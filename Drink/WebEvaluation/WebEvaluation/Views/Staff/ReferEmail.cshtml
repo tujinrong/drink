@@ -1,0 +1,136 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.StaffViewModel>
+@{
+    ViewBag.Title = "担当参照";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_self" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/site.css" rel="stylesheet">
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+
+    <script type="text/javascript">
+
+        function doOk() {
+
+            var value = "";
+            var text = "";
+            var selectedStaffs = $('#staffList').find("input[name='selectedStaff']:checked");
+
+            $.each(selectedStaffs, function () {
+                if (value == "") {
+                    value = $(this).val();
+                } else {
+                    value = value +","+$(this).val();
+                }
+                if (text == "") {
+                    text = $(this).attr('staffName');
+                } else {
+                    text = text + "、　" + $(this).attr('staffName');
+                }
+            })
+
+            window.parent.SMAT.returnValue = {
+                value: value,
+                text: text
+            };
+
+            doClose();
+        }
+
+        function doClose() {
+            //$(".webui-popover-inner", parent.document).closest('.webui-popover-inner').find('a.close').click();
+            $("#" + window.parent.SMAT.CurrentEmailPicker + " span", parent.document).click();
+        }
+    </script>
+</head>
+
+<body style="padding-top: 0;">
+    <div class="jumbotron" style="background-color:#dcdcdc;padding-left:5px;padding-right:5px;padding-top:5px">
+        
+
+        <!--社員一覧-->
+        <table id="staffList" class="table form-table table-hover" border="0">
+             <thead>
+                <tr style="background-color:#e9e9e9">
+                    <th class="text-center" width="35px"></th>        
+                    <th class="text-center">役職</th>
+                    <th class="text-left" nowrap>コード</th>
+                    <th class="text-left">氏名</th>
+                    <th class="text-left" nowrap>Email</th>
+                </tr>
+              </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="background-color:white">
+                            <td class="text-center">
+                                @if (string.IsNullOrEmpty(item.EMail) == false)
+                                {
+                                    if (ViewBag.selectMode == "one")
+                                    {
+                                        <label class="edit-title">@Html.RadioButton("selectedStaff", item.StaffCD, new { @staffName = item.StaffName })</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="edit-title">@Html.CheckBox("selectedStaff", new { @value = item.StaffCD, @staffName = item.StaffName })</label>
+                                    }
+                                }
+                                
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Yakusyoku)
+                            </td>
+                            <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.StaffCD)
+                            </td>
+                            <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.StaffName)
+                            </td>
+                            <td class="text-left">
+                                @if (string.IsNullOrEmpty(item.EMail) == false) {
+                                    <span >@item.EMail</span>
+                                }
+                                else { 
+                                    <span style="color:red">Email無</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+        <div class="col-lg-12 text-center">
+            <a id="btnOk" class="btn btn-primary btn-sm" style="width:60px" onclick="doOk()">OK</a>
+
+            <a id="btnCancel" class="btn btn-primary btn-sm" style="width:80px" onclick="doClose()">ｷｬﾝｾﾙ</a>
+        </div>
+        </div>
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+
+        var selectedStaffCD = "@ViewBag.selectedStaffCD";
+        var codes = selectedStaffCD.split(',');
+        debugger;
+        for (var c in codes) {
+            $('#staffList').find("input[name='selectedStaff'][value='" + codes[c] + "']").iCheck('check');
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+﻿@model PagedList.IPagedList<WebEvaluation.ViewModels.TelRateRptViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-telerate.png";
+    ViewBag.Title = "通話率一覧検索";
+    ViewBag.color = "#f6d759";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <div style="position:absolute;top:40px;right:30px; z-index: 2;" >
+        @Html.ActionLink("テレフォンレポート閲覧", "TelRptSearch", "TelRpt", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, Sort = ViewBag.SortRpt, Tel = ViewBag.Tel, GroupBy = ViewBag.GroupBy, isPostBack = 1 }, null)
+    </div>
+    <div style="padding-top:15px"></div>
+    @using (Html.BeginForm("TelRptFrequencySearch", "TelRateRpt", FormMethod.Post, new { @class = "form-horizontal", @onsubmit = "return checkForm()" }))
+    {
+        @Html.Hidden("isPostBack",ViewBag.isPostBack as string)
+        
+        <div class="row" style="padding:0px 0px;">
+           
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;期間指定</font></div>
+                <table id="tb_Time" class="table form-table" >
+                    <tr id="tr_Months" class="tr-enable">
+                        <td class="text-left">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Months", null)&nbsp;月度：
+                            </label>
+                        </td>
+                        <td>
+                            @Html.MonthsPicker("Months", ViewBag.Months as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Custom" class="tr-disable">
+                        <td class="text-left">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Custom", null)&nbsp;自由：
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DatePicker("DateFrom", ViewBag.DateFrom as string, new { @class = "s-range-from", @rangekey = "partyDate" })
+                        </td>
+                        <td style="text-align:center">～</td>
+                        <td>
+                            @Html.DatePicker("DateTo", ViewBag.DateTo as string, new { @class = "s-range-to", @rangekey = "partyDate" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Year" class="tr-disable">
+                        <td class="text-left" width="100">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Year", null)&nbsp;年度：
+
+                            </label>
+                        </td>
+                        <td width="180">
+                            @Html.YearsPicker("Year", ViewBag.Year as string)
+                        </td>
+                        <td width="50px" class="edit-title">半期</td>
+                        <td width="180">
+                            @Html.CodeDropDownList("Season", "Season", ViewBag.Season as string, new { @class = "form-control input-sm" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;範囲指定</font></div>
+                <table id="tb_Range" class="table form-table" >
+                    <tr id="tr_division" class="tr-enable">
+                        <td align="left" width="140"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "division", null)&nbsp;事業部/G：</label></td>
+                        <td width="180">
+                            @Html.GroupDropDownList("divisionCD", "groupControl", ViewBag.divisionCD as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_shop" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "shop", null) &nbsp;店舗：</label></td>
+                        <td>
+                            @Html.CodeName("ShopCD", "shop", ViewBag.ShopCD as string)
+                        </td>
+                        <td class="text-left" colspan="4">
+                            @Html.CodeNameLabel("ShopCD")
+                        </td>
+                    </tr>
+                    <tr id="tr_tanto" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "tanto", null) &nbsp;担当者：</label></td>
+                        <td>
+                            @Html.CodeName("StaffCD", "staff", ViewBag.StaffCD as string)
+                        </td>
+                        <td class="text-left" colspan="4">
+                            @Html.CodeNameLabel("StaffCD")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+            <div class="row" style="padding:0px 0px;">
+
+        <div class="col-lg-6">
+            <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;集計単位</font></div>
+            <table class="table form-table" >
+                <tr>
+                    <td colspan="7" align="left">
+                        <label class="edit-title"> @Html.RadioButtonFor("GroupBy", ViewBag.GroupBy as string, "div", null)&nbsp;事業部&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label class="edit-title"> @Html.RadioButtonFor("GroupBy", ViewBag.GroupBy as string, "group", null)&nbsp;グループ&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label class="edit-title"> @Html.RadioButtonFor("GroupBy", ViewBag.GroupBy as string, "shop", null)&nbsp;店舗&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label class="edit-title"> @Html.RadioButtonFor("GroupBy", ViewBag.GroupBy as string, "staff", null)&nbsp;担当者&nbsp;&nbsp;&nbsp;&nbsp;　</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-6">
+            <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;表示順</font></div>
+            <table class="table form-table" >
+                <tr >
+                    <td colspan="7" align="left">
+                        <label class="edit-title">
+                            @Html.RadioButtonFor("Sort", ViewBag.Sort as string, "unit", null)&nbsp;組織順&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
+                        <label class="edit-title"> @Html.RadioButtonFor("Sort", ViewBag.Sort as string, "result", null)&nbsp;通話率順</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+        
+        
+        <div class="row" style="padding-top:15px">
+            <div class="col-lg-12 text-center">
+                <button class="btn btn-primary btn-sm" type="submit">    検　索    </button>
+                <button id="csv_btn" class="btn btn-primary btn-sm" type="button">CSV出力</button>
+                <button id="report_btn" class="btn btn-primary btn-sm" type="button">   帳　票   </button>
+            </div>
+        </div>
+    }
+    @if (null != Model && Model.ToList().Count > 0)
+    {
+            <!--通話率一覧-->
+        <div class="col-lg-5" style="padding-left:0px"><font color="#aaaaaa">通話率一覧</font></div>
+        <div class="col-lg-7" style="padding-right:0px">
+        @Html.PagedListPager(Model, page => Url.Action("TelRptFrequencySearch", new { page, Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, Sort = ViewBag.Sort,GroupBy = ViewBag.GroupBy, isPostBack = ViewBag.isPostBack }))
+        </div>
+                <table class="table form-table table-hover" border="0">
+                <thead>
+                    @*<tr style="background-color:#f7f7f7">
+                        <th class="text-center" colspan="4" style="border-bottom-width: 0px;"></th>
+                        <th class="text-center" colspan="4" style="border-bottom-width: 0px;border-left: 1px solid #dddddd;">一回目</th>
+                        <th class="text-center" colspan="4" style="border-bottom-width: 0px;border-left: 1px solid #dddddd;">二回目</th>
+                        <th class="text-center" colspan="4" style="border-bottom-width: 0px;border-left: 1px solid #dddddd;">三回目</th>
+                    </tr>*@
+                    <tr style="background-color:#f7f7f7">
+                        @{
+                            var groupBy = @ViewBag.GroupBy as string;
+                        }
+
+                        @if (groupBy == "div")
+                        {
+                            <th class="text-center">事業部</th>
+                        }
+                        else if (groupBy == "group")
+                        {
+                        <th class="text-center" >事業部</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">グループ名</th>
+                        }
+                        else if (groupBy == "shop")
+                        {
+                        <th class="text-center" >事業部</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">グループ名</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">店舗名</th>
+                        }
+                        else if (groupBy == "staff")
+                        {
+                        <th class="text-center" >事業部</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">グループ名</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">店舗名</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">番号</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">担当</th>
+                        }
+
+                      
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">総数</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">繋がった</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">繋がらず</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd;">通話率</th>
+                        @*<th class="text-right" style="border-left: 1px solid #dddddd;">総数</th>
+                        <th class="text-right">繋がった</th>
+                        <th class="text-right">繋がらず</th>
+                        <th class="text-right">通話率</th>
+                        <th class="text-right" style="border-left: 1px solid #dddddd;">総数</th>
+                        <th class="text-right">繋がった</th>
+                        <th class="text-right">繋がらず</th>
+                        <th class="text-right">通話率</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="">
+                            @if (groupBy == "div")
+                            {
+                                <td class="text-left" >@Html.DisplayFor(modelItem => item.DivName)</td>
+                            }
+                            else if (groupBy == "group")
+                            {
+                                <td class="text-left" >@Html.DisplayFor(modelItem => item.DivName)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.GroupName)</td>
+                            }
+                            else if (groupBy == "shop")
+                            {
+                                <td class="text-left" >@Html.DisplayFor(modelItem => item.DivName)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.GroupName)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.ShopCD)</td>
+                            }
+                            else if (groupBy == "staff")
+                            {
+                                <td class="text-left" >@Html.DisplayFor(modelItem => item.DivName)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.GroupName)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.ShopCD)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.StaffCD)</td>
+                                <td class="text-left" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.StaffName)</td>
+                            }
+                        
+                            <td class="text-right" style="border-left: 1px solid #dddddd;">@Html.DisplayFor(modelItem => item.Count)</td>
+                            <td class="text-right" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.Connected)</td>
+                            <td class="text-right" style="border-left: 1px solid #dddddd">@Html.DisplayFor(modelItem => item.NoConnected)</td>
+                            <td class="text-right" style="border-left: 1px solid #dddddd;">@Html.DisplayFor(modelItem => item.Rate)</td>
+                            @*<td class="text-right" style="border-left: 1px solid #dddddd;">@Html.DisplayFor(modelItem => item.SecondCount)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondNoConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondRate)</td>
+                            <td class="text-right" style="border-left: 1px solid #dddddd;">@Html.DisplayFor(modelItem => item.ThirdCount)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdNoConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdRate)</td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("TelRptFrequencySearch", new { page, Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, Sort = ViewBag.Sort, GroupBy = ViewBag.GroupBy, isPostBack = ViewBag.isPostBack }))
+      
+    }
+    <script type="text/javascript">
+
+        $("#ShopCD").ui().onSelectedRow = function (ret) {
+            $("#groupControl").val(ret.paramCD);
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+        };
+
+        $("#ShopCD").ui().getParam = function (e) {
+            if ($("#groupControl").val().trim().length > 0) {
+                return "?divisionCD=" + ($("#groupControl").val().trim());
+            } else {
+                return "";
+            }
+
+        };
+
+        $("#StaffCD").ui().getParam = function (e) {
+            if ($("#ShopCD").val().trim().length > 0) {
+                return "?shopCD=" + ($("#ShopCD").val().trim());
+            } else {
+                return "";
+            }
+        }
+
+        //$("#StaffCD").ui().getParam = function (e) {
+        //    return "?initCenter=1";
+        //};
+
+        $("input[name='Months']").bind('focus', function () {
+            $("input[type='radio'][value='Months']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateFrom']").bind('focus', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateTo']").bind('focus', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='Year']").bind('focus', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("select[name='Season']").bind('focus', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+        $("select[name='divisionCD']").bind('focus', function () {
+            $("input[type='radio'][value='division']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("select[name='divisionCD']").bind('change', function () {
+            showGroupByRadioButton("div");
+        });
+
+        $("input[name='ShopCD']").bind('focus', function () {
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='StaffCD']").bind('focus', function () {
+            $("input[type='radio'][value='tanto']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+
+        $("input[name='Months']").bind('change', function () {
+            $("input[type='radio'][value='Months']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateFrom']").bind('change', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateTo']").bind('change', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='Year']").bind('change', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("select[name='Season']").bind('change', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+        $("input[name='ShopCD']").bind('change', function () {
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='StaffCD']").bind('change', function () {
+            $("input[type='radio'][value='tanto']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("#StaffCD").ui().onSelectedRow = function (ret) {
+            $("#ShopCD").val(ret.paramCD);
+            $("#ShopCD").blur();
+
+            $("input[type='radio'][value='tanto']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+        };
+
+        ///////
+        $("input[type='radio'][value='Months']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='Custom']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='Year']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='division']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+
+            showGroupByRadioButton("div");
+        });
+
+        $("input[type='radio'][name='Range'][value='shop']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+            showGroupByRadioButton("shop");
+            
+        });
+
+        $("input[type='radio'][value='tanto']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+            showGroupByRadioButton("staff");
+        });
+
+
+        function showGroupByRadioButton(range)
+        {
+            $("input[name='GroupBy'][value='div']").parent().parent("label").show();
+            $("input[name='GroupBy'][value='group']").parent().parent("label").show();
+            $("input[name='GroupBy'][value='shop']").parent().parent("label").show();
+            $("input[name='GroupBy'][value='staff']").parent().parent("label").show();
+
+            if (range == "div")
+            {
+                if ($("select[name='divisionCD']").get(0).selectedIndex > 0) {
+                    if ($("select[name='divisionCD']").val().indexOf("g_") >= 0) {
+                        $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+                        $("input[type='radio'][value='group']").iCheck('check');
+                    } else {
+                        $("input[type='radio'][value='div']").iCheck('check');
+                    }
+                } else {
+                    $("input[type='radio'][value='div']").iCheck('check');
+                }
+            } else if (range == "shop") {
+                $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='group']").parent().parent("label").hide();
+                $("input[type='radio'][value='shop']").iCheck('check');
+            } else if (range == "staff") {
+                $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='group']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='shop']").parent().parent("label").hide();
+                $("input[type='radio'][value='staff']").iCheck('check');
+            }
+        }
+
+        function checkForm() {
+            if ($(":radio[name='Time']:checked").val() == "Months") {
+                if ($("input[name='Months']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(月度)を入力してください！", "error");
+                    $("input[name='Months']").focus();
+                    return false;
+                }
+            } else if ($(":radio[name='Time']:checked").val() == "Custom") {
+
+
+                if ($("input[name='DateFrom']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(自由)を入力してください！", "error");
+                    $("input[name='DateFrom']").focus();
+                    return false;
+                }
+
+                if (!CheckDateFromTo("partyDate")) {
+                    SMAT.Service.toastr("日付け指定にエラーがあります！", "error");
+                    $("input[name='DateFrom']").focus();
+                    return false;
+                }
+            } else if ($(":radio[name='Time']:checked").val() == "Year") {
+                if ($("input[name='Year']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(年度)を入力してください！", "error");
+                    $("input[name='Year']").focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function getParam() {
+            var p = {
+                Time: $(":radio[name='Time']:checked").val(),
+                Year: $("input[name='Year']").val().trim(),
+                Season: $("#Season").val(),
+                Months: $("input[name='Months']").val().trim(),
+                DateFrom: $("input[name='DateFrom']").val().trim(),
+                DateTo: $("input[name='DateTo']").val().trim(),
+                Range: $(":radio[name='Range']:checked").val(),
+                divisionCD: $("#groupControl").val(),
+                ShopCD: $("#ShopCD").val().trim(),
+                StaffCD: $("#StaffCD").val().trim(),
+                StaffEva: $("#StaffEva").val(),
+                LeaderEva: $("#LeaderEva").val(),
+                Sort: $(":radio[name='Sort']:checked").val(),
+                GroupBy: $(":radio[name='GroupBy']:checked").val(),
+            }
+
+
+            return p;
+        }
+
+        $("#report_btn").bind('click', function (e) {
+
+            if (checkForm() == false) {
+                return;
+            }
+            var p = getParam();
+
+            SMAT.Service.getServerFile({
+                url: "@Url.Action("TelRptFrequencyIndexPreview")",
+                params: p
+        });
+        });
+
+        $("#csv_btn").bind('click', function (e) {
+
+            if (checkForm() == false) {
+                return;
+            }
+            var p = getParam();
+
+            SMAT.Service.getServerFile({
+                url: "@Url.Action("csv")",
+                params: p
+        });
+        });
+    </script>
+
+@{
+            var time = ViewBag.Time;
+            var range = ViewBag.Range;
+}
+@if (time == "Months"){
+    <script type="text/javascript">
+        $("input[type='radio'][value='Months']").iCheck('check');
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+    </script>
+    }
+    else if (time == "Year"){
+        <script type="text/javascript">
+            $("input[type='radio'][value='Year']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (time == "Custom"){
+        <script type="text/javascript">
+            $("input[type='radio'][value='Custom']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+
+    @if (range == "division")
+    {
+    <script type="text/javascript">
+        $("input[type='radio'][value='division']").iCheck('check');
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+
+        var divcd = "@ViewBag.divisionCD";
+        $(document).ready(function () {
+            if (divcd.indexOf("g_") >= 0) {
+                $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+            }
+            
+        });
+    </script>
+    }
+    else if (range == "shop")
+    {
+        <script type="text/javascript">
+            $("#tr_shop input[type='radio'][value='shop']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+            $(document).ready(function () {
+                $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='group']").parent().parent("label").hide();
+            });
+        </script>
+    }
+    else if (range == "tanto")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='tanto']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+            $(document).ready(function () {
+                $("input[name='GroupBy'][value='div']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='group']").parent().parent("label").hide();
+                $("input[name='GroupBy'][value='shop']").parent().parent("label").hide();
+            });
+        </script>
+    }
+    
+</div>

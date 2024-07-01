@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "店舗マスタ";
+}
+
+<script>
+    var roleCD = "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD)"
+    if (roleCD == '@ModelBase.CN役割_店舗管理者' || roleCD == '@ModelBase.CN役割_ドリンクマネジメント')
+    {
+        smat.service.openForm({
+            url: "/Shop/ShopEdit",
+            fillTarget: "body_id",
+            params: {
+                shopCD: "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD)"
+            },
+            afterClose: function (result) {
+                $("#body_id").hide();
+                window.location.href = "/Main/Home";
+            }
+        });
+    }
+
+    function openShopEditForm(dataItem) {
+
+        smat.service.openForm({
+            url: "/Shop/ShopEdit",
+            fillTarget: "body_id",
+            params: {
+                shopCD: dataItem.ShopCD == undefined ? "" : dataItem.ShopCD,
+                shopName: dataItem.ShopName == undefined ? "" : dataItem.ShopName,
+            },
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#shopListPager").ui().dataSource != undefined && $("#shopListPager").ui().dataSource.pageData.length > 0) {
+                        $("#shopListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+    }
+
+    function downloadShopCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag)
+    {
+        editStr = "参照";
+    }
+}
+<section id="listBody" class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+                @using (Html.Smat().BeginForm("shopListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                    {
+                        actions.Action("/Shop/ShopSearch").ActionBtn("btnSearch").ResultHandler("shopListPager");
+                        actions.Action("/Shop/ShopCsv").ActionBtn("btnCsv").Success("downloadShopCsv");
+                    }
+                ))
+                {
+                    <div class="row">
+                        <div class="col-fix-2">
+                            <div class="form-group">
+                                @(Html.Smat().RadioButton("rdoShopType")
+                                            .Name("shopType")
+                                            .Label("区分")
+                                            .DataSource(new List<object>() {
+                                                        new{text="店舗",value="1"},
+                                                        new{text="管理部署",value="2"},
+                                            }).HtmlAttributes(new { style = "width:100px;" })
+                                            .Value("1")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @(Html.Smat().DropDownList("ShopListRegionCD")
+                                            .Label(label =>
+                                                {
+                                                    label.Text("地域");
+                                                })
+                                            .Name("regionCD")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                            .CodeKind(DrinkService.Models.ModelBase.CN地域)
+                                            .HtmlAttributes(new { style = "width:200px" })
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                               @Html.Smat().Refer("referShopCD").Name("shopCD").Label("店舗").ReferKey("referShop").HtmlAttributes(new { style = "" })
+                            </div>
+                        </div>
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @Html.Smat().TextBox("txtShopName").Name("shopName").Label("店舗名").HtmlAttributes(new { @class = "form-control input-s" })
+                            </div>
+                        </div>
+                    </div>
+                 }
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="row row-tool">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            @Html.Smat().Button("btnCsv").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                            @(Html.Smat().Button("btnNew")
+                                      .Content("新規")
+                                      .HtmlAttributes(new { @class = "btn-primary" })
+                                      .Events(events =>
+                                      {
+                                          events.Click("openShopEditForm");
+                                      })
+                            )
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            @Html.Smat().Pager("shopListPager").DataHandler("shopListGrid")
+                        </div>
+                    </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("shopListGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("ShopCD").Title("コード").Width("100px");
+                          columns.Bound("ShopName").Title("店舗名");
+                          columns.Bound("RegionCDName").Title("地域").Width("80px");
+                          columns.Bound("AreaCDName").Title("エリア").Width("80px");
+                          columns.Bound("SysTypeCDName").Title("店舗業務区分").Width("140px");
+                          columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                            ).Actions(actions =>
+                             {
+                                 actions.Text(editStr).Click("openShopEditForm");
+                             });
+                      })
+                )
+            </div>
+        </div>
+
+        <script>
+    $(document).ready(function () {
+        if (Modernizr.ios || Modernizr.android) {
+            $("#btnCsv").hide();
+        };
+    });
+        </script>
+
+    </section>
+</section>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnNew").ui().visible(false);
+        }
+    });
+</script>*@

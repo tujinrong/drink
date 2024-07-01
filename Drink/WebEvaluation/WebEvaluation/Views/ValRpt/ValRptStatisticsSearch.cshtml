@@ -1,0 +1,519 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ValResultViewModel>
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-teleevapic.png";
+    ViewBag.Title = "評価構成比検索";
+    ViewBag.color = "#f7db69";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="/Scripts/Common/Chart.min.js"></script>
+<div class="jumbotron">
+    <div style="position:absolute;top:40px;right:30px; z-index: 2;">
+        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+        {
+            @Html.ActionLink("総合評価", "ValRptSearch", "ValRpt", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, Host = ViewBag.Host, Sort = ViewBag.Sort, Show = ViewBag.Show, isPostBack = 1 }, null)
+        }
+    </div>
+    <div style="padding-top:15px"></div>
+    @using (Html.BeginForm("ValRptStatisticsSearch", "ValRpt", FormMethod.Post, new { @class = "form-horizontal", @onsubmit = "return checkForm()" }))
+    {
+        <div class="row" style="padding:0px 0px;">
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;期間指定</font></div>
+                <table id="tb_Time" class="table form-table" >
+                    <tr id="tr_Months" class="tr-enable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Time", ViewBag.Time as string, "Months", null)&nbsp;月度：</label></td>
+                        <td>
+                            @Html.MonthsPicker("Months", ViewBag.Months as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Custom" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Time", ViewBag.Time as string, "Custom", null)&nbsp;自由：</label></td>
+                        <td>
+                            @Html.DatePicker("DateFrom", ViewBag.DateFrom as string, new { @class = "s-range-from", @rangekey = "partyDate" })
+                        </td>
+                        <td align="center">～</td>
+                        <td>
+                            @Html.DatePicker("DateTo", ViewBag.DateTo as string, new { @class = "s-range-to", @rangekey = "partyDate" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Year" class="tr-disable">
+                        <td class="text-left" width="100"><label class="edit-title">@Html.RadioButtonFor("Time", ViewBag.Time as string, "Year", null)&nbsp;年度：</label></td>
+                        <td width="180">
+                            @Html.YearsPicker("Year", ViewBag.Year as string)
+                        </td>
+                        <td width="50px" class="edit-title">半期</td>
+                        <td width="180">
+                            @Html.CodeDropDownList("Season", "Season", ViewBag.Season as string, new { @class = "form-control input-sm" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                
+
+            </div>
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;範囲指定</font></div>
+                <table id="tb_Range" class="table form-table" >
+                    <tr id="tr_division" class="tr-enable">
+                        <td align="left" width="140"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "division", null)&nbsp;事業部/G：</label></td>
+                        <td width="180">
+                            @Html.GroupDropDownList("divisionCD", "groupControl", ViewBag.divisionCD as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_shop" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "shop", null) &nbsp;店舗：</label></td>
+                        <td>
+                            @Html.CodeName("ShopCD", "shop", ViewBag.ShopCD as string)
+                        </td>
+                        <td class="text-left" colspan="4">
+                            @Html.CodeNameLabel("ShopCD")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top:10px">
+            <div class="col-lg-12 text-center">
+                <button class="btn btn-primary btn-sm" type="submit">    検　索    </button>
+                <button id="csv_btn" class="btn btn-primary btn-sm" type="button">CSV出力</button>
+                <button id="report_btn" class="btn btn-primary btn-sm" type="button">   帳　票   </button>
+
+            </div>
+        </div>
+    }
+    @if (null != Model && Model.ToList().Count > 0)
+    {
+         <div class="col-lg-13" style="padding-left:0px">
+            <font>&nbsp;</font>
+            </div>
+            <!--統計結果＆範囲-->
+            <table class="table form-table table-hover">
+                <thead>
+                    <tr >
+                        <th class="text-left"></th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">SS</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">S</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">A</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">B</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">C</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">D</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">E</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">F</th>
+                        <th class="text-center" style="border-left:1px solid #dddddd">統計</th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr class="" style="background-color:white">
+                        <td class="text-left">@Html.DisplayFor(modelItem => item.Type)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaSS)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaS)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaA)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaB)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaC)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaD)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaE)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.EvaF)</td>
+                        <td class="text-right" style="border-left:1px solid #dddddd">@Html.DisplayFor(modelItem => item.SumAll)</td>
+                    </tr>
+                }
+            </table>
+            <div class="row">
+                <div style="text-align:center;width:100%;position:relative;">
+                    <div style="width: 300px; float:left;position:relative;left:50%;margin-left:-300px">
+                        <canvas id="chart-area" width="300" height="300" />
+                    </div>
+                    <div class="pie_info" style="width: 200px; float: left; position: relative; left: 50%; margin-left: -10px; ">
+                        <ul style="list-style: none;margin-top:60px; margin-left:30px;">
+                            <li style="text-align:left"><span style="background-color: #3fb618; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>SS</li>
+                            <li style="text-align:left"><span style="background-color: #3E18B6; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>S</li>
+                            <li style="text-align:left"><span style="background-color: #F7464A; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>A</li>
+                            <li style="text-align:left"><span style="background-color: #46BFBD; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>B</li>
+                            <li style="text-align:left"><span style="background-color: #FDB45C; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>C</li>
+                            <li style="text-align:left"><span style="background-color: #949FB1; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>D</li>
+                            <li style="text-align:left"><span style="background-color: #4D5360; display: inline-block; width: 40px; height: 10px; margin-right: 5px; "></span>E</li>
+                            <li style="text-align:left"><span style="background-color: #D285F7; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>F</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+    }
+    <script type="text/javascript">
+
+        $("#ShopCD").ui().onSelectedRow = function (ret) {
+            $("#groupControl").val(ret.paramCD);
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+        };
+
+        $("#ShopCD").ui().getParam = function (e) {
+            if ($("#groupControl").val().trim().length > 0) {
+                return "?divisionCD=" + ($("#groupControl").val().trim());
+            } else {
+                return "";
+            }
+
+        };
+
+        $("input[name='Months']").bind('focus', function () {
+            $("input[type='radio'][value='Months']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateFrom']").bind('focus', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateTo']").bind('focus', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='Year']").bind('focus', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("select[name='Season']").bind('focus', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+        $("select[name='divisionCD']").bind('focus', function () {
+            $("input[type='radio'][value='division']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='ShopCD']").bind('focus', function () {
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='StaffCD']").bind('focus', function () {
+            $("input[type='radio'][value='tanto']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+
+        $("input[name='Months']").bind('change', function () {
+            $("input[type='radio'][value='Months']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateFrom']").bind('change', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='DateTo']").bind('change', function () {
+            $("input[type='radio'][value='Custom']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("input[name='Year']").bind('change', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        $("select[name='Season']").bind('change', function () {
+            $("input[type='radio'][value='Year']").iCheck('check');
+
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+
+        $("input[name='ShopCD']").bind('change', function () {
+            $("input[type='radio'][value='shop']").iCheck('check');
+
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+        });
+
+        ///////
+        $("input[type='radio'][value='Months']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='Custom']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='Year']").on('ifChecked', function (event) {
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='division']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='shop']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        $("input[type='radio'][value='tanto']").on('ifChecked', function (event) {
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+        });
+
+        function checkForm() {
+            if ($(":radio[name='Time']:checked").val() == "Months") {
+                if ($("input[name='Months']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(月度)を入力してください！", "error");
+                    $("input[name='Months']").focus();
+                    return false;
+                }
+            } else if ($(":radio[name='Time']:checked").val() == "Custom") {
+
+                if ($("input[name='DateFrom']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(自由)を入力してください！", "error");
+                    $("input[name='DateFrom']").focus();
+                    return false;
+                }
+                if (!CheckDateFromTo("partyDate")) {
+                    SMAT.Service.toastr("日付け指定にエラーがあります！", "error");
+                    $("input[name='DateFrom']").focus();
+                    return false;
+                }
+            } else if ($(":radio[name='Time']:checked").val() == "Year") {
+                if ($("input[name='Year']").val().trim().length == 0) {
+                    SMAT.Service.toastr("期間指定(年度)を入力してください！", "error");
+                    $("input[name='Year']").focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function getParam() {
+            var p = {
+                Time: $(":radio[name='Time']:checked").val(),
+                Year: $("input[name='Year']").val().trim(),
+                Season: $("#Season").val(),
+                Months: $("input[name='Months']").val().trim(),
+                DateFrom: $("input[name='DateFrom']").val().trim(),
+                DateTo: $("input[name='DateTo']").val().trim(),
+                Range: $(":radio[name='Range']:checked").val(),
+                divisionCD: $("#groupControl").val(),
+                ShopCD: $("#ShopCD").val(),
+                StaffCD: $("#StaffCD").val(),
+                StaffEva: $("#StaffEva").val(),
+                LeaderEva: $("#LeaderEva").val(),
+                Sort: $(":radio[name='Sort']:checked").val(),
+                Tel: [],
+            }
+
+            var checkBoxs = $(":checkbox[name='Tel']:checked");
+            var index = 0;
+            $.each(checkBoxs, function () {
+                p.Tel[index] = $(this).val();
+
+                index = index + 1;
+            });
+
+            return p;
+        }
+
+        $("#report_btn").bind('click', function (e) {
+
+            if (checkForm() == false) {
+                return;
+            }
+            var p = getParam();
+
+            SMAT.Service.getServerFile({
+                url: "@Url.Action("ValResultPreview")",
+                params: p
+        });
+        });
+
+        $("#csv_btn").bind('click', function (e) {
+
+            if (checkForm() == false) {
+                return;
+            }
+            var p = getParam();
+
+            SMAT.Service.getServerFile({
+                url: "@Url.Action("csv")",
+                params: p
+        });
+        });
+
+    </script>
+
+    @{
+        WebEvaluation.ViewModels.ValResultViewModel data = ViewBag.pie;
+
+        if (null != data)
+        {
+
+            <script type="text/javascript">
+
+                var pieData = [
+                    {
+                        value: Number(@data.EvaSS),
+                        color: "#3fb618",
+                        highlight: "#AAF392",
+                        label: "SS"
+                    },
+                    {
+                        value: Number(@data.EvaS),
+                        color: "#3E18B6",
+                        highlight: "#83F2F7",
+                        label: "S"
+                    },
+                    {
+                        value: Number(@data.EvaA),
+                        color: "#F7464A",
+                        highlight: "#FF5A5E",
+                        label: "A"
+                    },
+                    {
+                        value: Number(@data.EvaB),
+                        color: "#46BFBD",
+                        highlight: "#5AD3D1",
+                        label: "B"
+                    },
+                    {
+                        value: Number(@data.EvaC),
+                        color: "#FDB45C",
+                        highlight: "#FFC870",
+                        label: "C"
+                    },
+                    {
+                        value: Number(@data.EvaD),
+                        color: "#949FB1",
+                        highlight: "#A8B3C5",
+                        label: "D"
+                    },
+                    {
+                        value: Number(@data.EvaE),
+                        color: "#4D5360",
+                        highlight: "#616774",
+                        label: "E"
+                    }
+                    ,
+                    {
+                        value: Number(@data.EvaF),
+                        color: "#D285F7",
+                        highlight: "#E7CEF3",
+                        label: "F"
+                    }
+
+                ];
+                window.onload = function () {
+                    var ctx = document.getElementById("chart-area").getContext("2d");
+                    window.myPie = new Chart(ctx).Pie(pieData);
+                };
+            </script>
+        }
+    }
+
+    @{
+        var time = ViewBag.Time;
+        var range = ViewBag.Range;
+    }
+    @if (time == "Months")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='Months']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (time == "Year")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='Year']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (time == "Custom")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='Custom']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+
+    @if (range == "division")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='division']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (range == "shop")
+    {
+        <script type="text/javascript">
+            $("#tr_shop input[type='radio'][value='shop']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+</div>

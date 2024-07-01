@@ -1,0 +1,19 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>エラー</title>
+</head>
+<body>
+    <hgroup>
+        <h1>エラー</h1>
+        <h2>An error occurred while processing your request.</h2>
+        <h3>@ViewData["ErrorMessage"]</h3>
+    </hgroup>
+    @Html.ActionLink("ログインページに戻る", "Login", "Home", null, null)
+</body>
+</html>

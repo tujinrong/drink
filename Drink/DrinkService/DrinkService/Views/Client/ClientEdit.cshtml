@@ -1,0 +1,1211 @@
+﻿@model  DrinkService.Models.M_Client
+@{
+    Layout = "~/Views/Shared/_SubFormLayout.cshtml";
+    ViewBag.Title = "顧客管理";
+    ViewBag.ContentId = "btnEditClose";
+}
+<script>
+
+    var clientCD = "@( Model.ClientCD == null ? "" : (Model.ClientCD as string).Replace(@"\", @"\\").Replace("\"", "\\\""))";
+    var hoClient = null;
+    var firstDay = "";
+    var loading = true;
+    var hoClientUpdateTime = "";
+    var clientUpdateTime = "";
+
+    var oldCancelFlg = "@Model.CancelFlg";
+
+
+    function getStaffList() {
+        smat.service.loadJosnData({
+            url: "/Staff/GetStaffList",
+            params: { "ShopCD": "@ViewBag.shopCD" },
+            closeLoding: false,
+            success: function (result) {
+                if (loading) {
+                    smat.service.beginLoding();
+                }
+                var emptyItem = {};
+                emptyItem.staffCD = "";
+                emptyItem.StaffName = "";
+
+                result.unshift(emptyItem);
+
+                $("#ddlTanto").ui().setDataSource(result);
+
+            }
+        });
+    }
+
+    function getKitNameList() {
+        smat.service.loadJosnData({
+            url: "/Kit/GetItemKitName",
+            params: {
+                "shopCD": "@ViewBag.shopCD"
+            },
+            closeLoding: false,
+            success: function (result) {
+                if (loading) {
+                    smat.service.beginLoding();
+                }
+                var emptyItem = {};
+                emptyItem.KitID = "";
+                emptyItem.KitName = "";
+
+                result.unshift(emptyItem);
+
+                $("#ddlKitID").ui().setDataSource(result);
+
+            }
+        });
+    }
+
+    function getClientEditData() {
+        if (clientCD != "") {
+            loading = true;
+            smat.service.openLoding();
+            smat.service.loadJosnData({
+                url: "/Client/GetClientInitItems",
+                params: {
+                    "shopCD": "@Model.ShopCD",
+                    "clientCD": clientCD
+                },
+                success: function (result) {
+                    loading = false;
+                    //set uuid
+                    if (result.clientInitItems) {
+                        for (var index in result.clientInitItems) {
+                            result.clientInitItems[index]["data-uuid"] = result.clientInitItems[index]["ShelfCD"] + "_" + result.clientInitItems[index]["ItemCD"];
+                        }
+                    }
+
+                    $("#clientRouteGrid").ui().setDataSource(result.clientRoute);
+                    $("#clientEditListGrid").ui().setDataSource(result.clientInitItems);
+                    $("#hoClientGrid").ui().setDataSource(result.hoClientItems);
+                    $("#hoClientAddGrid").ui().setDataSource(result.hoClientItemsAdd);
+                    $("#clientRouteGrid").ui().accessChange();
+                    $("#clientEditListGrid").ui().accessChange();
+                    $("#hoClientGrid").ui().accessChange();
+                    $("#hoClientAddGrid").ui().accessChange();
+
+                    $("#txtHoDate").ui().value(result.hoDate);
+
+                    if (result.hoClientItemsAdd == null || result.hoClientItemsAdd == undefined || result.hoClientItemsAdd.length == 0) {
+                        $("#hoClientAddGrid").hide();
+                    } else {
+                        $("#hoClientAddGrid").show();
+                    }
+                    hoClientUpdateTime = result.hoClientUpdateTime;
+                    clientUpdateTime = result.clientUpdateTime;
+                    hoClient = result.hoClient;
+                    firstDay = result.firstDay;
+                }
+            });
+        }
+    }
+
+    var clientRouteGridTemplate1 = function (dataItem) {
+        return '<input type="text" style="width:100%" maxLength="4" class="form-control s-textbox">' + dataItem.Rule1 + '</input>';
+    }
+    var clientRouteGridTemplate2 = function (dataItem) {
+        return '<input type="text" style="width:100%" maxLength="4" class="form-control s-textbox">' + dataItem.Rule2 + '</input>';
+    }
+    var clientRouteGridTemplate3 = function (dataItem) {
+        return '<input type="text" style="width:100%" maxLength="4" class="form-control s-textbox">' + dataItem.Rule3 + '</input>';
+    }
+
+    var clientRouteGridInitDataSource = [
+    { "WeekNo": "1", "WeekName": "A週", "Rule1": "", "Rule2": "", "Rule3": "" },
+    { "WeekNo": "2", "WeekName": "B週", "Rule1": "", "Rule2": "", "Rule3": "" },
+    { "WeekNo": "3", "WeekName": "C週", "Rule1": "", "Rule2": "", "Rule3": "" },
+    { "WeekNo": "4", "WeekName": "D週", "Rule1": "", "Rule2": "", "Rule3": "" }
+    ];
+
+    var hoClientGridDataBound = function (e) {
+        e.sender.thead.find('tr').remove();
+        e.sender.thead.html($('#head-template').html());
+
+        var trs = e.sender.tbody.children('tr');
+        $.each(trs, function () {
+            var rowKey = $(this).index();
+            var dataItem = e.sender.dataItem($(this));
+            if (dataItem["NextStopFlag"] == 1) {
+                $(this).children().addClass("tr-del");
+            } else {
+                $(this).children().removeClass("tr-del");
+            }
+
+            var priceTxt = $(this).children('.txt-Price').find('input');
+            priceTxt.bind('change', function () {
+
+                //Money
+                var money = Number($(this).val()) * Number(dataItem.UsedNum);
+                dataItem["Money"] = money;
+                $("#hoClientGrid").ui().config.dataSource[rowKey] = dataItem;
+
+                var sumMoney = 0;
+                var dataSource = $("#hoClientGrid").ui().config.dataSource;
+                for (var key in dataSource) {
+                    sumMoney = sumMoney + Number(dataSource[key]["Money"]);
+                }
+                hoClient.SoldMoney = sumMoney;
+            });
+        });
+
+        //if (mainRoleCD == mainCN役割_本部参照) {
+        //    var uis = $("#hoClientGrid").find(".s-cell-checkBox");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+
+        //    var uis = $("#hoClientGrid").find(".s-cell-onlyNum");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+        //}
+    };
+
+    var templateBound1 = function (dataItem) {
+        return '<input type="text" colindex="0" style="width:100%" class="edit-numeric-ShelfNo" maxlength="1" max="9" min="0" value="' + dataItem.ShelfNo + '">';
+    }
+
+    var templateBound2 = function (dataItem) {
+        return '<input type="text" colindex="1" style="width:100%" class="edit-numeric-ShelfSubNo " maxlength="1" max="9" min="0" value="' + dataItem.ShelfSubNo + '">';
+        //return '';
+    }
+
+    var hoClientAddGridDataBound = function (e) {
+        $('#hoClientAddGrid').find('.edit-numeric').asmatNumericTextBox({
+            format: '#'
+        });
+
+        var shelfNos = $("#hoClientAddGrid").find('.edit-numeric-ShelfNo');
+       
+        $.each(shelfNos, function (n, value) {
+            var grid = $("#hoClientAddGrid").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatDropDownList({
+                codeKind: "@DrinkService.Models.ModelBase.CN棚",
+                change: function (e) {
+                    var value = e.ui.value();
+                    dataItem["ShelfNo"] = value;
+                    $("#hoClientAddGrid").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+        var shelfSubNos = $("#hoClientAddGrid").find('.edit-numeric-ShelfSubNo');
+        
+        $.each(shelfSubNos, function (n, value) {
+            var grid = $("#hoClientAddGrid").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+                    dataItem["ShelfSubNo"] = value;
+                    $("#hoClientAddGrid").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+    };
+
+    var hoClientAddGridValueChange = function (dataItem, field) {
+        if (field == "ShelfCD") {
+            dataItem["data-uuid"] = dataItem["ShelfCD"] + "_" + dataItem["ItemCD"];
+        }
+    }
+
+    function getIgnoreItem() {
+        var param = {};
+        param.IgnoreItems = new Array();
+        var grid = $("#clientEditListGrid").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+        return param;
+    }
+
+    function addRow() {
+        smat.service.refer({
+            referKey: "referItem",
+            //param: getIgnoreItem(),
+            param: { "ShopCD": "@ViewBag.shopCD" },
+            afterSelected: function (reslut) {
+                var grid = $("#clientEditListGrid").ui();
+
+                var rs = [];
+                for (var index in reslut.selectedRows) {
+                    var item = reslut.selectedRows[index];
+
+                    rs.push({
+                        "ShelfCD": item.ShelfCD,
+                        "ItemCD": item.ItemCD,
+                        "ShortName": item.ShortName,
+                        "Num": item.Num,
+                        "Price": item.StandardPrice
+                    });
+                }
+                grid.addRow(rs);
+            }
+        });
+    }
+
+    function hoClientgetIgnoreItem() {
+        var param = {};
+        param.IgnoreItems = new Array();
+        var grid = $("#hoClientGrid").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+
+        var grid = $("#hoClientAddGrid").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+
+        param.ShopCD = "@ViewBag.shopCD";
+
+        return param;
+    }
+
+    function hoClientAddGridAddRow() {
+        smat.service.refer({
+            referKey: "referItem",
+            param: hoClientgetIgnoreItem(),
+            afterSelected: function (reslut) {
+                var grid = $("#hoClientAddGrid").ui();
+                
+                var rs = [];
+                for (var index in reslut.selectedRows) {
+                    var item = reslut.selectedRows[index];
+
+                    rs.push({
+                        "ShelfCD": item.ShelfCD,
+                        "ItemsName": item.ShortName,
+                        "ItemCD": item.ItemCD,
+                        "ShelfSubNo": item.ShelfSubNo,
+                        "NextPrice": item.StandardPrice,
+                        "ItemAddFlag": "2"
+                    });
+                }
+                grid.addRow(rs);
+
+                $('#hoClientAddGrid').show();
+            }
+        });
+    }
+
+    function txtClientCDChange() {
+        if ($("#txtClientCD").ui().value() != "" && $("#txtKanriClientCD").ui().value() == "") {
+            $("#txtKanriClientCD").ui().value($("#txtClientCD").ui().value());
+        }
+    }
+
+    function checkForm() {
+
+        if ($('#txtKanriClientCD').ui().value().length < 7) {
+            smat.service.addErrorInfo("txtKanriClientCD", $('#txtKanriClientCD'), "【販売管理顧客コード】7桁で入力してください。");
+        }
+
+        var routeList = [];
+        var grid = $("#clientRouteGrid").ui();
+        var routeDataSource = grid.config.dataSource;
+        for (var i = 0; i < routeDataSource.length; i++) {
+            var routeData = routeDataSource[i];
+            for (var col in routeData) {
+                if (col.indexOf("Rule") >= 0) {
+
+                    //var route = routeData[col].trim();
+                    var route = routeData[col];
+
+                    if (route.length > 0) {
+                        var node = grid.uiControl.tbody.children("tr:eq(" + (routeData["WeekNo"] - 1) + ")").find("input[colindex='" + col.substr(4, 1) + "']");
+
+                        if (route.length < 4) {
+                            smat.service.addErrorInfo("codeLen", node, "【ルートコード】4桁を入力してください。");
+                            //return false;
+                        }
+
+                        if (routeData["WeekNo"] != route.substr(0, 1)) {
+                            smat.service.addErrorInfo("weekNo", node, "【ルートコード】" + routeData['WeekName'] + "は「" + routeData['WeekNo'] + "」を入力してください。");
+                            //return false;
+                        }
+
+                        if (route.length >= 2 && route.substr(1, 1) > 6) {
+                            smat.service.addErrorInfo("zeroSix", node, "【ルートコード】2桁目に0〜6を入力してください。");
+                            //return false;
+                        }
+
+                        if (route.length == 4 && (route.substr(2, 2) == "00" || route.substr(2, 2) > 49)) {
+                            smat.service.addErrorInfo("zeroFour", node, "【ルートコード】下二桁は01〜49を入力してください。");
+                            //return false;
+                        }
+
+                        if (routeList.indexOf(route) >= 0) {
+                            smat.service.addErrorInfo("same", node, "【ルートコード】「" + route + "」はすでに存在しています。");
+                        }
+
+                        for (var j = 0; j < routeList.length; j++) {
+
+                            if (routeList[j].substr(0, 2) == route.substr(0, 2)) {
+                                smat.service.addErrorInfo("daySame", node, "【ルートコード】同じ日のルートが同時存在は不可。");
+                                //return false;
+                            }
+                        }
+
+                        routeList.push(route);
+                    }
+                }
+            }
+        }
+
+        //if (routeList.length == 0) {
+        //    var node = grid.uiControl.tbody.children("tr:eq(0)").find("input[colindex='1']");
+        //    smat.service.addErrorInfo("empty", node, "【ルートコード】を入力してください。");
+        //    //return false;
+        //}
+
+        var initItemDataSource = $("#clientEditListGrid").ui().config.dataSource;
+        var initItemKeys = [];
+        for (var i = 0; i < initItemDataSource.length; i++) {
+
+            var key = initItemDataSource[i]["ShelfCD"] + "|" + initItemDataSource[i]["ItemCD"];
+
+            for (var j = 0; j < initItemKeys.length; j++) {
+                if (initItemKeys[j] == key) {
+
+                    var node1 = $("#clientEditListGrid").ui().uiControl.tbody.children("tr:eq(" + i + ")").find("input[colindex='1']");
+                    var node2 = $("#clientEditListGrid").ui().uiControl.tbody.children("tr:eq(" + j + ")").find("input[colindex='1']");
+                    smat.service.addErrorInfo("ShelfCD", node1, "同じ商品の同じ棚が同時存在は不可。");
+                    smat.service.addErrorInfo("ShelfCD", node2, "同じ商品の同じ棚が同時存在は不可。");
+                }
+            }
+            initItemKeys.push(key);
+        }
+
+        //firstDay
+        if (firstDay == "") {
+            if ($("#txtFirstDate").ui().value() != null && $("#txtFirstDate").ui().value() != 0) {
+                if (Number(asmat.toString($("#txtFirstDate").ui().value(), "yyyyMMdd")) < Number(asmat.toString(new Date(), "yyyyMMdd"))) {
+                    smat.service.addErrorInfo("txtFirstDate", $("#txtFirstDate"), "設置日は【" + asmat.toString(new Date(), "yyyy/MM/dd") + "】以降に設定してください。");
+                }
+            }
+
+        } else {
+            if ($("#txtFirstDate").ui().value() == null) {
+                smat.service.addErrorInfo("txtFirstDate", $("#txtFirstDate"), "【設置日】を入力してください。");
+            } else if (Number(asmat.toString($("#txtFirstDate").ui().value(), "yyyyMMdd")) > Number(asmat.toString(asmat.parseDate(firstDay), "yyyyMMdd"))) {
+                smat.service.addErrorInfo("txtFirstDate", $("#txtFirstDate"), "設置日は【" + firstDay + "】以前に設定してください。");
+            }
+        }
+
+        @*if ($("#txtAfterDate").prop("disabled") == true) {
+
+        } else {
+
+            if ($("#txtAfterDate").ui().value() == null) {
+                smat.service.addErrorInfo("txtAfterDate", $("#txtAfterDate"), "【後日】を入力してください。");
+            }
+
+            debugger;
+            if (Number(asmat.toString($("#txtAfterDate").ui().value(), "yyyyMMdd")) >= Number(asmat.toString(new Date("@ViewBag.NextHoDate"), "yyyyMMdd"))
+                || Number(asmat.toString($("#txtAfterDate").ui().value(), "yyyyMMdd")) <= Number(asmat.toString(new Date(), "yyyyMMdd"))) {
+
+                var fromDate = new Date();
+                fromDate = fromDate.valueOf();
+                fromDate = fromDate + 1 * 24 * 60 * 60 * 1000;
+                fromDate = new Date(fromDate);
+
+                var toDate = new Date("@ViewBag.NextHoDate");
+                toDate = toDate.valueOf();
+                toDate = toDate + (-1) * 24 * 60 * 60 * 1000;
+                toDate = new Date(toDate);
+
+                if (fromDate.valueOf() > toDate.valueOf()) {
+                    smat.service.addErrorInfo("txtAfterDate", $("#txtAfterDate"), "次回日を超える後日フォローは指定できませんので今ストを指定してください。");
+
+                } else {
+                    smat.service.addErrorInfo("txtAfterDate", $("#txtAfterDate"), "後日フォロー日は【" + asmat.toString(fromDate, "yyyy/MM/dd") + "】～【" + asmat.toString(toDate, "yyyy/MM/dd") + "】期間内に設定してください。");
+
+                }
+            }
+        }*@
+
+        var gridAdd = $("#hoClientAddGrid").ui();
+        if (gridAdd.config.dataSource != undefined) {
+            for (dataKey in gridAdd.config.dataSource) {
+                var dataItem = gridAdd.config.dataSource[dataKey];
+
+                if (dataItem["ShelfNo"] == null || dataItem["ShelfNo"] == undefined || String(dataItem["ShelfNo"]) == "") {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='0']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "ShelfNo", node, "【商品追加:棚】を入力してくだい。");
+                }
+                if (dataItem["ShelfSubNo"] == null || dataItem["ShelfSubNo"] == undefined || String(dataItem["ShelfSubNo"]) == "") {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='1']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "ShelfSubNo", node, "【商品追加:順】を入力してくだい。");
+                }
+            }
+        }
+
+        return true;
+    }
+
+    function getDelConfirmMsg() {
+        return "顧客コード" + clientCD + "の顧客を削除しますか？";
+
+        //var config = {
+        //    msg: "顧客コード" + clientCD + "の顧客を削除しますか？",
+        //    callback: function (result) {
+        //        alert(result)
+        //    }
+        //}
+
+        //smat.service.confirm(config);
+
+        //return false;
+    }
+
+    function getSaveConfirmMsg() {
+        //if (oldCancelFlg == "False" && $('#CancelFlg').prop("checked")) {
+        if ($('#CancelFlg').prop("checked")) {
+            return "顧客を解約しますか？";
+        }
+
+        return "";
+    }
+
+    function getSaveParam(param) {
+        param["routeList"] = $("#clientRouteGrid").ui().config.dataSource;
+        param["hoClient"] = hoClient;
+        param["hoClientUpdateTime"] = hoClientUpdateTime;
+        param["clientUpdateTime"] = clientUpdateTime;
+
+        param.newMode = clientCD == "" ? true : false;
+
+        var gridAdd = $("#hoClientAddGrid").ui();
+        var addUpdateList = gridAdd.getUpdateDatas();
+        for (var iKey in addUpdateList) {
+            param.hoClientUpdateList.push(addUpdateList[iKey]);
+        }
+
+        for (var key in param.hoClientUpdateList) {
+            var item = param.hoClientUpdateList[key];
+            if (item.FreshDate != null && item.FreshDate != "" && item.FreshDate.length == 8) {
+                param.hoClientUpdateList[key].FreshDate = item.FreshDate.substr(0, 4) + "/" + item.FreshDate.substr(4, 2) + "/" + item.FreshDate.substr(6, 2);
+            }
+        }
+
+        if ($('#CancelFlg').prop("checked") == true) {
+            param.CancelFlg = true;
+        } else {
+            param.CancelFlg = false;
+        }
+    }
+
+    var saveFlag = false;
+
+    function successFunc(result) {
+        hoClientUpdateTime = result.Message;
+        clientUpdateTime = result.ErrorKey;
+        clientCD = $("#txtClientCD").ui().value();
+        $("#txtClientCD").ui().enable(false);
+        $("#btnEditDel").show();
+        smat.service.notice({ msg: "保存完了しました。" });
+        saveFlag = true;
+        oldCancelFlg = $('#CancelFlg').prop("checked")?"True":"False"
+    }
+    function successFunc2() {
+        smat.service.notice({ msg: "保存完了しました。" });
+        smat.service.closeForm({
+            contentId: "clientEditForm",
+            result: true
+        });
+    }
+    function successFunc3(result) {
+        if (result.ReturnValue == 0) {
+            smat.service.closeForm({
+                contentId: "clientEditForm",
+                result: true
+            });
+        }
+    }
+
+    function errorFunc(result) {
+        if (result.ErrorKey == "key") {
+            smat.service.addErrorBorder($('#txtShopName'));
+            smat.service.addErrorBorder($('#txtClientCD'));
+        } else if (result.ErrorKey == "ClientName") {
+            smat.service.addErrorBorder($('#txtEditClientName'));
+        } else if (result.ErrorKey == "ClientKana") {
+            smat.service.addErrorBorder($('#txtClientKana'));
+        } else if (result.ErrorKey == "haita") {
+
+        }
+
+        $("#tabstrip").data("asmatTabStrip").select(0);
+    }
+
+    function closeEditForm() {
+        smat.service.closeForm({
+            contentId: "clientEditForm",
+            result: saveFlag
+        });
+    }
+
+    function delConfirm(dataItem) {
+        return "追加商品【" + dataItem.ItemsName + "】を削除しますか？";
+        //return smat.Service.confirm("追加商品【" + dataItem.ItemsName + "】を削除しますか？");
+    }
+
+    function initdelConfirm(dataItem) {
+        return "商品【" + dataItem.ShortName + "】を削除しますか？";
+    }
+
+    function template1(dataItem) {
+        if (dataItem["ItemAddFlag"] == "1") {
+            return "*" + dataItem["ShelfNo"]
+        } else {
+            return dataItem["ShelfNo"];
+        }
+    }
+
+    function clientRouteGridDataBound() {
+        //if (mainRoleCD == mainCN役割_本部参照) {
+        //    var uis = $("#clientRouteGrid").find(".s-cell-onlyNum");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+        //}
+    }
+
+    function clientEditListGridDataBound() {
+        //if (mainRoleCD == mainCN役割_本部参照) {
+        //    var uis = $("#clientEditListGrid").find("[uuid]");
+        //    $.each(uis, function () {
+        //        $(this).ui().enable(false);
+        //    })
+
+        //    var uis = $("#clientEditListGrid").find(".s-cell-onlyNum");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+        //}
+    }
+
+    $("#CancelFlg").bind("change", function () {
+        if ($("#CancelFlg").prop("checked")) {
+            if (!$("#CancelFlgLabel").hasClass("CancelFlg")) {
+                $("#CancelFlgLabel").addClass("CancelFlg");
+            }
+        } else {
+            $("#CancelFlgLabel").removeClass("CancelFlg");
+        }
+    })
+
+</script>
+
+@{
+    bool editFlag = Model.ClientCD == null ? true : false;
+    bool detailFlag = Model.LastSeq != 0;
+    var postCD = Model.PostCD == null ? "" : (Model.PostCD as string).Replace("-", "");
+}
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        @using (Html.Smat().BeginForm("clientEditForm", new { @class = "panel-body", style = "padding-top:0;" }
+                ).Actions(actions =>
+                {
+                    actions.Action("/Client/Save").ActionBtn("btnEditTempSave").ConfirmFunc("getSaveConfirmMsg").CheckForm("checkForm").GetParam("getSaveParam").Success("successFunc").Error("errorFunc");
+                    actions.Action("/Client/Save").ActionBtn("btnEditSave").ConfirmFunc("getSaveConfirmMsg").CheckForm("checkForm").GetParam("getSaveParam").Success("successFunc2").Error("errorFunc");
+                    actions.Action("/Client/Del").ActionBtn("btnEditDel").ConfirmFunc("getDelConfirmMsg").IgnoreCommonCheck(true).Success("successFunc3");
+                }
+                ))
+        {
+
+            @Html.Hidden("AfterStopVisitDate", Model.AfterStopVisitDate);
+            @Html.Hidden("LastAfterStopFlag", Model.LastAfterStopFlag);
+
+            
+            <div class="row">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("btnEditTempSave").Content("一時保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @Html.Smat().Button("btnEditSave").Content("保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @(Html.Smat().Button("btnEditClose")
+                            .Content("閉じる")
+                            .HtmlAttributes(new { @class = "btn-primary" })
+                            .Events(events =>
+                            {
+                                events.Click("closeEditForm");
+                            })
+                    )
+
+                    @Html.Smat().Button("btnEditDel").Content("削除").HtmlAttributes(new { @class = "btn-danger" }).Visible(!editFlag)
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="panel-body" style="padding:0;">
+                <div id="tabstrip">
+                    <ul>
+                        <li class="s-state-active">
+                            基本情報
+                        </li>
+                        <li>
+                            初期在庫
+                        </li>
+                        <li style="display:none;">
+                            在庫照会・契約変更
+                        </li>
+                    </ul>
+                    <div>
+                        <div class="form-horizontal">
+                            @Html.Smat().TextBox("txtSeq").Name("LastSeq").Value(Model.LastSeq).HtmlAttributes(new { style = "display:none;" })
+                            @Html.Smat().TextBox("txtShopCD").Name("ShopCD").Value(ViewBag.shopCD as string).HtmlAttributes(new { style = "display:none;" })
+                            <div class="row">
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtShopName").Name("ShopName").Label("店舗").Value(ViewBag.shopName as string).MaxLength(7).HtmlAttributes(new { @class = "form-control input-s" }).Enable(false)
+                                    </div>
+                                </div>
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtEditClientName").Name("ClientName").Label(label => { label.Text("<span style='color:red;'>*</span>顧客名"); label.Attrs(new { @class = "input-s-sm" }); }).Value(Model.ClientName).MaxLength(40).HtmlAttributes(new { @class = "form-control input-s-bg s-required", style = "width: 470px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-1" style="margin-left: -20px;width: 330px;">
+                                    <div class="form-group">
+                                        @(Html.Smat().TextBox("txtClientCD")
+                                        .Name("ClientCD")
+                                        .Label(label => { label.Text("<span style='color:red;'>*</span>顧客コード"); label.Attrs(new { @class = "input-s-sm", style = "width: 100px;" }); })
+                                        .Value(Model.ClientCD)
+                                        .MaxLength(7)
+                                        .Events( e => e.Change("txtClientCDChange"))
+                                        .HtmlAttributes(new { @class = "form-control input-s s-required onlyHalfNumAlpha" })
+                                        .Enable(editFlag))
+                                    </div>
+                                </div>
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtClientKana").Name("ClientKana").Label("カナ").Value(Model.ClientKana).MaxLength(40).HtmlAttributes(new { @class = "form-control input-s-bg", style = "width: 470px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtTel").Name("Tel").Label("電話番号").Value(Model.Tel).MaxLength(16).HtmlAttributes(new { @class = "form-control input-s onlyHalfNumAlpha" })
+                                    </div>
+                                </div>
+                                <div class="col-fix-1" style="width: 300px;">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtFax").Name("Fax").Label("FAX").Value(Model.Fax).MaxLength(16).HtmlAttributes(new { @class = "form-control input-s onlyHalfNumAlpha" })
+                                    </div>
+                                </div>
+                                <div class="col-fix-1" style="width: 255px;">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtKanriClientCD").Name("KanriClientCD").Label(label => { label.Text("<span style='color:red;'>*</span>販売管理顧客コード"); label.Attrs(new { @class = "input-s-sm", style = "width: 150px;" }); }).Value(Model.KanriClientCD).MaxLength(7).HtmlAttributes(new { @class = "form-control input-s s-required onlyHalfNumAlpha", style = "width:100px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        <label class="input-s-sm control-label">郵便番号</label>
+                                        <input id="txtPostCD" name="PostCD" class="s-input s-textbox " style="width: 120px; text-align: left;" value="@(postCD)" oldval="@(postCD)" maxlength="7">
+ 
+                                    </div>
+                                </div>
+                                <div class="col-fix-2" style="width: 250px;">
+                                    <div class="form-group">
+                                        @(Html.Smat().DropDownList("ddlTransactionType")
+                                        .Name("TransactionType")
+                                        .Label(
+                                                label =>
+                                                {
+                                                    label.Text("<span style='color:red;'>*</span>取引種別");
+                                                    label.Attrs(new { @class = "input-s-date" });
+                                                }
+                                              )
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .Value(Model.TransactionType)
+                                        .CodeKind(DrinkService.Models.ModelBase.CN取引種別)
+                                        .HtmlAttributes(new {@class="s-required", style = "width:100px" })
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtAddress").Name("Address").Label("住所").Value(Model.Address).MaxLength(80).HtmlAttributes(new { @class = "form-control input-s-hg" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtEmploeeNum").Name("EmploeeNum").Label("従業員数").Value(Model.EmploeeNum).MaxLength(10
+                                        ).HtmlAttributes(new { @class = "form-control input-s-md" })
+                                    </div>
+                                </div>
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtCustomerTanto").Name("CustomerTanto").Label("担当部署").Value(Model.CustomerTanto).MaxLength(20).HtmlAttributes(new { @class = "form-control input-s" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        @(Html.Smat().DropDownList("ddlTanto")
+                                                    .Name("TantoCD")
+                                                    .Label(label =>
+                                                    {
+                                                        label.Text("<span style='color:red;'>*</span>担当者");
+                                                        label.Attrs(new { @class = "input-s-sm" });
+                                                    })
+                                                    .DataTextField("StaffName")
+                                                    .DataValueField("StaffCD")
+                                                    .Value(Model.TantoCD)
+                                                    .HtmlAttributes(new { @class = "form-control input-s-date s-required", style = "margin-left: 0px;" })
+
+                                        )
+                                    </div>
+                                </div>
+                                <div class="col-fix-2" style="width: 250px;">
+                                    <div class="form-group">
+                                        <label id="CancelFlgLabel" class="checkbox i-checks input-s-ss @(Model.CancelFlg == true ? "CancelFlg" : "")" style="width: 100px;margin-left: 90px;">解約<input id="CancelFlg" type="checkbox" @(Model.CancelFlg == true ? "checked='checked'" : "") class="chs-item" name="CancelFlg" value="1"><i style="margin-left: 5px;"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-1" style="width:430px;">
+                                    <div class="form-group">
+                                        <label class="input-s-sm control-label">ルート</label>
+                                    </div>
+                                </div>
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        <label class="input-s-sm control-label" style="text-align:left;">備考</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                @(Html.Smat().Grid("clientRouteGrid")
+                                        .Columns(columns =>
+                                        {
+                                            columns.Bound("WeekName").Title("週").Width("80px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                            columns.Bound("Rule1").Title("ルート１").Editable(true).MaxLength(4).DataType("onlyNum");
+                                            columns.Bound("Rule2").Title("ルート2").Editable(true).Width("106px").MaxLength(4).DataType("onlyNum");
+                                            columns.Bound("Rule3").Title("ルート3").Editable(true).Width("106px").MaxLength(4).DataType("onlyNum");
+                                        })
+                                        .DataSource("clientRouteGridInitDataSource")
+                                        .DataBound("clientRouteGridDataBound")
+                                        .HtmlAttributes(new { @class = "col-fix-1", style = "width:398px;" })
+                                 )
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        <textarea id="txtMemo" class="s-textbox " name="Memo" rows="8" maxlength="200" style="width: 450px;margin-left: 30px;height: 220px;resize:none;">@Model.Memo</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-fix-1" style="width: 300px;">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtShopCD1").Label("店舗").Value(ViewBag.shopName as string).MaxLength(7).HtmlAttributes(new { @class = "form-control input-s" }).Enable(false)
+                                    </div>
+                                </div>
+                                <div class="col-fix-2">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtClientName1").Label(label => { label.Text("顧客名"); label.Attrs(new { style = "width:110px;" }); }).Value(Model.ClientName).MaxLength(40).HtmlAttributes(new { @class = "form-control input-s-bg", style = "width: 450px;" }).Enable(false)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-fix-1" style="width: 300px;">
+                                    <div class="form-group">
+                                        @Html.Smat().DatePicker("txtFirstDate").Name("FirstDate").Label("設置日").Value(Model.FirstDate as DateTime?).HtmlAttributes(new { @class = " input-s", style = "margin-left: 0px;" })
+                                    </div>
+                                </div>
+
+                                <div id="afterDateBox" class="col-fix-1" style="width:270px;display:none;">
+                                    <div class="form-group">
+                                        @Html.Smat().DatePicker("txtAfterDate").Name("AfterDate").Label(label => { label.Text("後日フォロー"); label.Attrs(new { style = "width:110px;" }); }).Value(Model.AfterDate as DateTime?).Enable(Model.AfterDate != null).HtmlAttributes(new { @class = " input-s-date", style = "margin-left: 0px; " })
+                                    </div>
+                                </div>
+                                <div class="col-fix-2" style="width:320px;">
+                                    <div class="form-group">
+                                        <label class="input-s-sm control-label" style="width:110px;">キット名</label>
+                                        @(Html.Smat().DropDownList("ddlKitID")
+                                                .Name("KitID")
+                                                .DataTextField("KitName")
+                                                .DataValueField("KitID")
+                                                .Value(Model.KitID.ToString())
+                                                .HtmlAttributes(new { @class = "form-control input-s",style="width:180px;" })
+                                        )
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $("#ddlKitID").ui().uiControl.bind("change", function () {
+
+                                                    if ($("#ddlKitID").ui().value() != "") {
+                                                        if ($("#clientEditListGrid").ui().config.dataSource.length > 0) {
+
+                                                            var confirm_config = {
+                                                                msg: "初期在庫データが既にあります。変更しますか？",
+                                                                callback: function () {
+                                                                    smat.service.loadJosnData({
+                                                                        url: "/Kit/KitItemList",
+                                                                        params: {
+                                                                            ShopCD: '@ViewBag.shopCD',
+                                                                            kitID: $("#ddlKitID").ui().value()
+                                                                        },
+                                                                        success: function (result) {
+                                                                            $("#clientEditListGrid").ui().setDataSource(result);
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                            smat.service.confirm(confirm_config);
+                                                        } else {
+                                                            smat.service.loadJosnData({
+                                                                url: "/Kit/KitItemList",
+                                                                params: {
+                                                                    ShopCD: '@ViewBag.shopCD',
+                                                                    kitID: $("#ddlKitID").ui().value()
+                                                                },
+                                                                success: function (result) {
+                                                                    $("#clientEditListGrid").ui().setDataSource(result);
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-sm ">
+                                <div class="form-group m-b-none">
+                                        @(Html.Smat().Button("btnItemAdd2")
+                                            .Content("商品追加")
+                                            .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;margin-top: -10px;" })
+                                            .Events(events =>{
+                                                events.Click("addRow");
+                                            })
+                                        )
+                                </div>
+                            </div>
+
+                            <div class="row ">
+                                @(Html.Smat().Grid("clientEditListGrid")
+                                        .Columns(columns =>
+                                        {
+                                            columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                            columns.Bound("ShelfCD").Title("棚").Width("80px").HtmlAttributes(new { @class = "text-center" }).Editable(true).CodeKind(DrinkService.Models.ModelBase.CN棚).DataType("dropDownList").IsRequired(true);
+                                            columns.Bound("ShortName").Title("商品");
+                                            columns.Bound("Num").Title("数量").Width("80px").Editable(true).DataType("onlyNum").MaxLength(3).IsRequired(true);
+                                            columns.Bound("Price").Title("単価").Width("100px").Editable(true).DataType("onlyNum").MaxLength(4).Min(-1);
+                                            columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" })
+                                                    .Actions(actions =>
+                                                    {
+                                                        actions.Text("削除").ActionType("delRow").ActionConfirm("initdelConfirm");
+                                                    });
+                                        })
+                                        .DataBound("clientEditListGridDataBound")
+                                    .ValueChange("hoClientAddGridValueChange")
+                                        .SendData(sendData => {
+                                           sendData.AddDataName("clientInitItemAddList");
+                                           sendData.DeleteDataName("clientInitItemDelList");
+                                           sendData.UpdateDataName("clientInitItemUpdateList");
+                                        })
+
+                                )
+                            </div>
+
+                            <div class="row m-t-sm ">
+                                <div class="form-group m-b-none">
+                                    @(Html.Smat().Button("btnItemAdd2Bottom")
+                                            .Content("商品追加")
+                                            .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;margin-top: -10px;" })
+                                            .Events(events =>
+                                            {
+                                                events.Click("addRow");
+                                            })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-fix-1">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtShopCD2").Label("店舗").Value(ViewBag.shopName as string).MaxLength(7).HtmlAttributes(new { @class = "form-control input-s" }).Enable(false)
+                                    </div>
+                                </div>
+                                <div class="col-fix-1" style="width:400px;">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtClientName2").Label("顧客名").Value(Model.ClientName).MaxLength(40).HtmlAttributes(new { @class = "form-control input-s", style = "width:300px;" }).Enable(false)
+                                    </div>
+                                </div>
+                                <div class="col-fix-1" style="width:220px;">
+                                    <div class="form-group">
+                                        @Html.Smat().TextBox("txtHoDate").Label("補充日").HtmlAttributes(new { @class = "form-control input-s", style = "width:120px;" }).Enable(false)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-sm ">
+                                <div class="form-group m-b-none">
+                                    @(Html.Smat().Button("btnClientEditAdd")
+                                            .Content("商品追加")
+                                            .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;margin-top: -10px;" })
+                                            .Events(events =>
+                                            {
+                                                events.Click("hoClientAddGridAddRow");
+                                            })
+                                        )
+                                </div>
+                            </div>
+                            <div class="row">
+                                @(Html.Smat().Grid("hoClientGrid")
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                        columns.Bound("ShelfNo").Title("棚").Width("72px").HtmlAttributes(new { @class = "text-center cell-display" }).TemplateBound("template1");
+                                        columns.Bound("ShelfSubNo").Title("順").Width("72px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                        columns.Bound("ItemsName").Title("商品").HtmlAttributes(new { @class = "cell-display" });
+                                        columns.Bound("AfterNum").Title("在庫数").Width("70px").HtmlAttributes(new { @class = "text-right cell-display" });
+                                        columns.Bound("FreshDate").Title("賞味期限").Width("120px").DataType("Date").HtmlAttributes(new { @class = "text-center cell-display" });
+                                        columns.Bound("Price").Title("単価").Width("80px").HtmlAttributes(new { @class = "text-right txt-Price" }).DataType("onlyNum").Editable(false).MaxLength(4).Min(-1);
+                                        columns.Bound("NextPrice").Title("次回単価").Width("86px").HtmlAttributes(new { @class = "text-right" }).DataType("onlyNum").Editable(true).MaxLength(4).Min(-1);
+                                        columns.Bound("NextStopFlag").Title("中止").Width("90px").HtmlAttributes(new { @class = "text-center" }).Editable(true).DataType("checkBox");
+
+                                    })
+                                    .DataBound("hoClientGridDataBound")
+                                    .SendData(sendData => {
+                                        sendData.UpdateDataName("hoClientUpdateList");
+                                    })
+                                )
+
+                                @(Html.Smat().Grid("hoClientAddGrid")
+                                    .Columns(columns =>{
+                                        columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                        columns.Bound("ShelfNo")
+                                            .Title("棚").Width("72px")
+                                            .HtmlAttributes(new { @class = "text-center" })
+                                            .TemplateBound("templateBound1")
+                                            .IsRequired(true);
+                                        columns.Bound("ShelfSubNo")
+                                            .Title("順").Width("72px")
+                                            .HtmlAttributes(new { @class = "text-center" })
+                                            .TemplateBound("templateBound2")
+                                            .IsRequired(true);
+                                        columns.Bound("ItemsName").Title("商品").HtmlAttributes(new { @class = "cell-display" });
+                                        columns.Bound("").Title("").Width("270px").Actions(actions => {
+                                            actions.Text("削除").ActionType("delRow").ActionConfirm("delConfirm");
+                                        });
+                                        columns.Bound("NextPrice").Title("次回単価").Width("86px").HtmlAttributes(new { @class = "text-right" }).DataType("onlyNum").Editable(true).MaxLength(4).Min(-1);
+                                        columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }).Template("");
+                                    })
+                                    .DataBound("hoClientAddGridDataBound")
+                                    .SendData(sendData => {
+                                        sendData.AddDataName("hoClientAddList");
+                                        sendData.DeleteDataName("hoClientDelList");
+                                    })
+                                )
+
+                            </div>
+
+                            <div class="row m-t-sm ">
+                                <div class="form-group m-b-none">
+                                    @(Html.Smat().Button("btnClientEditAddBottom")
+                                            .Content("商品追加")
+                                            .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;margin-top: -10px;" })
+                                            .Events(events =>
+                                            {
+                                                events.Click("hoClientAddGridAddRow");
+                                            })
+                                    )
+                                </div>
+                            </div>
+                            <script id="head-template" type="text/x-asmat-template">
+
+                                <tr role="row">
+                                    <th role="columnheader" rowspan="2" class="s-header">№</th>
+                                    <th role="columnheader" rowspan="2" class="s-header">棚</th>
+                                    <th role="columnheader" rowspan="2" class="s-header">順</th>
+                                    <th role="columnheader" rowspan="2" class="s-header">商品</th>
+                                    <th role="columnheader" rowspan="1" colspan="3" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">今回</th>
+                                    <th role="columnheader" rowspan="1" colspan="2" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">次回</th>
+                                </tr>
+                                <tr role="row">
+                                    <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">在庫数</th>
+                                    <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">賞味期限</th>
+                                    <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">単価</th>
+                                    <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">単価</th>
+                                    <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">中止</th>
+                                </tr>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+</section>
+<script>
+    $(document).ready(function () {
+        
+        if (Modernizr.ie9 == true) {
+            $("#txtMemo").bind("change keydown keyup", function () {
+                if (this.value.length > 200)this.value = this.value.substring(0, 200);
+            })
+        }
+
+
+        $('#hoClientAddGrid').hide();
+
+        $('#txtEditClientName').bind('blur', function () {
+            $('#txtClientName1').val($('#txtEditClientName').val());
+            $('#txtClientName2').val($('#txtEditClientName').val());
+            
+        });
+
+        $('#hoClientGrid').ui().config.valueChange = function (dataItem, field, node) {
+
+            if (field == "NextStopFlag") {
+                if (dataItem[field] == 1) {
+                    node.closest('tr').children().addClass("tr-del");
+                } else {
+                    node.closest('tr').children().removeClass("tr-del");
+                }
+            }
+        }
+        $("#tabstrip").asmatTabStrip({});
+
+        $("#txtPostCD").keypress(function (e) { 
+            var key = e.which; 
+            if (key == 13) {
+                $("#txtAddress").focus();
+                return false;
+            }
+        });
+
+        $("#txtPostCD").onlyNum();
+        $("#txtPostCD").css("text-align", "left");
+        $("#txtPostCD").bind('blur', function () {
+            var oldValue = $(this).attr('oldVal');
+            var newValue = $(this).val();
+            $(".s-fieldError").removeClass("s-fieldError");
+           // $("#txtPostCD").removeAttr('data-error');
+
+            if (newValue != "" && newValue.length <7) {
+                smat.service.notice({ msg: "【郵便番号】7桁で入力してください。", type: "error", target: $('#txtPostCD') });
+                smat.service.addErrorBorder($('#txtPostCD'));
+                //$("#txtPostCD").attr('data-error', "error");
+                //var i = $(this);
+                //setTimeout(function () {
+                //    i.focus().select()
+                //}, 100);
+                return false;
+            }
+
+            var self = $(this);
+            
+            if (newValue != "" && newValue != oldValue) {
+                var postVal = newValue.substr(0, 3) + "-" + newValue.substr(3, 4);
+                smat.service.loadJosnData({
+                    url: "/Main/GetZipByCode",
+                    async:false,
+                    params: { "PostCD": postVal },
+                    success: function (result) {
+                        if(result.PostInfo == null){
+                            smat.service.notice({ msg: "郵便番号不正。", type: "error", target: $('#txtPostCD') });
+                            smat.service.addErrorBorder($('#txtPostCD'));
+                                //$("#txtPostCD").attr('data-error', "error");
+                                
+                                //setTimeout(function () {
+                                //    $("#txtPostCD").focus().select();
+                                //}, 100);
+                        } else {
+                            if ($.trim($("#txtAddress").val()) == "") {
+                                $("#txtAddress").val(result.PostInfo.Adress);
+                            }
+                                
+                           // $("#txtPostCD").removeAttr('data-error');
+                        }
+                    }
+                });
+               
+            }
+
+            $(this).attr('oldVal', newValue);
+            //
+        })
+
+        getClientEditData();
+        getStaffList();
+        getKitNameList();
+    });
+
+</script>
+
+   @if (detailFlag)
+    {
+        <script type="text/javascript">
+            $("#tabstrip li:last-child").show();
+        </script>
+    }
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //if ($("#txtAfterDate").prop("disabled") == true) {
+        //    $("#afterDateBox").hide();
+        //}
+
+        if ($("#ddlTransactionType").ui().value() == "") {
+            $("#ddlTransactionType").ui().value("1");
+        }
+
+        if (mainRoleCD == mainCN役割_本部参照) {
+            //smat.service.lockUIField('clientEditForm');
+            $("#btnEditTempSave").ui().visible(false);
+            $("#btnEditSave").ui().visible(false);
+            $("#btnEditDel").ui().visible(false);
+            //$("#btnItemAdd2").hide();
+            //$("#btnClientEditAdd").hide();
+            //$("#btnClientEditAddBottom").hide();
+            //$("#txtPostCD").attr("disabled", "disabled");
+            //$("#txtMemo").attr("disabled", "disabled");
+        }
+    });
+</script> 

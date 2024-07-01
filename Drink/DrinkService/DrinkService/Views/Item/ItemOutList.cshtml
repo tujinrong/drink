@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "商品出庫リスト";
+}
+<script>
+    function openItemCloseForm(dataItem) {
+        window.location.href = "DeliveryRouteListCreate.html";
+    }
+    function openItemPdfForm(dataItem) {
+        window.open("/Main/PDFView?Path=66");
+    }
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding-top:0;">
+            <div class="form-horizontal">
+                @using (Html.Smat().BeginForm("itemListForm", new { @class = "panel-body"}).Actions(actions =>
+                            {
+                                actions.Action("/Item/ItemInSearch").ActionBtn("btnSearch").ResultHandler("item-list-pager");
+                            }
+                        ))
+                {
+                    <div class="row">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @(Html.Smat().Button("btnClose")
+                                      .Content("閉じる")
+                                      .HtmlAttributes(new { @class = "btn-primary" })
+                                      .Events(events =>
+                                              {
+                                                  events.Click("openItemCloseForm");
+                                              })
+                            )
+                            @(Html.Smat().Button("item_Llist_pdf_btn")
+                                .Content("PDF出力")
+                                .HtmlAttributes(new { @class = "btn-primary" })
+                                .Events(events =>{
+                                    events.Click("openItemPdfForm");
+                                })
+                            )
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row  m-t-md m-b-md ">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="input-s-md control-label">店舗：</label>
+                            <label class="input-s control-display">南森町店</label>
+                            <label class="input-s-sm control-label">担当：</label>
+                            <label class="input-s-md control-display">田中　担当</label>
+                            <label class="input-s-sm control-label">ルート：</label>
+                            <label class="input-s-md control-display">1201</label>
+                            <label class="input-s-sm control-label">補充日：</label>
+                            <label class="input-s-md control-display">2015/02/23</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("item-list-pager").DataHandler("item-list-grid").HtmlAttributes(new { @class = "ccc1" })
+                </div>
+            </div>
+            <div class="row">
+                @(Html.Smat().Grid("item-list-grid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("ItemNo").Title("№").Width("60px").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("ItemCD").Title("商品コード").Width("120px");
+                          columns.Bound("ItemName").Title("商品名");
+                          columns.Bound("ItemInNum1").Title("実数").Width("80px").HtmlAttributes(new { @class = "text-right" });
+                          columns.Bound("ItemInNum2").Title("ケース数").Width("80px").HtmlAttributes(new { @class = "text-right" });
+                          columns.Bound("ItemInNum3").Title("端数").Width("80px").HtmlAttributes(new { @class = "text-right" });
+                      })
+                )
+            </div>
+        </div>
+    </section>
+</section>

@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="Home.html" id="home-link" class="text-muted">
+                        <i class="icon icon-home text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">店舗検索</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
+                            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                                <img src="images/temp-user.png" alt="...">
+                            </span>
+                            本社　　江坂　太郎 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight">
+                            <li>
+                                <span class="arrow top"></span>
+                                <a href="PasswordChange.html">パスワード設定</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="Login.html" >ログアウト</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:5px 20px">
+
+                                    <div class="form-horizontal">
+
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">区分</label>
+                                                    <label class="control-label radio m-l-md  i-checks input-s-sm" style="text-align:left;"><input type="radio" class="chs-item" name="name1" checked="checked"><i></i>店舗</label>
+                                                    <label class="control-label radio m-l-md  i-checks input-s-md" style="text-align:left;"><input type="radio" class="chs-item" name="name1"><i></i>管理部署</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">地域</label>
+                                                    <input id="input1" class="form-control input-s "  value="0" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">店舗</label>
+                                                    <input id="input2" type="text" class="form-control input-s s-textbox">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                                    <div class="row">
+
+
+                                        <div class="col-sm-6 text-left text-center-xs">
+                                            <button id="button1" class="btn-primary">検索</button>
+
+                                            <button id="button2" class="btn-primary">CSV</button>
+
+                                            <button id="button3" class="btn-primary">新規</button>
+
+                                        </div>
+                                        <div class="col-sm-6 text-right text-center-xs">
+                                            <ul class="pagination pagination-sm m-t-xs m-b-none">
+                                                <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                                <li><a href="#">1</a></li>
+                                                <li><a href="#">2</a></li>
+                                                <li><a href="#">3</a></li>
+                                                <li><a href="#">4</a></li>
+                                                <li><a href="#">5</a></li>
+                                                <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                    <div class="row">
+                                        <div id="demo_list" class="col-xs12 grid-no-cell-border"></div>
+                                    </div>
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        // create DropDownList from input HTML element
+        $("#input1").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "", value: "0" },
+            { text: "大阪", value: "1" },
+            { text: "東京", value: "2" },
+            { text: "神戸", value: "3" },
+            { text: "京都", value: "4" }
+            ],
+            index: 0
+        });
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton();
+        $("#button3").asmatButton({
+            click: function () { window.location.href = "ShopEdit.html"; }
+        });
+
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "11001", "FIELD2": "大阪南森町店", "FIELD3": "大阪", "FIELD4": "業務区分1", "FIELD5": "田中　一郎", "FIELD6": "店舗", "FIELD7": "20" },
+            { "FIELD1": "11002", "FIELD2": "大阪北森町店", "FIELD3": "大阪", "FIELD4": "業務区分2", "FIELD5": "田中　太郎", "FIELD6": "店舗", "FIELD7": "30" },
+            { "FIELD1": "11003", "FIELD2": "大阪東森町店", "FIELD3": "大阪", "FIELD4": "業務区分3", "FIELD5": "田中　二郎", "FIELD6": "店舗", "FIELD7": "40" },
+            { "FIELD1": "11004", "FIELD2": "大阪西森町店", "FIELD3": "大阪", "FIELD4": "業務区分1", "FIELD5": "田中　三郎", "FIELD6": "店舗", "FIELD7": "25" },
+            { "FIELD1": "11005", "FIELD2": "大阪中森町店", "FIELD3": "大阪", "FIELD4": "業務区分2", "FIELD5": "田中　四郎", "FIELD6": "店舗", "FIELD7": "26" },
+        ];
+
+        //列信息
+        var columns =
+           [
+            {
+                field: "FIELD1",
+                title: "コード",
+                headerAttributes: {
+                    style: "text-align: left; "
+                },
+                width: "100px"
+            },
+            {
+                field: "FIELD2",
+                headerAttributes: {
+                    style: "text-align: left; "
+                },
+                title: "店舗名"
+            },
+           {
+               field: "FIELD6",
+               title: "区分",
+               headerAttributes: {
+                   style: "text-align: left; "
+               },
+               width: "80px"
+           },{
+                field: "FIELD3",
+                title: "地域",
+                headerAttributes: {
+                    style: "text-align: left; "
+                },
+                width: "80px"
+            },
+            {
+                field: "FIELD4",
+                title: "店舗業務区分",
+                headerAttributes: {
+                    style: "text-align: left; "
+                },
+                width: "140px"
+            },
+            {
+                field: "",
+                title: "",
+                width: "90px",
+                attributes: {
+                    "class": "text-center"
+                },
+                template: '<button  class="btn-primary btn-command1 s-button" data-role="button" role="button" aria-disabled="false" tabindex="0">修正</button>'
+            },
+           ];
+
+        $("#demo_list").asmatGrid({
+            dataSource: dataSource,
+            sortable: true,
+            scrollable: false,
+            columns: columns,
+            dataBound: function(e) {
+
+                var btns = $("#demo_list").find(".btn-command1");
+
+                $.each(btns, function (n, value) {
+
+                    $(this).bind("click", function (e) {
+
+                        window.location.href = "ShopEdit.html";
+                    });
+                });
+
+                
+
+                $("#chs-all").bind("click", function (e) {
+                    if (this.checked == false) {
+                        //$("#demo_list").find(".chs-item").removeAttr('checked')
+                        $("#demo_list").find(".chs-item").each(function () {
+                            $(this).prop("checked", false);
+                        })
+                    }
+                    else {
+                        $("#demo_list").find(".chs-item").each(function () {
+                            $(this).prop("checked", true);
+                        })
+                    }
+
+                });
+            }
+        });
+    });
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

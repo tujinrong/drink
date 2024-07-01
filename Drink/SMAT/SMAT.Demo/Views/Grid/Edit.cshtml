@@ -1,0 +1,358 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<script>
+    function rowAdd() {
+
+        var grid = $("#demo_list").ui();
+
+        grid.addRow(
+            { "FIELD1": "new文字", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "DATE": "20150504" }
+        );
+    };
+
+    function rowDel() {
+
+        var grid = $("#demo_list").ui();
+
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            alert("请先选中行！");
+        } else {
+            grid.delRow(selectIndexs);
+        }
+    }
+
+    function cusDropDown(dataItem) {
+
+        var data = [
+            {
+                text: "值1",
+                value: "1"
+            },
+            {
+                text: "值2",
+                value: "2"
+            },
+            {
+                text: "值3",
+                value: "3"
+            }
+        ];
+
+        return data;
+    }
+
+    //数据
+    var dataSource = [
+        { "FIELD1": "文字1", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "KEY": "1", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字2", "FIELD2": 2, "FIELD3": "B", "FIELD4": "2", "KEY": "2", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字3", "FIELD2": 3, "FIELD3": "C", "FIELD4": "2", "KEY": "3", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字4", "FIELD2": 4, "FIELD3": "D", "FIELD4": "2", "KEY": "4", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字5", "FIELD2": 5, "FIELD3": "E", "FIELD4": "2", "KEY": "5", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" }
+    ];
+
+    function checkFormFunc () {
+
+        var dataSource = $("#demo_list").ui().getDataSource();
+        var ok = true;
+        var msg = "";
+        for (var index in dataSource) {
+            var dataItem = dataSource[index];
+            if (dataItem["DATE"] == undefined || dataItem["DATE"] == null || dataItem["DATE"].trim() == "") {
+                msg = "日期不能为空！";
+                grid.addErrorMark(index, 3);
+                ok = false;
+            }
+        }
+        if (ok == false) {
+            alert(msg);
+        }
+        return ok;
+    }
+
+    function getParamFunc (param) {
+        var str = "updateList的值：" + JSON.stringify(param.updateList) + "\n";
+        str = str + "addList的值：" + JSON.stringify(param.addList) + "\n";
+        str = str + "deleteList的值：" + JSON.stringify(param.deleteList) + "\n";
+
+        str = str + "selectedList的值：" + JSON.stringify(param.selectedList) + "\n";
+
+        alert(str);
+    }
+
+</script>
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="form" class="form-horizontal">
+          @using (Html.Smat().BeginForm("form", new { @class = "form-horizontal" })
+              .Actions(actions => {
+                  actions.Action("").ActionBtn("actionBtn").CheckForm("checkFormFunc").GetParam("getParamFunc");
+              }))
+          {
+
+          }
+            <div>
+                <dl class="s-dl addmargin s-f-right">
+                    <dt style="width:350px; margin-right:40px;">
+                        @Html.Smat().Button("row_addBtn").Content("行追加").HtmlAttributes(new { @class = "btn-primary" }).Events(events => { events.Click("rowAdd"); })
+                        @Html.Smat().Button("row_delBtn").Content("行删除").HtmlAttributes(new { @class = "btn-primary" }).Events(events => { events.Click("rowDel"); })
+                        @Html.Smat().Button("actionBtn").Content("保存").HtmlAttributes(new { @class = "btn-primary" })
+                    </dt>
+                </dl>
+            </div>
+            <div id="demo_list"></div>
+            @(Html.Smat().Grid("demo_list")
+                .Columns(columns =>
+                    {
+                        columns.Bound("").DataType("checkBox-selecter").Width("40px").CheckAll(true).SelectedDataName("selectedList");
+                        columns.Bound("FIELD1").Title("字段1").Editable(true);
+                        columns.Bound("FIELD2").Title("数值").Editable(true).DataType("number").Max(10).Min(0);
+                        columns.Bound("FIELD3")
+                            .Title("字段3")
+                            .Editable(true)
+                            .GetReferParam(@"
+                                function (e){
+                                    var p = {
+                                        p1: 'test'
+                                    };
+
+                                    alert('自定义参数：p');
+                                    return p;
+                                }
+                            ")
+                            .ReferSelected(@"
+                                function (data) {
+                                    alert('refer返回：data');
+                                }
+                            ").ValueField("FIELD4").ReferKey("referDemo").ReferValueField("MODULE_CD").ReferDisplayField("MODULE_NAME");
+                        columns.Bound("DATE").Title("日期字段").Editable(true).DataType("Date");
+                        columns.Bound("onlyNum").Title("只能输入数字").Editable(true).DataType("onlyNum").MaxLength(3);
+                        columns.Bound("onlyAlpha").Title("只能输入英文").Editable(true).DataType("onlyAlpha").MaxLength(4);
+                        columns.Bound("onlyNumAlpha").Title("只能输入英数").Editable(true).DataType("onlyNumAlpha").MaxLength(5);
+                        columns.Bound("Drop1_text").Title("自定义下拉").ValueField("Drop1").Editable("InCell").DataType("dropDownList").EditorDataSource("cusDropDown");
+                        columns.Bound("Drop2").Title("codeMst下拉").CodeKind("00").Editable(true).DataType("dropDownList");
+                    }
+                    ).DataSource("dataSource")
+                    .SendData(setData => {
+                        setData.UpdateDataName("updateList");   //对应后台action中"updateList"变量
+                        setData.AddDataName("addList");         //对应后台action中"addListName"变量
+                        setData.UpdateDataName("updateList");   //对应后台action中"deleteListName"变量
+                    })
+                    .CheckCellEditable(@"
+                        function (dataItem, field) {  //根据dataItem判断cell是否可以编辑
+                            if (field == 'onlyNum' && dataItem['onlyNum'] > 5) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    ")
+            )
+
+        </div>
+    </div>
+</section>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+  
+smatscript
+    function rowAdd() {
+
+        var grid = $("#demo_list").ui();
+
+        grid.addRow(
+            { "FIELD1": "new文字", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "DATE": "20150504" }
+        );
+    };
+
+    function rowDel() {
+
+        var grid = $("#demo_list").ui();
+
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            alert("请先选中行！");
+        } else {
+            grid.delRow(selectIndexs);
+        }
+    }
+
+    function cusDropDown(dataItem) {
+
+        var data = [
+            {
+                text: "值1",
+                value: "1"
+            },
+            {
+                text: "值2",
+                value: "2"
+            },
+            {
+                text: "值3",
+                value: "3"
+            }
+        ];
+
+        return data;
+    }
+
+    //数据
+    var dataSource = [
+        { "FIELD1": "文字1", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "KEY": "1", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字2", "FIELD2": 2, "FIELD3": "B", "FIELD4": "2", "KEY": "2", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字3", "FIELD2": 3, "FIELD3": "C", "FIELD4": "2", "KEY": "3", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字4", "FIELD2": 4, "FIELD3": "D", "FIELD4": "2", "KEY": "4", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+        { "FIELD1": "文字5", "FIELD2": 5, "FIELD3": "E", "FIELD4": "2", "KEY": "5", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" }
+    ];
+
+    function checkFormFunc () {
+
+        var dataSource = $("#demo_list").ui().getDataSource();
+        var ok = true;
+        var msg = "";
+        for (var index in dataSource) {
+            var dataItem = dataSource[index];
+            if (dataItem["DATE"] == undefined || dataItem["DATE"] == null || dataItem["DATE"].trim() == "") {
+                msg = "日期不能为空！";
+                grid.addErrorMark(index, 3);
+                ok = false;
+            }
+        }
+        if (ok == false) {
+            alert(msg);
+        }
+        return ok;
+    }
+
+    function getParamFunc (param) {
+        var str = "updateList的值：" + JSON.stringify(param.updateList) + "\n";
+        str = str + "addList的值：" + JSON.stringify(param.addList) + "\n";
+        str = str + "deleteList的值：" + JSON.stringify(param.deleteList) + "\n";
+
+        str = str + "selectedList的值：" + JSON.stringify(param.selectedList) + "\n";
+
+        alert(str);
+    }
+
+smat2script
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="form" class="form-horizontal">
+          @@using (Html.Smat().BeginForm("form", new { @@class = "form-horizontal" })
+              .Actions(actions => {
+                  actions.Action("").ActionBtn("actionBtn").CheckForm("checkFormFunc").GetParam("getParamFunc");
+              }))
+          {
+
+          }
+            <div>
+                <dl class="s-dl addmargin s-f-right">
+                    <dt style="width:350px; margin-right:40px;">
+                        @@Html.Smat().Button("row_addBtn").Content("行追加").HtmlAttributes(new { @@class = "btn-primary" }).Events(events => { events.Click("rowAdd"); })
+                        @@Html.Smat().Button("row_delBtn").Content("行删除").HtmlAttributes(new { @@class = "btn-primary" }).Events(events => { events.Click("rowDel"); })
+                        @@Html.Smat().Button("actionBtn").Content("保存").HtmlAttributes(new { @@class = "btn-primary" })
+                    </dt>
+                </dl>
+            </div>
+            <div id="demo_list"></div>
+            @@(Html.Smat().Grid("demo_list")
+                .Columns(columns =>
+                    {
+                        columns.Bound("").DataType("checkBox-selecter").Width("40px").CheckAll(true).SelectedDataName("selectedList");
+                        columns.Bound("FIELD1").Title("字段1").Editable(true);
+                        columns.Bound("FIELD2").Title("数值").Editable(true).DataType("number").Max(10).Min(0);
+                        columns.Bound("FIELD3")
+                            .Title("字段3")
+                            .Editable(true)
+                            .GetReferParam(@@"
+                                function (e){
+                                    var p = {
+                                        p1: 'test'
+                                    };
+
+                                    alert('自定义参数：p');
+                                    return p;
+                                }
+                            ")
+                            .ReferSelected(@@"
+                                function (data) {
+                                    alert('refer返回：data');
+                                }
+                            ").ValueField("FIELD4").ReferKey("referDemo").ReferValueField("MODULE_CD").ReferDisplayField("MODULE_NAME");
+                        columns.Bound("DATE").Title("日期字段").Editable(true).DataType("Date");
+                        columns.Bound("onlyNum").Title("只能输入数字").Editable(true).DataType("onlyNum").MaxLength(3);
+                        columns.Bound("onlyAlpha").Title("只能输入英文").Editable(true).DataType("onlyAlpha").MaxLength(4);
+                        columns.Bound("onlyNumAlpha").Title("只能输入英数").Editable(true).DataType("onlyNumAlpha").MaxLength(5);
+                        columns.Bound("Drop1_text").Title("自定义下拉").ValueField("Drop1").Editable("InCell").DataType("dropDownList").EditorDataSource("cusDropDown");
+                        columns.Bound("Drop2").Title("codeMst下拉").CodeKind("00").Editable(true).DataType("dropDownList");
+                    }
+                    ).DataSource("dataSource")
+                    .SendData(setData => {
+                        setData.UpdateDataName("updateList");   //对应后台action中"updateList"变量
+                        setData.AddDataName("addList");         //对应后台action中"addListName"变量
+                        setData.UpdateDataName("updateList");   //对应后台action中"deleteListName"变量
+                    })
+                    .CheckCellEditable(@@"
+                        function (dataItem, field) {  //根据dataItem判断cell是否可以编辑
+                            if (field == 'onlyNum' && dataItem['onlyNum'] > 5) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    ")
+            )
+
+        </div>
+    </div>
+</section>
+
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+    hljs.configure({ tabReplace: '    ' }); // 4 spaces
+    $('pre code').each(function (i, e) {
+
+        if ($(this).find('.source-code').length > 0) {
+
+            $(this).html((asmat.htmlEncode($(this).find('.source-code').html())).replace(new RegExp("smatscript", "gm"), "&lt;script&gt;").replace(new RegExp("smat2script", "gm"), "&lt;/script&gt;"));
+
+        }
+
+        hljs.highlightBlock(e)
+    });
+</script>

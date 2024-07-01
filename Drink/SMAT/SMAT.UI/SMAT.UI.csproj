@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{03462DCF-F34F-4F0F-8504-451D475932AB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ASMAT.UI</RootNamespace>
+    <AssemblyName>ASMAT.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SMAT.UI\images\temp-user.png" />
+    <Content Include="SMAT.UI\Scripts\asmat.all.min.js" />
+    <Content Include="SMAT.UI\Scripts\jquery.min.js" />
+    <Content Include="SMAT.UI\Scripts\js\app.js" />
+    <Content Include="SMAT.UI\Scripts\js\app.plugin.js" />
+    <Content Include="SMAT.UI\Scripts\js\bootstrap.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\excanvas.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\html5shiv.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\respond.min.js" />
+    <Content Include="SMAT.UI\Scripts\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="SMAT.UI\Scripts\smat.core.js" />
+    <Content Include="SMAT.UI\Scripts\smat.Service.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.js" />
+    <Content Include="SMAT.UI\Styles\asmat.common-material.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.common.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.material.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.mobile.all.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.silver.min.css" />
+    <Content Include="SMAT.UI\Styles\css\animate.css" />
+    <Content Include="SMAT.UI\Styles\css\app.css" />
+    <Content Include="SMAT.UI\Styles\css\bootstrap.css" />
+    <Content Include="SMAT.UI\Styles\css\font-awesome.min.css" />
+    <Content Include="SMAT.UI\Styles\css\font.css" />
+    <Content Include="SMAT.UI\Styles\css\simple-line-icons.css" />
+    <Content Include="SMAT.UI\Styles\fonts\fontawesome-webfont.svg" />
+    <Content Include="SMAT.UI\Styles\fonts\Simple-Line-Icons.dev.svg" />
+    <Content Include="SMAT.UI\Styles\fonts\Simple-Line-Icons.svg" />
+    <Content Include="SMAT.UI\Styles\Material\editor.png" />
+    <Content Include="SMAT.UI\Styles\Material\imagebrowser.png" />
+    <Content Include="SMAT.UI\Styles\Material\indeterminate.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading-image.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading_2x.gif" />
+    <Content Include="SMAT.UI\Styles\Material\slider-h.gif" />
+    <Content Include="SMAT.UI\Styles\Material\slider-v.gif" />
+    <Content Include="SMAT.UI\Styles\Material\sprite.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_2x.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_kpi.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_kpi_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\editor.png" />
+    <Content Include="SMAT.UI\Styles\Silver\imagebrowser.png" />
+    <Content Include="SMAT.UI\Styles\Silver\indeterminate.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading-image.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading_2x.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\markers.png" />
+    <Content Include="SMAT.UI\Styles\Silver\markers_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\slider-h.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\slider-v.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_kpi.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_kpi_2x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SMAT.UI\Styles\fonts\fontawesome-webfont.eot" />
+    <None Include="SMAT.UI\Styles\fonts\fontawesome-webfont.ttf" />
+    <None Include="SMAT.UI\Styles\fonts\fontawesome-webfont.woff" />
+    <None Include="SMAT.UI\Styles\fonts\FontAwesome.otf" />
+    <None Include="SMAT.UI\Styles\fonts\Simple-Line-Icons.eot" />
+    <None Include="SMAT.UI\Styles\fonts\Simple-Line-Icons.ttf" />
+    <None Include="SMAT.UI\Styles\fonts\Simple-Line-Icons.woff" />
+    <None Include="SMAT.UI\Styles\fonts\sourcesanspro\sourcesanspro-bold.woff" />
+    <None Include="SMAT.UI\Styles\fonts\sourcesanspro\sourcesanspro-light.woff" />
+    <None Include="SMAT.UI\Styles\fonts\sourcesanspro\sourcesanspro.woff" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.TelRateRptViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<p>
+    @Html.ActionLink("再建策", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            エリア
+        </th>
+        <th>
+            グループ
+        </th>
+        <th>
+            店舗
+        </th>
+        <th>
+            担当
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AreaCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GroupCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShopCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StaffName)
+        </td>
+
+    </tr>
+}
+
+</table>

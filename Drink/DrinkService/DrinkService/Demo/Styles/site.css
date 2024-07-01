@@ -1,0 +1,341 @@
+html {
+  background-color: #fff;
+}
+body {
+    font-size: 16px;
+}
+
+td.cell-display {
+background-color: #F7FAFA;
+}
+
+.input-s-md {
+  width: 120px;
+}
+
+.input-s-date {
+  width: 140px;
+}
+
+@media (min-width: 768px) {
+  
+    .col-fix-1, .col-fix-2, .col-fix-3, .col-fix-4, .col-fix-5, .col-fix-6 {
+    float: left;
+  }
+
+  .col-fix-3 {
+    width: 1000px;
+  }
+  .col-fix-2 {
+    width: 650px;
+  }
+  .col-fix-1 {
+    width: 310px;
+  }
+  
+.input-s-ss {
+  width: 60px;
+}
+ .input-s-sm {
+  width: 80px;
+}
+  .input-s-md {
+  width: 110px;
+}
+.input-s {
+  width: 200px;
+}
+.input-s-lg {
+  width: 320px;
+}
+
+.input-s-bg {
+  width: 420px;
+}
+
+.input-s-hg {
+  width: 510px;
+}
+
+    .header-md .navbar-brand {
+    line-height: 40px;
+  }
+  .header-md .navbar-brand img {
+    max-height: 30px;
+  }
+  .header-md .navbar-nav > li > a {
+    padding: 10px 20px;
+  }
+}
+
+.panel {
+  border:none;
+}
+
+.header.navbar {
+    border-bottom: 1px solid #ccc;
+}
+
+
+  .vbox > header.header-md ~ section {
+    top: 40px;
+  }
+
+    .header-md {
+    min-height: 40px;
+  }
+  .header-md .navbar-form {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .btn-primary {
+  color: #fff !important;
+  background-color: #3F81FA;
+  border-color: #3F81FA;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  color: #fff !important;
+  background-color: #3B76E0;
+  border-color: #3B76E0;
+}
+
+.btn-warning {
+  color: #fff !important;
+  background-color: #F46E1D;
+  border-color: #F46E1D;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active,
+.open .dropdown-toggle.btn-warning {
+  color: #fff !important;
+  background-color: #E86A1D;
+  border-color: #E86A1D;
+}
+
+.btn-danger {
+  color: #fff !important;
+  background-color: #BE0000;
+  border-color: #BE0000;
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  color: #fff !important;
+  background-color: #BA3535;
+  border-color: #BA3535;
+}
+
+.bg-black.dk,
+.bg-black .dk {
+  background-color: #232c32;
+}
+
+.bg-black.bg,
+.bg-black .bg {
+  background-color: #35434C;
+}
+
+.bg-info.dker,
+.bg-info .dker {
+  background-color: #2E7DB6;
+}
+
+.bg-black .nav > li > a {
+  color: #F4F9FC;
+}
+.bg-black .text-muted {
+  color: #F4F9FC !important;
+}
+
+.text-primary {
+  color: #3F81FA;
+}
+
+.wrapper {
+  padding: 5px 15px;
+}
+
+.b-t {
+  border-top: 1px solid #3F81FA;
+}
+.b-r {
+  border-right: 1px solid #3F81FA;
+}
+.b-b {
+  border-bottom: 1px solid #3F81FA;
+}
+.b-l {
+  border-left: 1px solid #3F81FA;
+}
+
+.panel.panel-home .panel-brand {
+  font-size: 18px;
+}
+
+.panel.panel-home a:hover{
+  text-decoration:none ;
+  cursor:hand;
+}
+
+.form-horizontal label.checkbox {
+float: left;
+}
+
+.form-horizontal td label.checkbox {
+float: none;
+}
+.panel-title {
+font-size: 20px;
+}
+
+a#home-link {
+font-size: x-large;
+padding: 8px 16px;
+color:#3F81FA;
+background-color:#EDF2F3;
+border-right: 1px solid #ccc;
+}
+
+.form-horizontal .control-display{
+padding-top: 7px;
+margin-top: 0;
+margin-bottom: 0;
+float:left;
+text-align:left;
+}
+
+/* ssssssssssssssssssssssssssssssssssss */
+ .s-autocomplete, .s-dropdown-wrap, .s-picker-wrap, .s-numeric-wrap {
+padding: 0 2.2em 0 0;
+}
+
+ .s-textbox>input, .s-autocomplete .s-input, .s-picker-wrap .s-input, .s-numeric-wrap .s-input, .s-dropdown-wrap .s-input, .s-selectbox .s-input {
+padding: .177em 0 .137em 0;
+}
+
+ .s-grid .s-alt {
+background-color: #fff;
+}
+ .s-grid-header th.s-header, .s-filter-row th {
+padding: .486em .6em .414em .6em;
+}
+.s-textbox>input, .s-autocomplete .s-input, .s-picker-wrap .s-input, .s-numeric-wrap .s-input, .s-dropdown-wrap .s-input, .s-selectbox .s-input {
+
+text-indent: .6em;
+}
+.s-grid td {
+ padding: .209em .286em;
+}
+
+.grid-no-cell-border tr td {
+border-width: 1px 0px 0 0px;
+}
+
+
+.grid-no-cell-border .s-grid-header th.s-header{
+border-width: 0 0px 1px 0px;
+}
+.s-datepicker .s-input, .s-timepicker .s-input {
+background-color: #fff;
+border-right: 1px solid #eee;
+}
+
+.s-input, input.s-textbox, textarea.s-textbox, input.s-textbox:hover, textarea.s-textbox:hover, .s-textbox>input, .s-multiselect-wrap {
+margin-left: 5px;
+}
+
+.s-grid-header .s-header{
+background-color: #EDEDED;
+}
+
+.s-context-menu.s-menu-vertical>.s-item>.s-link, .s-menu .s-menu-group .s-item>.s-link {
+padding: .5em 1.829em .5em 1.714em;
+}
+
+.s-textbox {
+border-color: #ddd;
+}
+.s-tabstrip .s-content.s-state-active {
+border-color: #ccc;
+}
+.s-tabstrip .s-tabstrip-items {
+background-color: #E8ECEC;
+border-top: 1px solid #ccc;
+border-left: 1px solid #ccc;
+border-right: 1px solid #ccc;
+border-radius: 2px 2px 0 0;
+}
+
+.s-tabstrip-items>.s-item {
+border-bottom-width: 0;
+background: none;
+border-right-width: 1px;
+border-right-style: solid;
+border-right-color: #ccc;
+}
+.s-tabstrip-items .s-state-active {
+background-color: #fff;
+border-color: #ddd;
+border-bottom-color: #fff;
+border-bottom-width: 2px;
+border-top-width: 0px;
+}
+.s-tabstrip-items .s-state-default .s-link {
+color: #788188;
+}
+.s-tabstrip-items .s-loading {
+
+border-top: 0px solid transparent;
+
+}
+.s-tabstrip-items>.s-item:first-child {
+border-left-width:0px;
+border-radius: 2px 0 0 0;
+}
+.s-tabstrip-items .s-item.s-state-hover {
+background: #EFF2F2;
+border-color: #EFF2F2;
+}
+
+.s-autocomplete.s-state-default, .s-picker-wrap.s-state-default, .s-numeric-wrap.s-state-default, .s-dropdown-wrap.s-state-default {
+border-color: #ccc;
+}
+
+.s-tabstrip>.s-content, .s-panelbar .s-tabstrip>.s-content {
+padding: .3em 1.92em;
+}
+td input.s-textbox {
+margin-left: 0px;
+}
+td input.s-textbox:hover {
+margin-left: 0px;
+}
+
+.s-textbox:focus, .s-autocomplete.s-state-active, .s-picker-wrap.s-state-active, .s-numeric-wrap.s-state-active, .s-dropdown-wrap.s-state-active, .s-multiselect.s-header.s-state-active {
+border-color: #e5e5e5;
+}
+
+.s-tabstrip-items .s-link {
+padding: .3em 1.071em .4em 1.071em;
+}
+
+.s-header, .s-grid-header-wrap, .s-grid .s-grouping-header, .s-grid-header, .s-pager-wrap, .s-pager-wrap .s-textbox, .s-pager-wrap .s-link, .s-gantt-toolbar .s-state-default, .s-grouping-row td, .s-group-footer td, .s-grid-footer td {
+border-color: #ccc;
+}
+.s-block, .s-widget, .s-input, .s-textbox, .s-group, .s-content, .s-header, .s-filter-row>th, .s-editable-area, .s-separator, .s-colorpicker .s-i-arrow-s, .s-textbox>input, .s-autocomplete, .s-dropdown-wrap, .s-toolbar, .s-group-footer td, .s-grid-footer, .s-footer-template td, .s-state-default, .s-state-default .s-select, .s-state-disabled, .s-grid-header, .s-grid-header-wrap, .s-grid-header-locked, .s-grid-footer-locked, .s-grid-content-locked, .s-grid td, .s-grid td.s-state-selected, .s-grid-footer-wrap, .s-pager-wrap, .s-pager-wrap .s-link, .s-pager-refresh, .s-grouping-header, .s-grouping-header .s-group-indicator, .s-panelbar>.s-item>.s-link, .s-panel>.s-item>.s-link, .s-panelbar .s-panel, .s-panelbar .s-content, .s-treemap-tile, .s-calendar th, .s-slider-track, .s-splitbar, .s-dropzone-active, .s-tiles, .s-toolbar, .s-tooltip, .s-button-group .s-tool, .s-upload-files {
+border-color: #ccc;
+}
+
+.s-state-default .s-select {
+    border-left-color: #fff;
+}
+ /* ssssssssssssssssssssssssssssssssssss */

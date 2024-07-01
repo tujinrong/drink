@@ -1,0 +1,44 @@
+﻿@{
+    if (ViewBag.type == "SimpleYList"
+        || ViewBag.type == "SimpleMasterList"
+        || ViewBag.type == "SimpleMasterEdit")
+    {
+        ViewBag.Title = "システム構成";
+    }
+    else {
+        ViewBag.Title = "データ抽出";
+    }
+}
+
+<div id="dy_desinger_form_list"></div>
+
+<script>
+
+    smat.uiConfig.CodeMst = {
+        cache: true,
+        codeListUrl: "/Dynamics/GetOptionSet",
+        kindField: "OptSetName",
+        codeField: "CD",
+        nameField: "Name",
+        memoField: "Memo"
+
+    }
+
+    smat.global.codeMst = {};
+    smat.global.codeMstMap = {};
+    smat.globalInit();
+    smat.global.ignoreGlobalInit = false;
+
+    var type = "@ViewBag.type";
+
+    smat.dynamics.role.type = "9";
+
+
+
+    $("#dy_desinger_form_list").smatDynamicsdFormList({
+        type: type,
+        belong: ""
+    });
+
+</script>
+

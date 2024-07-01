@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = ViewBag.FormName;
+}
+
+<div id="form_designer"></div>
+<script>
+
+    //$("#aside_btn").removeClass('active');
+    //$("#nav").addClass('nav-xs');
+    //$(".navbar-header").addClass('nav-xs');
+
+    var projID = "@ViewBag.ProjID";
+    var formName = "@ViewBag.FormName";
+    var entityName = "@ViewBag.EntityName";
+    var templateType = "@ViewBag.type";
+    $("#form_designer").smatDynamicsdDesigner({
+        projID: projID,
+        formName: formName,
+        entityName: entityName,
+        titleTarget:$('#title-text'),
+        templateType: templateType
+    });
+
+</script>
+

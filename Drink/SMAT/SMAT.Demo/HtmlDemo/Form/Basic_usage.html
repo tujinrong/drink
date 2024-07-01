@@ -1,0 +1,332 @@
+﻿<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal" id="refer-demo-pics-form">
+
+            <div class="row">
+                <div class="form-group col-fix-1">
+                    <label class="input-s-sm control-label">Id</label>
+                    <input type="text" name="Id" class="input-s s-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-fix-2">
+                    <label class="input-s-sm control-label">FirstName</label>
+                    <input type="text" name="FirstName" class="input-s-lg s-textbox" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-2">
+                    <div class="form-group">
+                        <button id="refer-demo-pics-search-btn" class="btn-primary s-button" style="margin-left:30px;">検索</button>
+                        <button id="refer-demo-pics-search-btn2" class="btn-primary s-button" style="margin-left:30px;">検索2</button>
+                        <button id="refer-demo-pics-search-btn3" class="btn-primary s-button" style="margin-left:30px;">検索3</button>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row">
+
+                <div class="col-sm-11 text-right text-center-xs">
+                    <div id="refer-demo-pics-pager" class="ccc1"></div>
+                </div>
+            </div>
+            <div id="refer-demo-pics-grid"></div>
+        </div>
+    </div>
+</section>
+<script>
+
+    //列信息
+    var columns =
+       [
+        {
+            field: "Id",
+            title: "Id",
+            width: "60px",
+            template: "<strong>#: Id # </strong>"
+        },
+        {
+            field: "FirstName",
+            title: "FirstName"
+        },
+        {
+            field: "LastName",
+            title: "LastName"
+        },
+        {
+            field: "Episodes",
+            title: "Episodes"
+        }, {
+            field: "",
+            title: "",
+            width: "120px",
+            attributes: {
+                "class": "text-center"
+            },
+            actions: [
+                {
+                    text: 'Pick Me!',
+                    click: function (dataItem) {
+
+                    }
+                }
+            ]
+
+        }
+       ];
+
+    //初始化grid
+    $("#refer-demo-pics-grid").smatGrid({
+        columns: columns,           //列信息
+    });
+
+    $("#refer-demo-pics-form").smatForm({
+        action: "/Refer/PersonSearch",
+        actionBtn: "refer-demo-pics-search-btn",
+        resultHandler: "refer-demo-pics-pager",
+        checkForm: function () {
+
+            alert("checkForm1")
+            return true;
+        },
+        getParam: function (param) {
+            param["p3"] = 1;
+
+            alert("P3:" + param["p3"]);
+        },
+        success: function (result) {
+            alert("success1");
+        },
+        actions: [
+                {
+                    action: "/Refer/PersonSearch2",
+                    actionBtn: "refer-demo-pics-search-btn2",
+                    resultHandler: "refer-demo-pics-pager",
+                    checkForm: function () {
+
+                        alert("checkForm2")
+                        return true;
+                    },
+                    getParam: function (param) {
+                        param["p3"] = 2;
+
+                        alert("P3:" + param["p3"]);
+                    },
+                    success: function (result) {
+                        alert("success2");
+                    }
+                },
+                {
+                    action: "/Refer/PersonSearch3",
+                    actionBtn: "refer-demo-pics-search-btn3",
+                    resultHandler: "refer-demo-pics-pager",
+                    checkForm: function () {
+
+                        alert("checkForm3")
+                        return true;
+                    },
+                    getParam: function (param) {
+                        param["p3"] = 3;
+
+                        alert("P3:" + param["p3"]);
+                    },
+                    success: function (result) {
+                        alert("success3");
+                    }
+                }
+        ]
+    });
+
+    $("#refer-demo-pics-pager").smatPager({
+        dataHandler: "refer-demo-pics-grid"
+    });
+
+</script>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal" id="refer-demo-pics-form">
+            <div class="row">
+                <div class="form-group col-fix-1">
+                    <label class="input-s-sm control-label">Id</label>
+                    <input type="text" name="Id" class="input-s s-textbox" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-fix-2">
+                    <label class="input-s-sm control-label">FirstName</label>
+                    <input type="text" name="FirstName" class="input-s-lg s-textbox" />
+                </div>
+            </div>
+            <div class="row">
+                 <div class="col-fix-2">
+                    <div class="form-group">
+                        <button id="refer-demo-pics-search-btn" class="btn-primary s-button" style="margin-left:30px;">検索</button>
+                        <button id="refer-demo-pics-search-btn2" class="btn-primary s-button" style="margin-left:30px;">検索2</button>
+                        <button id="refer-demo-pics-search-btn3" class="btn-primary s-button" style="margin-left:30px;">検索3</button>
+                    </div>
+                </div>
+            </div>
+                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                    <div class="row">
+                    <div class="col-sm-11 text-right text-center-xs">
+                    <div id="refer-demo-pics-pager" class="ccc1"></div>
+                </div>
+            </div>
+                    <div id="refer-demo-pics-grid"></div>
+        </div>
+    </div>
+</section>
+<script>
+
+    //列信息
+    var columns =
+       [
+        {
+            field: "Id",
+            title: "Id",
+            width: "60px",
+            template: "<strong>#: Id # </strong>"
+        },
+        {
+            field: "FirstName",
+            title: "FirstName"
+        },
+        {
+            field: "LastName",
+            title: "LastName"
+        },
+        {
+            field: "Episodes",
+            title: "Episodes"
+        }, {
+            field: "",
+            title: "",
+            width: "120px",
+            attributes: {
+                "class": "text-center"
+            },
+            actions: [
+                {
+                    text: 'Pick Me!',
+                    click: function (dataItem) {
+
+                    }
+                }
+            ]
+
+        }
+       ];
+
+    //初始化grid
+    $("#refer-demo-pics-grid").smatGrid({
+        columns: columns,           //列信息
+    });
+
+    $("#refer-demo-pics-form").smatForm({
+        action: "/Refer/PersonSearch",
+        actionBtn: "refer-demo-pics-search-btn",
+        resultHandler: "refer-demo-pics-pager",
+        checkForm: function () {
+
+            alert("checkForm1")
+            return true;
+        },
+        getParam: function (param) {
+            param["p3"] = 1;
+
+            alert("P3:" + param["p3"]);
+        },
+        success: function (result) {
+            alert("success1");
+        },
+        actions: [
+                {
+                    action: "/Refer/PersonSearch",
+                    actionBtn: "refer-demo-pics-search-btn2",
+                    resultHandler: "refer-demo-pics-pager",
+                    checkForm: function () {
+
+                        alert("checkForm2")
+                        return true;
+                    },
+                    getParam: function (param) {
+                        param["p3"] = 2;
+
+                        alert("P3:" + param["p3"]);
+                    },
+                    success: function (result) {
+                        alert("success2");
+                    }
+                },
+                {
+                    action: "/Refer/PersonSearch",
+                    actionBtn: "refer-demo-pics-search-btn3",
+                    resultHandler: "refer-demo-pics-pager",
+                    checkForm: function () {
+
+                        alert("checkForm3")
+                        return true;
+                    },
+                    getParam: function (param) {
+                        param["p3"] = 3;
+
+                        alert("P3:" + param["p3"]);
+                    },
+                    success: function (result) {
+                        alert("success3");
+                    }
+                }
+        ]
+    });
+
+    $("#refer-demo-pics-pager").smatPager({
+        dataHandler: "refer-demo-pics-grid"
+    });
+
+</script>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+	hljs.configure({tabReplace: '    '}); // 4 spaces
+	$('pre code').each(function (i, e) {
+
+	    if ($(this).find('.source-code').length > 0) {
+
+	       $(this).html((asmat.htmlEncode($(this).find('.source-code').html())) + " &lt;/script&gt;");
+
+	    }
+
+	    hljs.highlightBlock(e)
+	});
+</script>

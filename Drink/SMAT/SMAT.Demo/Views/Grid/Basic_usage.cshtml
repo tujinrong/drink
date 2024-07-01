@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<script>
+
+    function templatBoundFunc1(dataItem) {
+        if (dataItem.FIELD2 == true) {
+            return "<img src='/Content/images/accept.png'>";
+        } else {
+            return "<img src='/Content/images/crossout.png'>";
+        }
+    }
+
+    function templatBoundFunc2(dataItem) {
+        var result = "";
+        for (var i = 0; i < dataItem.FIELD3; i++) {
+            result = result + "<img src='/Content/images/star.png'>";
+        }
+        return result;
+    }
+
+</script>
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            @(Html.Smat().Grid("grid")
+                  .Columns(columns =>
+                    { 
+                        columns.Bound("FIELD1").Title("粗体").Template("<strong>#: FIELD1 # </strong>");
+                        columns.Bound("FIELD2").Title("是否收藏").TemplateBound("templatBoundFunc1");
+                        columns.Bound("FIELD3").Title("指数").TemplateBound("templatBoundFunc2");
+                    })
+                  .DataSource(new List<object>(){
+                    new { FIELD1 = "粗体1", FIELD2 = true, FIELD3 = 5 },
+                    new { FIELD1 = "粗体2", FIELD2 = true, FIELD3 = 4 },
+                    new { FIELD1 = "粗体3", FIELD2 = false,FIELD3 = 4 },
+                    new { FIELD1 = "粗体4", FIELD2 = true, FIELD3 = 3 },
+                    new { FIELD1 = "粗体5", FIELD2 = false,FIELD3 = 2 }
+                  })
+            )
+
+        </div>
+    </div>
+</section>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+
+smatscript
+
+    function templatBoundFunc1(dataItem) {
+        if (dataItem.FIELD2 == true) {
+            return "<img src='/Content/images/accept.png'>";
+        } else {
+            return "<img src='/Content/images/crossout.png'>";
+        }
+    }
+
+    function templatBoundFunc2(dataItem) {
+        var result = "";
+        for (var i = 0; i < dataItem.FIELD3; i++) {
+            result = result + "<img src='/Content/images/star.png'>";
+        }
+        return result;
+    }
+
+smat2script
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            @@(Html.Smat().Grid("grid")
+                  .Columns(columns =>
+                    { 
+                        columns.Bound("FIELD1").Title("粗体").Template("<strong>#: FIELD1 # </strong>");
+                        columns.Bound("FIELD2").Title("是否收藏").TemplatBound("templatBoundFunc1");
+                        columns.Bound("FIELD3").Title("指数").TemplatBound("templatBoundFunc2");
+                    })
+                  .DataSource(new List<object>(){
+                    new { FIELD1 = "粗体1", FIELD2 = true, FIELD3 = 5 },
+                    new { FIELD1 = "粗体2", FIELD2 = true, FIELD3 = 4 },
+                    new { FIELD1 = "粗体3", FIELD2 = false,FIELD3 = 4 },
+                    new { FIELD1 = "粗体4", FIELD2 = true, FIELD3 = 3 },
+                    new { FIELD1 = "粗体5", FIELD2 = false,FIELD3 = 2 }
+                  })
+            )
+
+        </div>
+    </div>
+</section>
+
+                 </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+    hljs.configure({ tabReplace: '    ' }); // 4 spaces
+    $('pre code').each(function (i, e) {
+
+        if ($(this).find('.source-code').length > 0) {
+
+            $(this).html((asmat.htmlEncode($(this).find('.source-code').html())).replace(new RegExp("smatscript", "gm"), "&lt;script&gt;").replace(new RegExp("smat2script", "gm"), "&lt;/script&gt;"));
+
+        }
+
+        hljs.highlightBlock(e)
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿@*@model WebEvaluation.Models.S_Unit
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>S_Unit</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopCD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCusCenter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsCusCenter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsShop)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsShop)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.UnitCD }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>*@

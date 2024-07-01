@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テレフォンレポートシステム</title>
+    @*<title>@ViewBag.Title</title>*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+    <link href="~/Content/site.css" rel="stylesheet">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var msg = "@ViewBag.msg";
+            var msgType = "@ViewBag.msgType";
+            if (msg.length > 0) {
+                if (msgType.length > 0) {
+                    SMAT.Service.toastr(msg,msgType);
+                } else {
+                    SMAT.Service.toastr(msg);
+                } 
+            }
+
+           // var timer = setInterval(keepSession, 60000);
+        });
+
+        function keepSession(){
+            $.ajax({
+                url: "@Url.Action("KeepSession", "Home")",
+                dataType: "json",
+            type: "post",
+            success: function (result) {
+            },
+            error: function (a, b, c) {
+
+            }
+        });
+        }
+    </script>
+</head>
+<body style="background-color: #fff1e5;padding: 0;">
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+        var radioClass = "@ViewBag.radioClass";
+        if (radioClass.length == 0) {
+            radioClass = "iradio_square-blue";
+        }
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: radioClass,
+            increaseArea: '20%' // optional
+        });
+
+    });
+    </script>
+
+    <div class="container body-content" style="width:1266px; margin-right:auto;margin-left:auto;">
+        @RenderBody()
+
+    </div>
+
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            var forms = $('form');
+
+            $.each(forms, function () {
+                var form = $(this);
+                var ctrls = $(this).find('input , select');
+                if (ctrls.length > 0) {
+                    ctrls.last().addClass('form-last-input')
+                }
+
+                var btns = $(this).find('input');
+
+                $.each(btns, function () {
+                    $(this).bind('keydown', function (e) {
+                        if ($(this).hasClass('form-last-input')) {
+                            return;
+                        }
+                        if (window.event.keyCode == 13) {
+                            window.event.keyCode = 9;
+                        }
+                    });
+                });
+
+                var selects = $(this).find('select');
+
+                $.each(selects, function () {
+                    $(this).bind('keydown', function (e) {
+                        if (window.event.keyCode == 13) {
+                            if ($(this).hasClass('form-last-input')) {
+                                form.submit();
+                                return;
+                            }
+                            window.event.keyCode = 9;
+                        }
+                    });
+                });
+            });
+
+            if ($(window).height() < $(document).height()) {
+                $("#footer-bar").css('position','relative');
+                $("#footer-bar").css('margin-bottom','-20px');
+            }
+
+            var pages = $('.pagination-container');
+
+            $.each(pages, function () {
+                var lis = $(this).find('li');
+                if (lis.length == 1) {
+                    $(this).hide();
+                    $(this).after("<div class='col-lg-13' style='padding-left:0px'><font>&nbsp;</font></div>");
+                }
+                
+            });
+            
+        });
+    </script>
+</body>
+</html>

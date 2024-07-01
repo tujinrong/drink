@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ShopViewModel>
+@{
+    ViewBag.Title = "店舗マスタ参照";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_self" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/site.css" rel="stylesheet">
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+</head>
+
+<body style="padding-top: 0;">
+        <!--SHOPマスタ&BUTTON-->
+    <div class="jumbotron" style="background-color:#dcdcdc;padding-left:5px;padding-right:5px;padding-top:5px">
+        @using (Html.BeginForm("Refer", "Shop", FormMethod.Get, new { @class = "form-horizontal" }))
+        { <!--条件検索-->
+
+            <table class="table form-table " style="margin-bottom:0;">
+                <tr>
+                    @*<td align="right" width="80px">店舗名：</td>
+                        <td width="90">
+                            <input id="inputSmall" class="form-control input-sm" size="10" type="text">
+                        </td>*@
+                    <td align="right" width="100px" class="edit-title">事業部/G：</td>
+                    <td width="160">
+                        @Html.GroupDropDownList("divisionCD", ViewBag.divisionCD as string)
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary btn-xs">検索</button>
+                        @*@Html.ButtonClose("true")*@
+                    </td>
+                </tr>
+            </table>
+        }
+
+        <table class="table form-table table-hover">
+            <thead>
+                <tr style="background-color:#e9e9e9">
+                    @*<th class="text-center" width="10%">ポスター</th>*@
+                    <th class="text-left">略称</th>
+                    <th class="text-left">店舗名</th>
+                    @*
+                        <th class="text-center" width="10%">事業部</th>
+                        <th class="text-center" width="10%">グループ</th>
+                        @*<th class="text-center">地区</th>
+                            <th class="text-center">事業部</th>*@
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr class="" style="background-color:#ffffff">
+                    @*<td align="left">
+                            @Html.DisplayFor(modelItem => item.Hoster)
+                        </td>*@
+                    <td align="left">
+                        @Html.DisplayFor(modelItem => item.ShopCD)
+                    </td>
+                    <td align="left">
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    @*
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.AreaName)
+                        </td>
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.GroupName)
+                        </td>
+                        @*<td align="left">
+                                @Html.DisplayFor(modelItem => item.PlaceName)
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.DivName)
+                            </td>
+                    *@
+                    <td align="center">
+                        <button class="btn btn-primary btn-xs" type="button" onclick="javascript:SMAT.Service.getReferValue('@item.ShopCD','@item.ShopName','@ViewBag.divisionCD')">選択</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+
+        @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F8413AD-479C-4DB4-8316-11F385A54341}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrinkService.Data</RootNamespace>
+    <AssemblyName>DrinkService.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\Lib\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="SMAT.Dynamics">
+      <HintPath>..\Lib\SMAT.Dynamics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adapter\HoEntityAdapterBase.cs" />
+    <Compile Include="Adapter\M_ClientAdapter .cs" />
+    <Compile Include="Adapter\M_CodeAdapter.cs" />
+    <Compile Include="Adapter\M_ItemAdapter.cs" />
+    <Compile Include="Adapter\M_ShopAdaptter.cs" />
+    <Compile Include="Adapter\M_StaffAdapter.cs" />
+    <Compile Include="Adapter\T_HoAdapter .cs" />
+    <Compile Include="Adapter\T_HoOrderAdapter.cs" />
+    <Compile Include="Common\CommonLogic.cs" />
+    <Compile Include="Common\DrinkLocker.cs" />
+    <Compile Include="Common\DrinkServiceContext.cs" />
+    <Compile Include="Common\HoRequest.cs" />
+    <Compile Include="Common\Locker.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityFieldData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityFilterData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityRela1NData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityRelaN1Data.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityViewData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityViewFilterData.cs" />
+    <Compile Include="Data\DySMAT\Y_EntityViewItemData.cs" />
+    <Compile Include="Data\DySMAT\Y_OptionSetData.cs" />
+    <Compile Include="Data\DySMAT\Y_ProjData.cs" />
+    <Compile Include="Data\M_ClientData.cs" />
+    <Compile Include="Data\M_CodeData.cs" />
+    <Compile Include="Data\M_ItemData.cs" />
+    <Compile Include="Data\M_ShopData.cs" />
+    <Compile Include="Data\M_StaffData.cs" />
+    <Compile Include="Data\M_SystemData.cs" />
+    <Compile Include="Data\T_HoData.cs" />
+    <Compile Include="Data\T_HoOrderData.cs" />
+    <Compile Include="Logics\CollectionLogic.cs" />
+    <Compile Include="Logics\SaleDataLogic.cs" />
+    <Compile Include="Logics\共通\CodeLogic.cs" />
+    <Compile Include="Logics\共通\LogLogic.cs" />
+    <Compile Include="Logics\商品\ItemInListLogic.cs" />
+    <Compile Include="Logics\商品\ItemKitLogic.cs" />
+    <Compile Include="Logics\商品\ItemLogic.cs" />
+    <Compile Include="Logics\商品\PagedResult.cs" />
+    <Compile Include="Logics\店舗\ShopLogic.cs" />
+    <Compile Include="Logics\担当者\StaffLogic.cs" />
+    <Compile Include="Logics\補充集金\xxxHoOrderClientLogic.cs" />
+    <Compile Include="Logics\補充集金\HoOrderClientLogic.cs" />
+    <Compile Include="Logics\顧客\ClientLogic.cs" />
+    <Compile Include="Models\LogicBase.cs" />
+    <Compile Include="Models\PagedResult.cs" />
+    <Compile Include="Models\共通\ModelBase.cs" />
+    <Compile Include="Models\共通\M_Code.cs" />
+    <Compile Include="Models\共通\M_PostCode.cs" />
+    <Compile Include="Models\共通\M_System.cs" />
+    <Compile Include="Models\共通\PostData.cs" />
+    <Compile Include="Models\共通\T_Log.cs" />
+    <Compile Include="Models\共通\T_Message.cs" />
+    <Compile Include="Models\共通\T_Sign.cs" />
+    <Compile Include="Models\共通\UserSession.cs" />
+    <Compile Include="Models\商品\M_Item.cs" />
+    <Compile Include="Models\商品\M_ItemKit.cs" />
+    <Compile Include="Models\商品\M_ItemKitDetail.cs" />
+    <Compile Include="Models\商品\M_ItemStock.cs" />
+    <Compile Include="Models\店舗\M_Shop.cs" />
+    <Compile Include="Models\担当者\M_Staff.cs" />
+    <Compile Include="Models\補充集金\T_HoClient.cs" />
+    <Compile Include="Models\補充集金\T_HoClientItem.cs" />
+    <Compile Include="Models\補充集金\T_hoDay.cs" />
+    <Compile Include="Models\補充集金\T_HoOrderClient.cs" />
+    <Compile Include="Models\補充集金\T_HoOrderTanto.cs" />
+    <Compile Include="Models\顧客\M_Client.cs" />
+    <Compile Include="Models\顧客\M_ClientInitItems.cs" />
+    <Compile Include="Models\顧客\M_ClientRoute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\CommonUtils.cs" />
+    <Compile Include="Utils\CsvUtils.cs" />
+    <Compile Include="Utils\DataIOUtils.cs" />
+    <Compile Include="Utils\Email.cs" />
+    <Compile Include="Utils\Log.cs" />
+    <Compile Include="Utils\SQLHelper.cs" />
+    <Compile Include="ViewModels\ClientEditRouteViewModel.cs" />
+    <Compile Include="ViewModels\ClientEditViewModel.cs" />
+    <Compile Include="ViewModels\ClientInitItemViewModel.cs" />
+    <Compile Include="ViewModels\ClientListViewModel.cs" />
+    <Compile Include="ViewModels\ClientReferViewModel.cs" />
+    <Compile Include="ViewModels\ClientRouteTantoViewModel.cs" />
+    <Compile Include="ViewModels\CodeListViewModel.cs" />
+    <Compile Include="ViewModels\CollectionViewModel.cs" />
+    <Compile Include="ViewModels\DeliveryRouteClientViewModel.cs" />
+    <Compile Include="ViewModels\DeliveryRouteListViewModel.cs" />
+    <Compile Include="ViewModels\HoClientItemViewModel.cs" />
+    <Compile Include="ViewModels\ItemInListViewModel.cs" />
+    <Compile Include="ViewModels\ItemKitListViewModel.cs" />
+    <Compile Include="ViewModels\ItemListViewModel.cs" />
+    <Compile Include="ViewModels\KitDetailViewModel.cs" />
+    <Compile Include="ViewModels\PostImportModel.cs" />
+    <Compile Include="ViewModels\SaleDataViewModel.cs" />
+    <Compile Include="ViewModels\ShopListViewModel.cs" />
+    <Compile Include="ViewModels\StaffListViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\SQL\1.0.1.8update.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

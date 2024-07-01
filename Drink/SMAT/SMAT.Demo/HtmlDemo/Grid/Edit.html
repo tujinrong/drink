@@ -1,0 +1,374 @@
+﻿
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="form" class="form-horizontal">
+
+            <div>
+                <dl class="s-dl addmargin s-f-right">
+                    <dt style="width:350px; margin-right:40px;">
+                        <button type="button" class="btn-primary" id="row_addBtn" style="" >行追加</button>
+                        <button type="button" class="btn-primary" id="row_delBtn" style="">行删除</button>
+                        <button type="button" class="btn-primary" id="actionBtn" style="">保存</button>
+                    </dt>
+                </dl>
+            </div>
+
+            <div id="demo_list"></div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#row_addBtn").asmatButton({
+            click: function () {
+
+                var grid = $("#demo_list").ui();
+
+                grid.addRow(
+    		        { "FIELD1": "new文字", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "DATE": "20150504" }
+    	        );
+            }
+        });
+
+        $("#row_delBtn").asmatButton({
+            click: function () {
+
+                var grid = $("#demo_list").ui();
+
+                var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+                if (selectIndexs.length == 0) {
+                    alert("请先选中行！");
+                } else {
+                    grid.delRow(selectIndexs);
+                }
+            }
+        });
+
+        $("#actionBtn").asmatButton();
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "文字1", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "KEY": "1", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+            { "FIELD1": "文字2", "FIELD2": 2, "FIELD3": "B", "FIELD4": "2", "KEY": "2", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+            { "FIELD1": "文字3", "FIELD2": 3, "FIELD3": "C", "FIELD4": "2", "KEY": "3", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+            { "FIELD1": "文字4", "FIELD2": 4, "FIELD3": "D", "FIELD4": "2", "KEY": "4", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" },
+            { "FIELD1": "文字5", "FIELD2": 5, "FIELD3": "E", "FIELD4": "2", "KEY": "5", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "02" }
+        ];
+
+        //列信息
+        var columns =
+           [
+            { dataType: "checkBox-selecter", width: "40px", checkAll: true, selectedDataName: "selectedList" },
+            { field: "FIELD1", title: "字段1", editable: true },
+            { field: "FIELD2", title: "数值", editable: true, dataType: "number", max: 10, min: 0 },
+            {
+                field: "FIELD3",
+                title: "字段3",
+                editable: true,
+                getReferParam: function (e) {
+                    var p = {
+                        p1: "test"
+                    };
+
+                    alert("自定义参数：p");
+                    return p;
+                },
+                referSelected: function (data) {
+                    alert("refer返回：data");
+                },
+                valueField: "FIELD4",
+                referKey: "referDemo",
+                referValueField: "MODULE_CD",
+                referDisplayField: "MODULE_NAME"
+            },
+            { field: "DATE", title: "日期字段", editable: "true", dataType: "Date" },
+            { field: "onlyNum", title: "只能输入数字", editable: "true", dataType: "onlyNum", maxlength: 3 },
+            { field: "onlyAlpha", title: "只能输入英文", editable: "true", dataType: "onlyAlpha", maxlength: 4 },
+            { field: "onlyNumAlpha", title: "只能输入英数", editable: "true", dataType: "onlyNumAlpha", maxlength: 5 },
+            { field: "Drop1_text", valueField: "Drop1", title: "自定义下拉", editable: "InCell", dataType: "dropDownList", editorDataSource: cusDropDown },
+            { field: "Drop2", title: "codeMst下拉", codeKind: "00", editable: "true", dataType: "dropDownList" }
+           ];
+
+        //初始化grid
+        $("#demo_list").smatGrid({
+            dataSource: dataSource,    //数据源
+            columns: columns,          //列信息
+            sendData:                 //dataSource发送到action
+            {
+                updateDataName: "updateList",   //对应后台action中"updateList"变量
+                addDataName: "addList",      //对应后台action中"addListName"变量
+                deleteDataName: "deleteList"    //对应后台action中"deleteListName"变量
+            },
+            checkCellEditable: function (dataItem, field) {  //根据dataItem判断cell是否可以编辑
+                if (field == "onlyNum" && dataItem["onlyNum"] > 5) {
+                    return false;
+                }
+
+                return true;
+            }
+        });
+
+        function cusDropDown(dataItem) {
+
+            var data = [
+                {
+                    text: "值1",
+                    value: "1"
+                },
+                {
+                    text: "值2",
+                    value: "2"
+                },
+                {
+                    text: "值3",
+                    value: "3"
+                }
+            ];
+
+            return data;
+        }
+
+        $("#form").smatForm({
+            actionBtn: "actionBtn",
+            checkForm: function () {
+
+                var dataSource = $("#demo_list").ui().getDataSource();
+                var ok = true;
+                var msg = "";
+                for (var index in dataSource) {
+                    var dataItem = dataSource[index];
+                    if (dataItem["DATE"] == undefined || dataItem["DATE"] == null || dataItem["DATE"].trim() == "") {
+                        msg = "日期不能为空！";
+                        grid.addErrorMark(index, 3);
+                        ok = false;
+                    }
+                }
+                if (ok == false) {
+                    alert(msg);
+                }
+                return ok;
+            },
+            getParam: function (param) {
+                var str = "updateList的值：" + JSON.stringify(param.updateList) + "\n";
+                str = str + "addList的值：" + JSON.stringify(param.addList) + "\n";
+                str = str + "deleteList的值：" + JSON.stringify(param.deleteList) + "\n";
+
+                str = str + "selectedList的值：" + JSON.stringify(param.selectedList) + "\n";
+
+                alert(str);
+            }
+        });
+
+    });
+</script>
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+                    <section class="panel panel-default">
+                    <div class="panel-body">
+                    <div id="form" class="form-horizontal">
+                    <div>
+                    <dl class="s-dl addmargin s-f-right">
+                    <dt style="width:350px; margin-right:40px;">
+                    <button type="button" class="btn-primary" id="row_addBtn" style="">行追加</button>
+                    <button type="button" class="btn-primary" id="row_delBtn" style="">行删除</button>
+                    <button type="button" class="btn-primary" id="actionBtn" style="">保存</button>
+                    </dt>
+                </dl>
+            </div>
+                    <div id="demo_list"></div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+
+        $("#row_addBtn").asmatButton({
+            click: function () {
+
+                var grid = $("#demo_list").ui();
+
+                grid.addRow(
+    		        { "FIELD1": "new文字", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "DATE": "20150504" }
+    	        );
+            }
+        });
+
+        $("#row_delBtn").asmatButton({
+            click: function () {
+
+                var grid = $("#demo_list").ui();
+
+                var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+                if (selectIndexs.length == 0) {
+                    alert("请先选中行！");
+                } else {
+                    grid.delRow(selectIndexs);
+                }
+            }
+        });
+
+        $("#actionBtn").asmatButton();
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "文字1", "FIELD2": 1, "FIELD3": "A", "FIELD4": "2", "KEY": "1", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "2", "Drop2_text": "group1demo2" },
+            { "FIELD1": "文字2", "FIELD2": 2, "FIELD3": "B", "FIELD4": "2", "KEY": "2", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "2", "Drop2_text": "group1demo2" },
+            { "FIELD1": "文字3", "FIELD2": 3, "FIELD3": "C", "FIELD4": "2", "KEY": "3", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "2", "Drop2_text": "group1demo2" },
+            { "FIELD1": "文字4", "FIELD2": 4, "FIELD3": "D", "FIELD4": "2", "KEY": "4", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "2", "Drop2_text": "group1demo2" },
+            { "FIELD1": "文字5", "FIELD2": 5, "FIELD3": "E", "FIELD4": "2", "KEY": "5", "DATE": "20140808", "onlyNum": "1", "onlyAlpha": "A", "onlyNumAlpha": "1A", "Drop1": "2", "Drop1_text": "值2", "Drop2": "2", "Drop2_text": "group1demo2" }
+        ];
+
+        //列信息
+        var columns =
+           [
+            { dataType: "checkBox-selecter", width: "40px", checkAll: true, selectedDataName: "selectedList" },
+            { field: "FIELD1", title: "字段1", editable: true },
+            { field: "FIELD2", title: "数值", editable: true, dataType: "number", max: 10, min: 0 },
+            {
+                field: "FIELD3",
+                title: "字段3",
+                editable: true,
+                getReferParam: function (e) {
+                    var p = {
+                        p1: "test"
+                    };
+
+                    alert("自定义参数：p");
+                    return p;
+                },
+                referSelected: function (data) {
+                    alert("refer返回：data");
+                },
+                valueField: "FIELD4",
+                referKey: "referDemo",
+                referValueField: "MODULE_CD",
+                referDisplayField: "MODULE_NAME"
+            },
+            { field: "DATE", title: "日期字段", editable: "true", dataType: "Date" },
+            { field: "onlyNum", title: "只能输入数字", editable: "true", dataType: "onlyNum", maxlength: 3 },
+            { field: "onlyAlpha", title: "只能输入英文", editable: "true", dataType: "onlyAlpha", maxlength: 4 },
+            { field: "onlyNumAlpha", title: "只能输入英数", editable: "true", dataType: "onlyNumAlpha", maxlength: 5 },
+            { field: "Drop1_text", valueField: "Drop1", title: "自定义下拉", editable: "InCell", dataType: "dropDownList", editorDataSource: cusDropDown }
+           ];
+
+        //初始化grid
+        $("#demo_list").smatGrid({
+            dataSource: dataSource,    //数据源
+            columns: columns,          //列信息
+            sendData:                 //dataSource发送到action
+            {
+                updateDataName: "updateList",   //对应后台action中"updateList"变量
+                addDataName: "addList",      //对应后台action中"addListName"变量
+                deleteDataName: "deleteList"    //对应后台action中"deleteListName"变量
+            },
+            checkCellEditable: function (dataItem, field) {  //根据dataItem判断cell是否可以编辑
+                if (field == "onlyNum" && dataItem["onlyNum"] > 5) {
+                    return false;
+                }
+
+                return true;
+            }
+        });
+
+        function cusDropDown(dataItem) {
+
+            var data = [
+                {
+                    text: "值1",
+                    value: "1"
+                },
+                {
+                    text: "值2",
+                    value: "2"
+                },
+                {
+                    text: "值3",
+                    value: "3"
+                }
+            ];
+
+            return data;
+        }
+
+        $("#form").smatForm({
+            actionBtn: "actionBtn",
+            checkForm: function () {
+
+                var dataSource = $("#demo_list").ui().getDataSource();
+                var ok = true;
+                var msg = "";
+                for (var index in dataSource) {
+                    var dataItem = dataSource[index];
+                    if (dataItem["DATE"] == undefined || dataItem["DATE"] == null || dataItem["DATE"].trim() == "") {
+                        msg = "日期不能为空！";
+                        grid.addErrorMark(index, 3);
+                        ok = false;
+                    }
+                }
+                if (ok == false) {
+                    alert(msg);
+                }
+                return ok;
+            },
+            getParam: function (param) {
+                var str = "updateList的值：" + JSON.stringify(param.updateList) + "\n";
+                str = str + "addList的值：" + JSON.stringify(param.addList) + "\n";
+                str = str + "deleteList的值：" + JSON.stringify(param.deleteList) + "\n";
+
+                str = str + "selectedList的值：" + JSON.stringify(param.selectedList) + "\n";
+
+                alert(str);
+            }
+        });
+
+    });
+</script>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+	hljs.configure({tabReplace: '    '}); // 4 spaces
+	$('pre code').each(function (i, e) {
+
+	    if ($(this).find('.source-code').length > 0) {
+
+	       $(this).html((asmat.htmlEncode($(this).find('.source-code').html())) + " &lt;/script&gt;");
+
+	    }
+
+	    hljs.highlightBlock(e)
+	});
+</script>

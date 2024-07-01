@@ -1,0 +1,270 @@
+﻿@model  DrinkService.Models.M_ItemKit
+@{
+    Layout = "~/Views/Shared/_SubFormLayout.cshtml";
+    ViewBag.Title = "初期キット管理";
+    ViewBag.ContentId = "btnEditClose";
+}
+<script>
+    var saveFlag = false;
+
+    function successFunc(result) {
+        smat.service.notice({ msg: "保存完了しました。" });
+        $("#btnEditDel").show();
+        $("#_itemKit_KitID").val(result.KitID);
+        saveFlag = true;
+    }
+    function getKitParam(params) {
+        params.detailList = $("#itemListGrid").ui().config.dataSource;
+    }
+
+    function successFunc2() {
+        smat.service.notice({ msg: "保存完了しました。" });
+        smat.service.closeForm({
+            contentId: "kitEditForm",
+            result: true
+        });
+    }
+    function successFunc3() {
+        smat.service.notice({ msg: "削除完了しました。" });
+        smat.service.closeForm({
+            contentId: "kitEditForm",
+            result: true
+        });
+    }
+    function closeEditForm() {
+        var result = undefined;
+        if (saveFlag == true) {
+            result = saveFlag;
+        }
+        smat.service.closeForm({
+            contentId: "kitEditForm",
+            result: result
+        });
+    }
+    function addRow() {
+        smat.service.refer({
+            referKey: "referItem",
+            //param:getIgnoreItem(),
+            param: { "ShopCD": "@ViewBag.ShopCD" },
+            afterSelected: function (reslut) {
+
+                var grid = $("#itemListGrid").ui();
+
+                var rs = [];
+                for (var index in reslut.selectedRows) {
+                    var item = reslut.selectedRows[index];
+
+                    rs.push(
+                        {
+                            "ItemCD": item.ItemCD,
+                            "ShortName": item.ShortName,
+                            "Price": item.StandardPrice,
+                            "ShopCD": "@ViewBag.ShopCD",
+                            "KitID": "@Model.KitID"
+                        }
+                    );
+                }
+                grid.addRow(rs);
+
+            }
+        });
+    }
+
+    function getIgnoreItem() {
+        var param = {};
+        param.IgnoreItems = new Array();
+        var grid = $("#itemListGrid").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+        return param;
+    }
+
+    function rowDel() {
+
+        var grid = $("#itemListGrid").ui();
+
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            alert("请先选中行！");
+        } else {
+            grid.delRow(selectIndexs);
+        }
+    }
+
+    function checkDel() {
+        return "キット[" + $("#txtKitName").ui().value() + "]を削除しますか？";
+    }
+
+    function checkform() {
+
+        if ($('#txtKitName').val() == "") {
+            smat.service.addErrorInfo("txtKitName", $('#txtKitName'), "【キット名】を入力ください");
+        }
+        var initItemDataSource = $("#itemListGrid").ui().config.dataSource;
+        var initItemKeys = [];
+        for (var i = 0; i < initItemDataSource.length; i++) {
+
+            var key = initItemDataSource[i]["ShelfCD"] + "|" + initItemDataSource[i]["ItemCD"];
+
+            for (var j = 0; j < initItemKeys.length; j++) {
+                if (initItemKeys[j] == key) {
+
+                    var node1 = $("#itemListGrid").ui().uiControl.tbody.children("tr:eq(" + i + ")").find("input[colindex='1']");
+                    var node2 = $("#itemListGrid").ui().uiControl.tbody.children("tr:eq(" + j + ")").find("input[colindex='1']");
+                    smat.service.addErrorInfo("ShelfCD", node1, "同じ商品の同じ棚が同時存在は不可！");
+                    smat.service.addErrorInfo("ShelfCD", node2, "同じ商品の同じ棚が同時存在は不可！");
+                }
+            }
+            initItemKeys.push(key);
+        }
+    }
+
+    function delConfirm(dataItem) {
+        return "商品【" + dataItem.ShortName + "】を削除しますか？";
+    }
+
+    function errorFunc(result) {
+        if (result.ErrorKey == "txtKitName") {
+            smat.service.addErrorBorder($('#txtKitName'));
+        }
+    }
+
+    function itemListGridDataBound() {
+        //if (mainRoleCD == mainCN役割_本部参照) {
+        //    var uis = $("#itemListGrid").find("[uuid]");
+        //    $.each(uis, function () {
+        //        $(this).ui().enable(false);
+        //    })
+
+        //    var uis = $("#itemListGrid").find("[data-role='numerictextbox']");
+        //    $.each(uis, function () {
+        //        $(this).data("asmatNumericTextBox").enable(false);
+        //    })
+        //}
+    }
+</script>
+
+@{
+    bool editFlag = Model.ShopCD == null ? true : false;
+    bool gridEditFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照 ? false : true;
+}
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        @using (Html.Smat().BeginForm("kitEditForm", new { @class = "panel-body", style = "padding-top:0;" }
+            ).Actions(actions =>
+            {
+                actions.Action("/Kit/Save").ActionBtn("btnEditTempSave").CheckForm("checkform").Success("successFunc").GetParam("getKitParam").Error("errorFunc");
+                actions.Action("/Kit/Save").ActionBtn("btnEditSave").CheckForm("checkform").Success("successFunc2").GetParam("getKitParam").Error("errorFunc");
+                actions.Action("/Kit/Del").ActionBtn("btnEditDel").Success("successFunc3").ConfirmFunc("checkDel");
+            }
+            ))
+        {
+            <div class="row">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("btnEditTempSave").Content("一時保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @Html.Smat().Button("btnEditSave").Content("保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @(Html.Smat().Button("btnEditClose")
+                            .Content("閉じる")
+                            .HtmlAttributes(new { @class = "btn-primary" })
+                            .Events(events =>
+                            {
+                                events.Click("closeEditForm");
+                            })
+                    )
+                    @Html.Smat().Button("btnEditDel").Content("削除").HtmlAttributes(new { @class = "btn-danger" }).Visible(!editFlag)
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+            <div class="panel-body" style="padding:5px"></div>
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            <input type="hidden" name="_itemKit.ShopCD" value="@ViewBag.ShopCD" />
+                                   @Html.Smat().TextBox("kitEditShopName").Label("店舗").Value(ViewBag.ShopName as string).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            <input type="hidden" id="_itemKit_KitID" name="_itemKit.KitID" value="@Model.KitID" />
+                            @Html.Smat().TextBox("txtKitName").Name("_itemKit.KitName").Label(label => { label.Text("キット名"); label.Attrs(new { @class = "input-s-sm" }); }).Value(Model.KitName).MaxLength(10).HtmlAttributes(new { @class = "form-control input-s" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="form-group m-b-none">
+                        <label class="input-s control-label" style="text-align:left;margin-left: 20px;">商品一覧</label>
+                        @(Html.Smat().Button("btnKitEditAdd")
+                        .Content("商品追加")
+                        .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;margin-top: -10px;" })
+                        .Events(events => 
+                        {
+                            events.Click("addRow"); 
+                        }))
+                    </div>
+                </div>
+                <div class="row ">
+                    @(Html.Smat().Grid("itemListGrid")
+                            .Columns(columns =>
+                            {
+                                columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center cell-display" });
+                                columns.Bound("ShelfCD").Title("棚").Width("90px").Editable(true).CodeKind(DrinkService.Models.ModelBase.CN棚).DataType("dropDownList").IsRequired(true);
+                                columns.Bound("ShortName").Title("商品");
+                                columns.Bound("Num").Title("数量").Width("90px").Editable(true).DataType("number").Max(999).MaxLength(DrinkService.Models.ModelBase.NUM_LEN).Min(0).IsRequired(true);
+
+                                if (gridEditFlag)
+                                {
+                                    columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                                            ).Actions(actions =>
+                                            {
+                                                actions.Text("削除").ActionType("delRow").ActionConfirm("delConfirm");
+                                            });
+                                }
+                            })
+                        .DataSource(dataSource => { dataSource.Read("/Kit/KitItemList?ShopCD=" + ViewBag.ShopCD + "&kitID=" + Model.KitID + "&tID=" + DateTime.Now.ToUniversalTime()); })
+                            .SendData(setData => {
+                                setData.UpdateDataName("updateList");   //对应后台action中"updateList"变量
+                            })
+                    .DataBound("itemListGridDataBound")
+                    )
+                </div>
+
+                <div class="row ">
+                    <div class="form-group m-b-none">
+                        @(Html.Smat().Button("btnKitEditAddBottom")
+                        .Content("商品追加")
+                        .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-right: 15px;" })
+                        .Events(events =>
+                        {
+                            events.Click("addRow");
+                        }))
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            //smat.service.lockUIField('kitEditForm');
+            $("#btnEditTempSave").ui().visible(false);
+            $("#btnEditSave").ui().visible(false);
+            $("#btnEditDel").ui().visible(false);
+            //$("#btnKitEditAdd").ui().visible(false);
+        }
+    });
+</script> 
+                

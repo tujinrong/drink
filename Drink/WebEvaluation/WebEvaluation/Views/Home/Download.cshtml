@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Download";
+    Layout = "";
+}
+<!DOCTYPE html>
+
+@Scripts.Render("~/bundles/jquery")
+<script type="text/javascript">
+    $(window.opener.document.body).append('<iframe id="iframeDownload" style="width:1px;height:1px;display: none;" src="@ViewBag.path"></iframe>');
+    window.close();
+</script>
+

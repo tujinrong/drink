@@ -1,0 +1,118 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ShopViewModel>
+
+@{
+    ViewBag.IMG = "../../Content/images/shop.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "店舗管理";
+}
+<body>
+    <div class="jumbotron">
+        <div style="padding-top:15px">
+            
+        </div>
+        <!--SHOPマスタ&BUTTON-->
+        @using (Html.BeginForm("MasterManager", "Shop", FormMethod.Get, new { @class = "form-horizontal" }))
+        {
+            @Html.Hidden("isPostBack", ViewBag.isPostBack as string)
+        <!--条件検索-->
+            <div class="col-lg-4" style="padding-left:0px">
+                <font color="#aaaaaa">条件検索</font>
+            </div>
+            
+            <div class="col-lg-8 text-right" style="padding-right:0px">
+                <a href="../../Shop/ShopDataImport">店舗インポート</a>
+            </div>
+            
+            <table class="table form-table " border="0">
+                <tr>
+
+                    <td align="right" width="100" class="edit-title">事業部/G：</td>
+                    <td width="180">
+                        @Html.GroupDropDownList("divisionCD", ViewBag.divisionCD as string)
+                    </td>
+                    <td align="right" width="7%"></td>
+                    <td width="10%"></td>
+                    <td></td>
+                </tr>
+            </table>
+            <div class="row" style="padding-top:15px">
+                <div class="col-lg-12 text-center">
+                    <button type="submit" class="btn btn-primary btn-sm">&nbsp;検&nbsp;&nbsp;索&nbsp;</button>
+                    <button id="csv_btn" class="btn btn-primary btn-sm" type="button">CSV出力</button>
+                </div>
+            </div>
+        }
+        @if (null != Model && Model.Count() > 0)
+        {
+            <font color="#aaaaaa">店舗一覧</font>
+            <table class="table form-table table-hover" border="0">
+                <thead>
+                    <tr>
+                        <th class="text-center">№</th>
+                        <th class="text-left" width="10%">事業部</th>
+                        <th class="text-left" width="10%">グループ</th>
+                        <th class="text-left">店舗名</th>
+                        <th class="text-left">会場</th>
+                        @*<th class="text-center">店舗</th>*@
+                        @* <th class="text-center">地区</th>
+                <th class="text-center">事業部</th>*@
+                    </tr>
+                </thead>
+                @{
+                    var no = 0;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr class="" style="background-color:white">
+                        <td align="center">
+                            @(++no)
+                        </td>
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.DivName)
+                        </td>
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.GroupName)
+                        </td>
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.ShopCD)
+                        </td>
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.ShopName)
+                        </td>
+
+                        @*                    <td align="left">
+                                                @Html.DisplayFor(modelItem => item.PlaceName)
+                                            </td>
+                                            <td align="left">
+                                                @Html.DisplayFor(modelItem => item.DivName)
+                            </td>*@
+                    </tr>
+                }
+            </table>
+
+            @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+
+        }
+    </div>
+
+    <script type="text/javascript">
+
+            function getParam() {
+                var p = {
+                    divisionCD: $("#divisionCD").val()
+                }
+
+                return p;
+            }
+
+            $("#csv_btn").bind('click', function (e) {
+
+                var p = getParam();
+
+                SMAT.Service.getServerFile({
+                    url: "@Url.Action("csv")",
+                    params: p
+            });
+            });
+    </script>
+</body>

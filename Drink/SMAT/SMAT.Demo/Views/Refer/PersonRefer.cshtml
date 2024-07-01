@@ -1,0 +1,99 @@
+﻿@{
+    Layout = null;
+}
+
+<section class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="form-horizontal" id="refer-demo-pics-form">
+            <div class="row">
+                <div class="col-fix-1">
+                    <div class="form-group">
+                        <label class="input-s-md control-label">Id</label>
+                        <input type="text" name="Id" class="form-control input-s s-textbox" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-2">
+                    <div class="form-group">
+                        <label class="input-s-md control-label">FirstName</label>
+                        <input type="text" name="FirstName" class="form-control input-s-lg s-textbox" />
+                        <button id="refer-demo-pics-search-btn" class="btn-primary s-button" style="margin-left:30px;">検索</button>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row">
+
+                <div class="col-sm-11 text-right text-center-xs">
+                    <div id="refer-demo-pics-pager" class="ccc1" ></div>
+                </div>
+            </div>
+            <div id="refer-demo-pics-grid"></div>
+            <script>
+
+                //列信息
+                var columns =
+                   [
+                    {
+                        field: "Id",
+                        title: "Id",
+                        width: "60px",
+                        template: "<strong>#: Id # </strong>"
+                    },
+                    {
+                        field: "FirstName",
+                        title: "FirstName"
+                    },
+                    {
+                        field: "LastName",
+                        title: "LastName"
+                    },
+                    {
+                        field: "Episodes",
+                        title: "Episodes"
+                    }, {
+                        field: "",
+                        title: "",
+                        width: "120px",
+                        attributes: {
+                            "class": "text-center"
+                        },
+                        actions: [
+                            {
+                                text: 'Pick Me!',
+                                click: function (dataItem) {
+
+                                    smat.service.closeForm({
+                                        contentId: "refer-demo-pics-grid",
+                                        result: {
+                                            selectedRows: dataItem
+                                        }
+                                    });
+
+                                }
+                            }
+                        ]
+
+                    }
+                   ];
+
+                //初始化grid
+                $("#refer-demo-pics-grid").smatGrid({
+                    columns: columns,           //列信息
+                });
+
+                $("#refer-demo-pics-form").smatForm({
+                    action: "/Refer/PersonSearch",
+                    actionBtn: "refer-demo-pics-search-btn",
+                    resultHandler: "refer-demo-pics-pager"
+                });
+
+                $("#refer-demo-pics-pager").smatPager({
+                    dataHandler: "refer-demo-pics-grid"
+                });
+            </script>
+        </div>
+    </div>
+</section>

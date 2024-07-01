@@ -1,0 +1,409 @@
+﻿@model WebEvaluation.ViewModels.HomeViewModel
+
+@{
+    ViewBag.IMG = "../Content/images/ic-logo.png";
+    ViewBag.Title = "テレフォンレポートシステム";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.color = "#2e2e2e";
+}
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/Content/summernote.css" rel="stylesheet">
+<script src="~/Scripts/summernote.js"></script>
+<script src="~/Scripts/summernote-ja-JP.js"></script>
+
+<div class="jumbotron">
+    <div style="position:absolute;right:70px;">
+        <a href="~/Help/新郎新婦アンケートベストプラクティス集.xlsx" style=" color:blue;"><span style="color: #fff;background-color: red;font-size: 9px;margin-bottom: 5px;float:left;padding: 2px;margin-right: 2px;border-radius: 3px;">NEW</span><span>新郎新婦アンケート　ベストプラクティス集</span></a>
+    </div>
+    <div class="menu-box" style="padding:15px 60px 15px 60px">
+        <div class="panel panel-menu" style="margin:0px">
+            <div class="panel-heading"><span class="title">店舗</span></div>
+            <div class="panel-body">
+                <table style="background-color:white">
+                    <tr>
+                        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01" 
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "05" ////20151025 「業務管理者」権限を追加。
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                        {
+                            <td width="400px"><a href="/Party/PartyIndex"><img style="height:50px;width:50px" src="~/Content/images/ic-telerepo.png"></a> &nbsp;&nbsp;@Html.ActionLink("テレフォンレポート入力", "PartyIndex", "Party")</td>
+                        }
+                        <td width="400px"><a href="/TelRpt/TelRptSearch"><img style="height:50px;width:50px" src="~/Content/images/ic-phone.png"></a> &nbsp;&nbsp;@Html.ActionLink("テレフォンレポート閲覧", "TelRptSearch", "TelRpt")</td>
+                        <td width="400px"><a href="/Party/ReportList"><img style="height:50px;width:50px" src="~/Content/images/ic-fork.png"></a> &nbsp;&nbsp;@Html.ActionLink("報告書閲覧", "ReportList", "Party")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+{
+    <div class="panel panel-menu" style="margin:0px">
+        <div class="panel-heading">
+            <span class="title">カスタマーセンター</span>
+        </div>
+        <div class="panel-body">
+            <table style="background-color:white">
+                <tr>
+                    <td width="400px" align="left">
+                        <a href="/EvaByStaff/EvaByStaffIndex"><img style="height: 50px; width: 50px; " src="~/Content/images/memo.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("電話内容入力", "EvaByStaffIndex", "EvaByStaff")
+                    </td>
+                    <td width="400px" align="left">
+                        <a href="/EvaByLeader/EvaByLeaderIndex"><img style="height:50px;width:50px" src="~/Content/images/ic-evas.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("二次評価", "EvaByLeaderIndex", "EvaByLeader")
+                    </td>
+                    <td width="400px" align="left"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+        
+        <div class="panel panel-menu" style="margin:0px">
+            <div class="panel-heading">
+                <span class="title">データ出力</span>
+            </div>
+            <div class="panel-body">
+                <table style="background-color:white">
+                    <tr>
+                        <td width="400px">
+                            <a href="/TelRateRpt/TelRptFrequencySearch"><img style="height:50px;width:50px" src="~/Content/images/ic-telerate.png"></a>&nbsp;&nbsp;
+                            @Html.ActionLink("通話率一覧", "TelRptFrequencySearch", "TelRateRpt")
+                        </td>
+                        <!--李梁   2014/09/13-->
+                        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "05" ////20151025 「業務管理者」権限を追加。
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                        {
+                            <td width="400px">
+                                <a href="/ValRpt/ValRptSearch"><img style="height:50px;width:50px" src="~/Content/images/ic-teleeva.png"></a>&nbsp;&nbsp;
+                                @Html.ActionLink("テレフォンレポート総合評価", "ValRptSearch", "ValRpt")
+                            </td>
+                        
+                        <td width="400px">
+                            <a href="/ValRpt/ValRptStatisticsSearch"><img style="height:50px;width:50px" src="~/Content/images/ic-teleevapic.png"></a>&nbsp;&nbsp;
+                            @Html.ActionLink("評価構成比", "ValRptStatisticsSearch", "ValRpt")
+                        </td>
+                        }
+                        else
+                        {
+                        <td width="400px">
+                            <a href="/ValRpt/ValRptStatisticsSearch"><img style="height:50px;width:50px" src="~/Content/images/ic-teleevapic.png"></a>&nbsp;&nbsp;
+                            @Html.ActionLink("評価構成比", "ValRptStatisticsSearch", "ValRpt")
+                        </td>
+                        <td width="400px">
+                        </td>
+                        }
+                    </tr>
+                    <tr><td height="10px" colspan="3"></td></tr>
+                    <tr>
+                        <td width="400px">
+                            <a href="/ValRpt/ValRptStaffStatisticsSearch"><img style="height:50px;width:50px" src="~/Content/images/ic-teleevapic.png"></a>&nbsp;&nbsp;
+                            @Html.ActionLink("担当者別構成比", "ValRptStaffStatisticsSearch", "ValRpt")
+                        </td>
+                       
+                        @*@if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                        {
+                            <td width="400px">
+                                <a href="/Home/BusinessAnalysis"><img style="height:50px;width:50px" src="~/Content/images/ic-teleevapic.png"></a>&nbsp;&nbsp;
+                                @Html.ActionLink("データ分析", "BusinessAnalysis", "Home")
+                            </td>
+                        }*@
+                        <td width="400px">
+                            <a href="/Home/BusinessAnalysis"><img style="height:50px;width:50px" src="~/Content/images/ic-teleevapic.png"></a>&nbsp;&nbsp;
+                            @Html.ActionLink("データ分析", "BusinessAnalysis", "Home")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+{
+    <div class="panel panel-menu" style="margin:0px">
+        <div class="panel-heading">
+            <span class="title">管理機能</span>
+        </div>
+        <div class="panel-body">
+            <table style="background-color:white">
+                <tr>
+                    <td width="400px">
+                        <a href="/Shop/ShopDataImport"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("店舗インポート", "ShopDataImport", "Shop")
+                    </td>
+                    <td width="400px">
+                        <a href="/Shop/StaffDataImport"><img style="height:50px;width:50px" src="~/Content/images/ic-staff.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("社員インポート", "StaffDataImport", "Shop")
+                    </td>
+                    <td width="400px">
+                        <a href="/Shop/PartyDataImport"><img style="height:50px;width:50px" src="~/Content/images/ic-party.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("パーティ情報インポート", "PartyDataImport", "Shop")
+                    </td>
+                </tr>
+                <tr><td height="10px" colspan="3"></td></tr>
+                <tr>
+                    <td width="400px">
+                        <a href="/Shop/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("店舗管理", "MasterManager", "Shop")
+                    </td>
+                    <td width="400px">
+                        <a href="/Staff/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/ic-staff.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("社員管理", "MasterManager", "Staff")
+                    </td>
+                    <td width="400px">
+                        <a href="/Staff/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/ic-staff.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("組織管理", "Index", "Unit")
+                    </td>
+                </tr>
+                <tr><td height="10px" colspan="3"></td></tr>
+                <tr>
+                    <td width="400px">
+                        <a href="/Shop/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("事業部管理", "DivList", "Home")
+                    </td>
+                    <td width="400px">
+                        <a href="/Staff/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("グループ管理", "GroupList", "Home")
+                    </td>
+                    <td width="400px">
+                        <a href="/Staff/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/ic-party.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("料理管理", "DishList", "Home")
+                    </td>
+                </tr>
+                <tr><td height="10px" colspan="3"></td></tr>
+                <tr>
+                    <td width="400px">
+                        <a href="/Shop/MasterManager"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("オプションセット管理", "OptionSetList", "Home")
+                    </td>
+                    <td width="400px">
+                    </td>
+                    <td width="400px">
+                    </td>
+                </tr>
+                @*<tr><td height="10px" colspan="3"></td></tr>
+                <tr>
+                    <td width="400px">
+                        <a href="/Unit/UnitDataImport"><img style="height:50px;width:50px" src="~/Content/images/shop.png"></a>&nbsp;&nbsp;
+                        @Html.ActionLink("組織インポート", "UnitDataImport", "Unit")
+                    </td>
+                    <td width="400px">
+                    </td>
+                    <td width="400px">       
+                    </td>
+                </tr>*@
+            </table>
+        </div>
+    </div>
+}
+        
+    </div>
+
+    <div class="menu-box" id="msg-box" style="padding: 10px 60px; display:none;">
+        <div class="panel panel-menu">
+            <div class="panel-heading">
+                <span class="title">メッセージ</span>
+
+@if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+{ 
+    <a id="msg-link-edit" class="msg-edit">[編集]</a>
+    <a id="msg-link-cancel" style="display:none;" class="msg-edit">[取消]</a>
+    <a id="msg-link-save" style="display:none;" class="msg-edit">[保存]</a>
+}
+                
+
+                <span id="msg-update-date" class="msg-info">@Model.UpdateTime</span>
+                <span id="msg-update-user" class="msg-info">@Model.UpdateUser</span>
+                <span id="msg-update-user-title" class="msg-info">更新者:</span>
+            </div>
+            <div class="panel-body">
+                <div id ="summernote-box">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <pre id="oldMsg"  style="display:none;" >@Model.Message</pre>
+</div>
+
+
+@if(String.IsNullOrEmpty(Model.Message))
+{
+<script type="text/javascript">
+    $('#msg-update-user-title').hide();
+</script>
+}
+    <script type="text/javascript">
+
+        var oldMsg =  htmlDecode(htmlDecode($('#oldMsg').html()));
+        $('#summernote-box').append($('<pre id="summernote" style="width: 100%;background: transparent;border: none;">' + oldMsg + '</pre>'));
+        var msgId = "@Model.MessageID";
+
+
+        
+
+        $("#btn_save").bind("click", function (e) {
+
+            var evas = new Array();
+            var items = $("#data").find("tr[partyid]");
+
+            $.each(items, function (n, value) {
+                var partyId = $(this).attr("partyid").trim();
+                var oldEva = $(this).attr("oldeva").trim();
+                var newEva = $(this).find(".leader-eva").val().trim();
+                if (oldEva != newEva) {
+                    evas.push({ PartyID: Number(partyId), LeaderEva: newEva });
+                }
+
+            });
+
+
+            var p = { evas: evas };
+            $.ajax({
+                url: "@Url.Action("MultipleEvaUpdate")",
+            data: mvcParamMatch(p),
+            dataType: "json",
+            type: "post",
+            success: function (result) {
+                SMAT.Service.toastr(result.Message);
+            },
+            error: function (a, b, c) {
+
+            }
+        });
+    });
+
+    $(document).ready(function () {
+
+        $("#msg-link-edit").bind('click', function (e) {
+
+            $("#msg-link-edit").hide();
+            $("#msg-link-cancel").show();
+            $("#msg-link-save").show();
+
+            $('#summernote').summernote({
+                toolbar: [
+                  //[groupname, [button list]]
+
+                  ['style', ['bold', 'italic', 'underline', 'clear']],
+                  ['font', ['strikethrough']],
+                  //['fontsize', ['fontsize']],
+                  ['color', ['color']],
+                  ['para', ['ul', 'ol', 'paragraph']],
+                  ['Insert', ['link']],
+                  ['height', ['height']],
+                  ['other', ['fullscreen', 'codeview']]
+                ],
+                lang: 'ja-JP',
+                height: 260,                 // set editor height
+
+                minHeight: 260,             // set minimum height of editor
+                maxHeight: 500,             // set maximum height of editor
+            });
+        });
+
+
+        $("#msg-link-cancel").bind('click', function (e) {
+
+            var msgContent =  $('#summernote').code();
+            if (msgContent != oldMsg) {
+                if (!confirm("変更があっても破棄してよろしいでしょうか？")) {
+
+                    return;
+                }
+                
+            }
+
+            $("#msg-link-edit").show();
+            $("#msg-link-cancel").hide();
+            $("#msg-link-save").hide();
+
+            endEdit(oldMsg);
+        });
+
+        $("#msg-link-save").bind('click', function (e) {
+
+            var msgContent = $('#summernote').code();
+            if (msgContent == oldMsg) {
+                SMAT.Service.toastr('変更ありません。');
+                $("#msg-link-edit").show();
+                $("#msg-link-cancel").hide();
+                $("#msg-link-save").hide();
+                endEdit(oldMsg);
+                return;
+            }
+
+            var msgContent =  htmlEncode($('#summernote').code());
+            var p = {
+                msg: {
+                    MessageID: msgId,
+                    Message: msgContent
+                }
+            };
+
+
+            SMAT.Service.doJsonURLNormal({
+                url: "@Url.Action("UpdateMsg")",
+                params: p,
+                success: function (result) {
+                    $("#msg-link-edit").show();
+                    $("#msg-link-cancel").hide();
+                    $("#msg-link-save").hide();
+
+                    msgId = result.MsgId;
+                    $('#msg-update-user').text(result.UpdateUser);
+                    $('#msg-update-date').text(result.UpdateTime);
+
+                    $('#msg-update-user').show();
+                    $('#msg-update-date').show();
+                    $('#msg-update-user-title').show();
+
+                    SMAT.Service.toastr(result.Message);
+                    oldMsg = htmlDecode(msgContent);
+                    endEdit(oldMsg);
+                }
+            });
+
+            
+        });
+
+    });
+
+    function htmlEncode(value){
+        return $('<div/>').text(value).html();
+    }
+
+    function htmlDecode(value){
+        return $('<div/>').html(value).text();
+    }
+
+    function endEdit(msg) {
+
+        $('#summernote').destroy();
+        $('#summernote-box').children().remove();
+        $('#summernote-box').append(' <pre id="summernote" style="width: 100%;background: transparent;border: none;">' + msg + '</pre>');
+
+    }
+    </script>
+
+@if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+{
+    <script type="text/javascript">
+        $('#msg-box').show();
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        if ($('<div>' + htmlDecode(htmlDecode($('#oldMsg').html())) + '</div>').text().length > 0) {
+            $('#msg-box').show();
+        }
+
+    </script>
+}

@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "配置ドリンク";
+}
+
+<div style="padding:1px 0px 1px 5px;">
+
+    <input id="upload" name="files" type="file" />
+</div>
+
+   <script>
+
+
+       var callBack = "@ViewBag.callBack";
+
+       $("#upload").smatUpload({
+           success: function (eu) {
+               //alert(callBack);
+               window.dialogArguments[callBack].call(this, eu);
+               window.close();
+           }
+       });
+
+       $("header").remove();
+       var resourceType = "@ViewBag.resourceType";
+
+       $("#upload").closest('div.s-button').addClass("btn-primary");
+       if (resourceType == "excel") {
+           $("#upload").attr("accept", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel");
+       }
+
+       $(".s-dropzone").hide();
+
+       $("#upload").click();
+
+
+   </script>

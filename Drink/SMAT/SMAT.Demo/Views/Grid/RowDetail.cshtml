@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<script>
+    //数据
+    var dataSource = [
+        { "FIELD1": "id1", "FIELD2": "name1", "FIELD3": 5 },
+        { "FIELD1": "id2", "FIELD2": "name2", "FIELD3": 4 },
+        { "FIELD1": "id3", "FIELD2": "name3", "FIELD3": 4 },
+        { "FIELD1": "id4", "FIELD2": "name4", "FIELD3": 3 },
+        { "FIELD1": "id5", "FIELD2": "name5", "FIELD3": 2 }
+    ];
+
+</script>
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            @(Html.Smat().Grid("grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("FIELD1").Title("id").Template("<strong>#: FIELD1 # </strong>");
+                        columns.Bound("FIELD2").Title("name");
+                        columns.Bound("FIELD3").Title("age");
+                        columns.Bound("").Title("").Width("320px").HtmlAttributes(new { @class = "text-center" })
+                        .Actions(actions =>
+                        {
+                            actions.Text("<i class='icon-list'></i>").ActionType("showRowDetail");
+                            actions.Text("削除").ActionConfirm(@"
+                                function(dataItem){
+                                    return confirm(dataItem.FIELD3+'??');
+                                }
+                            ").ActionType("delRow");
+                            actions.Text("Custom1").Click(@"
+                                function (dataItem) {
+                                    alert(dataItem.FIELD2);
+                                }
+                            ");
+                            actions.Text("Custom2").Template("<a >Custom2</a>").Click(@"
+                                function (dataItem) {
+                                    alert(dataItem.FIELD3);
+                                }
+                            ");
+                        });
+
+                    })
+                    .DataSource("dataSource")
+                    .DetailTemplateId("template")
+
+            )
+        </div>
+    </div>
+</section>
+
+<script id="template" type="text">
+    <div id="gridDetail_#: FIELD1 #"></div>
+    <script>
+
+        //列信息
+        var columnsDetail =
+           [
+            {
+                field: "FirstName",
+                title: "FirstName"
+            },
+            {
+                field: "LastName",
+                title: "LastName"
+            }
+           ];
+
+        //初始化grid
+        $("#gridDetail_#: FIELD1 #").smatGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: "/Grid/DetailData?Id=#: FIELD1 #"
+                }
+            },    //数据源
+            columns: columnsDetail           //列信息
+        });
+    </script>
+</script>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+smatscript
+    //数据
+    var dataSource = [
+        { "FIELD1": "id1", "FIELD2": "name1", "FIELD3": 5 },
+        { "FIELD1": "id2", "FIELD2": "name2", "FIELD3": 4 },
+        { "FIELD1": "id3", "FIELD2": "name3", "FIELD3": 4 },
+        { "FIELD1": "id4", "FIELD2": "name4", "FIELD3": 3 },
+        { "FIELD1": "id5", "FIELD2": "name5", "FIELD3": 2 }
+    ];
+
+smat2script
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            @@(Html.Smat().Grid("grid")
+                .Columns(columns =>
+                {
+                    columns.Bound("FIELD1").Title("id").Template("<strong>#: FIELD1 # </strong>");
+                    columns.Bound("FIELD2").Title("name");
+                    columns.Bound("FIELD3").Title("age");
+                    columns.Bound("").Title("").Width("320px").HtmlAttributes(new { @@class = "text-center" })
+                    .Actions(actions =>
+                    {
+                        actions.Text("<i class='icon-list'></i>").ActionType("showRowDetail");
+                        actions.Text("削除").ActionConfirm(@@"
+                            function(dataItem){
+                                return confirm(dataItem.FIELD3+'??');
+                            }
+                        ").ActionType("delRow");
+                        actions.Text("Custom1").Click(@@"
+                            function (dataItem) {
+                                alert(dataItem.FIELD2);
+                            }
+                        ");
+                        actions.Text("Custom2").Template("<a >Custom2</a>").Click(@@"
+                            function (dataItem) {
+                                alert(dataItem.FIELD3);
+                            }
+                        ");
+                    });
+                })
+                .DataSource("dataSource")
+                .DetailTemplateId("template")
+            )
+        </div>
+    </div>
+</section>
+<script id="template" type="text">
+    <div id="gridDetail_#: FIELD1 #"></div>
+    <script>
+        //列信息
+        var columnsDetail =
+           [
+            {
+                field: "FirstName",
+                title: "FirstName"
+            },
+            {
+                field: "LastName",
+                title: "LastName"
+            }
+           ];
+
+        //初始化grid
+        $("#gridDetail_#: FIELD1 #").smatGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: "/Grid/DetailData?Id=#: FIELD1 #"
+                }
+            },    //数据源
+            columns: columnsDetail           //列信息
+        });
+    </script>
+</script>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+    hljs.configure({ tabReplace: '    ' }); // 4 spaces
+    $('pre code').each(function (i, e) {
+
+        if ($(this).find('.source-code').length > 0) {
+
+            $(this).html((asmat.htmlEncode($(this).find('.source-code').html())).replace(new RegExp("smatscript", "gm"), "&lt;script&gt;").replace(new RegExp("smat2script", "gm"), "&lt;/script&gt;") + "&lt;/script&gt;");
+
+        }
+
+        hljs.highlightBlock(e)
+    });
+</script>

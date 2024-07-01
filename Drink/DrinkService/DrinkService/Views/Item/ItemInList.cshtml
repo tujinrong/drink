@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "商品別設置リスト";
+}
+<script>
+ 
+    function checkForm() {
+        if ($('#referShopCD').ui().value() == "") {
+            smat.service.addErrorInfo("referShopCD", $('#referShopCD'), "【店舗】を入力してください。");
+        }
+    }
+
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+                @using (Html.Smat().BeginForm("itemListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                            {
+                                actions.Action("/Item/ItemInSearch").ActionBtn("btnSearch").CheckForm("checkForm").ResultHandler("itemListPager");
+                                actions.Action("/Report/DeliveryRoutePlacement").ActionBtn("btnPdf").CheckForm("checkForm").Success("downloadPDF").Async(false);
+                            }
+                        ))
+                {
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-fix-1">
+                                <div class="form-group">
+                                    @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                    {
+                                        @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                                        @Html.Smat().TextBox("referShopCD").Name("ShopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Smat().Refer("referShopCD").Name("ShopCD").Label("店舗").ReferKey("referShop").HtmlAttributes(new { cookie = "shopCD" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                    <div class="row row-tool">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            @(Html.Smat().Button("btnPdf")
+                                      .Content("帳票出力")
+                                      .HtmlAttributes(new { @class = "btn-primary" })
+                            )
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            @Html.Smat().Pager("itemListPager").DataHandler("itemListGrid")
+                        </div>
+                    </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("itemListGrid")
+                                  .Columns(columns =>
+                                  {
+                                      columns.Bound("No").Title("№").Width("60px").HtmlAttributes(new { @class = "text-center" });
+                                      columns.Bound("ItemCD").Title("商品コード").Width("100px");
+                                      columns.Bound("ItemName").Title("商品名").Width("300px");
+                                      columns.Bound("InNum").Title("設置数").Width("100px").HtmlAttributes(new { @class = "text-right" });
+                                      columns.Bound("").Title("");
+                                  })
+                )
+            </div>
+        </div>
+    </section>
+</section>

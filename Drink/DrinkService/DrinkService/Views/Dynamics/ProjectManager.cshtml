@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "プロジェクト管理";
+}
+
+<div id="projectManager_@(ViewBag.ProjID)"></div>
+
+
+<script>
+    var projID = "@ViewBag.ProjID";
+
+    smat.uiConfig.CodeMst = {
+        cache: true,
+        codeListUrl: "/Dynamics/GetOptionSet",
+        kindField: "OptSetName",
+        codeField: "CD",
+        nameField: "Name",
+        memoField: "Memo"
+
+    }
+    smat.global.codeMst = {};
+    smat.global.codeMstMap = {};
+    smat.globalInit();
+    smat.global.ignoreGlobalInit = false;
+
+    var type = "@ViewBag.type";
+
+    smat.dynamics.role.type = "9";
+
+    $("#projectManager_" + projID).smatDynamicsProjectManager({
+        projID: projID
+    });
+
+</script>

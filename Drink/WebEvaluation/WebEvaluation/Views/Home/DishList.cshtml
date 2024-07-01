@@ -1,0 +1,30 @@
+﻿@model WebEvaluation.ViewModels.HomeViewModel
+
+@{
+    ViewBag.IMG = "../Content/images/ic-logo.png";
+    ViewBag.Title = "料理管理";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+    ViewBag.color = "#2e2e2e";
+}
+
+
+<div id="main_box" class="jumbotron s-form-content" style="top: 20px; padding-top: 4px; bottom:40px;">
+
+
+</div>
+
+<script>
+
+    smat.service.openPage({
+        page: {
+            projID: 1,
+            entityName: "@ViewBag.entityName",
+            pageName: "@ViewBag.pageName"
+        },
+        fillTarget: "main_box",
+        afterOpen: function (smatWindow) {
+            //smatWindow.parent().css('z-index', 1);
+        }
+    });
+
+</script>

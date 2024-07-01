@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="ShopList.html" id="home-link" class="text-muted">
+                        <i class="fa fa-mail-reply text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">店舗管理</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding-top:0;">
+                                    <div class="row">
+                                        <div class="col-sm-6 text-left text-center-xs">
+                                            <button id="button1" class="btn-warning">一時保存</button>
+                                            <button id="button2" class="btn-warning">保存</button>
+                                            <button id="button3" class="btn-primary">閉じる</button>
+                                            <button id="button4" class="btn-danger">削除</button>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+
+                                    <div class="panel-body" style="padding:5px"></div>
+                                    <div class="form-horizontal">
+
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    
+                                                    <label class="input-s control-label">区分</label>
+                                                    <input type="text" class="form-control input-s s-textbox s-state-disabled" value="店舗/管理部署" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">店舗コード</label>
+                                                    <input id="input1" type="text" class="form-control input-s s-textbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">店舗名</label>
+                                                    <input id="input2" type="text" class="form-control input-s-bg s-textbox">
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">地域</label>
+                                                    <input id="input36" type="text" class="form-control input-s ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">エリア</label>
+                                                    <input id="input3" type="text" class="form-control input-s ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">システム導入日</label>
+                                                    <input id="input7" type="text" class="form-control input-s">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-2">
+                                                <div class="form-group">
+                                                    <label class="input-s control-label">店舗業務区分</label>
+                                                    <input id="input8" class="form-control input-s " value="0">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        // create DropDownList from input HTML element 
+        $("#input8").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "", value: "0" },
+            { text: "業務１", value: "1" },
+            { text: "業務２", value: "2" },
+            { text: "業務３", value: "3" },
+            { text: "業務４", value: "4" }
+            ],
+            index: 0
+        });
+
+        $("#input36").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "", value: "0" },
+            { text: "大阪", value: "1" },
+            { text: "東京", value: "2" },
+            { text: "京東", value: "3" }
+            ],
+            index: 0
+        });
+
+        $("#input3").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "", value: "0" },
+            { text: "エリア1", value: "1" },
+            { text: "エリア2", value: "2" },
+            { text: "エリア3", value: "3" }
+            ],
+            index: 0
+        });
+
+        $("#input7").asmatDatePicker();
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton({
+            click: function () { window.location.href = "ShopList.html"; }
+        });
+        $("#button3").asmatButton({
+            click: function () { window.location.href = "ShopList.html"; }
+        });
+        $("#button4").asmatButton({
+            click: function () { window.location.href = "ShopList.html"; }
+        });
+        $("#button5").asmatButton({
+            click: function () { window.location.href = "ShopList.html"; }
+        });
+
+    });
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

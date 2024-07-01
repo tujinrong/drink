@@ -1,0 +1,585 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "未処理予定検索";
+}
+<script>
+
+    var afterReferShop = function (data) {
+        if (data != undefined) {
+            smat.service.loadJosnData({
+                url: "/Staff/GetStaffList",
+                params: { "ShopCD": data["ShopCD"] },
+                success: function (result) {
+
+                    var emptyItem = {};
+                    emptyItem.staffCD = "";
+                    emptyItem.StaffName = "";
+
+                    result.unshift(emptyItem);
+
+                    $("#ddlStaff").ui().setDataSource(result);
+
+                    @*if (data.defaultStaff != undefined) {
+                        $("#ddlStaff").ui().value('@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).StaffCD)');
+                    }*@
+                }
+            });
+
+            //smat.service.loadJosnData({
+            //    url: "/DeliveryRoute/GetShopUndoRoute",
+            //    params: { "ShopCD": data["ShopCD"] },
+            //    success: function (result) {
+            //
+            //        $("#ddlRoute").ui().setDataSource(result);
+            //    }
+            //});
+
+            smat.service.loadJosnData({
+                url: "/DeliveryRoute/GetRouteList",
+                params: { "ShopCD": data["ShopCD"] },
+                success: function (result) {
+
+                    $("#ddlRoute").ui().setDataSource(result);
+                }
+            });
+
+        } else {
+            $("#ddlStaff").ui().setDataSource([]);
+
+            smat.service.loadJosnData({
+                url: "/DeliveryRoute/GetRouteList",
+                params: {},
+                success: function (result) {
+
+                    $("#ddlRoute").ui().setDataSource(result);
+                }
+            });
+        }
+        $("#editClientName").ui().reSetCacheValue();
+    }
+
+    function ddl_refer_getParam(param) {
+        if ($('#chs-hoDate-type-last').prop("checked") == true) {
+            param.LastFlag = "1";
+
+        } else if ($('#chs-hoDate-type-month').prop("checked") == true) {
+            var month = asmat.toString($("#ddl_hoDate_month").ui().value(), "yyyyMM");
+            param.hoDateFrom = month + "01";
+
+            if (month.substr(4, 2) == "12") {
+                var tempMonth = (Number(month.substr(0, 4)) + 1) + "00";
+
+                var nextMonth = asmat.parseDate((Number(tempMonth) + 1) + "01", "yyyyMMdd");
+                param.hoDateTo = month + (new Date(nextMonth.getTime() - 1000 * 60 * 60 * 24)).getDate();
+            } else {
+                var nextMonth = asmat.parseDate((Number(month) + 1) + "01", "yyyyMMdd");
+                param.hoDateTo = month + (new Date(nextMonth.getTime() - 1000 * 60 * 60 * 24)).getDate();
+            }
+
+
+        } else if ($('#chs-hoDate-type-date').prop("checked") == true) {
+            param.hoDateFrom = asmat.toString($("#ddl_hoDate_from").ui().value(), "yyyyMMdd");
+            param.hoDateTo = asmat.toString($("#ddl_hoDate_to").ui().value(), "yyyyMMdd");
+        }
+    }
+
+    function checkReferCondition() {
+
+        if ($('#ShopName').ui().value() == "") {
+            smat.service.addErrorInfo("ShopName", $('#ShopName'), "【店舗】を入力してください");
+        }
+
+        if ($('#chs-hoDate-type-last').prop("checked") == true) {
+
+        } else if ($('#chs-hoDate-type-month').prop("checked") == true) {
+
+            if ($('#ddl_hoDate_month').ui().value() == null) {
+                smat.service.addErrorInfo("ddl_hoDate_month", $('#ddl_hoDate_month'), "【月】を入力ください");
+            }
+
+        } else if ($('#chs-hoDate-type-date').prop("checked") == true) {
+            //if ($('#ddl_hoDate_from').ui().value() == null) {
+            //    smat.service.addErrorInfo("ddl_hoDate_from", $('#ddl_hoDate_from'), "【開始期間】を入力ください");
+            //}
+
+            if (
+                $('#ddl_hoDate_from').ui().value() != null
+                && $('#ddl_hoDate_to').ui().value() != null
+                && (Number(asmat.toString($("#ddl_hoDate_from").ui().value(), "yyyyMMdd")) > Number(asmat.toString($("#ddl_hoDate_to").ui().value(), "yyyyMMdd")))
+
+                ) {
+                smat.service.addErrorInfo("ddl_hoDate_to", $('#ddl_hoDate_from'), "【任意期間】関係不正");
+            }
+        }
+
+    }
+
+    function checkPDFOpen() {
+        var grid = $("#deliveryRouteRefer-list-grid").ui();
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            smat.service.addErrorInfo("selectedList", null, "対象となるデータがありません。データを選択してください。");
+        }
+    }
+
+    function cancelDone() {
+        $("#deliveryRouteRefer_Llist_search_btn").click();
+    }
+
+    function getPdfParam(param) {
+        var grid = $("#deliveryRouteRefer-list-grid").ui();
+        var selectDatas = grid.getSelectedDatas()["selectedList"];
+        var clientList = [];
+        for (var index in selectDatas) {
+            clientList.push({
+                ShopCD: selectDatas[index]["ShopCD"],
+                ClientCD: selectDatas[index]["ClientCD"],
+                TantoCD: selectDatas[index]["StaffCD"],
+                FirstFlag: selectDatas[index]["初回"],
+                HoDate: selectDatas[index]["HoDate"],
+                Route: selectDatas[index]["Route"]
+            });
+        }
+
+        param.hoClientList = clientList;
+    }
+
+    function formatMoney(dataItem) {
+        return asmat.format("{0:n0}", Number(dataItem["売上額"]));
+    }
+
+    function formatMoney2(dataItem) {
+        return asmat.format("{0:n0}", Number(dataItem["集金額"]));
+    }
+
+    function formatStats(dataItem) {
+        if (dataItem["状態"] == "2") {
+            return "中";
+        }else if (dataItem["状態"] == "1") {
+            return "済";
+        }
+        return "未";
+    }
+    
+
+    //列信息
+    var columnsDetail =
+       [
+        {
+            field: "ShelfNo",
+            title: "棚",
+            width: "50px",
+            attributes: { 'class': 'text-center' },
+            template: function (data) {
+                if (data["ItemAddFlag"] == "1") {
+                    return "*" + data["ShelfNo"];
+                } else {
+                    return data["ShelfNo"];
+                }
+            }
+        },
+        {
+            field: "SaleFlag",
+            title: " ",
+            width: "40px",
+            template: function (data) {
+                if (data["SaleFlag"] == "1") {
+                    return "X";
+                } else {
+                    return "";
+                }
+            },
+            attributes: { 'class': 'text-center' }
+        },
+        {
+            field: "ItemsName",
+            title: "商品名"
+        },
+        {
+            field: "BeforeNum",
+            title: "前補充",
+            width: "70px",
+            attributes: { 'class': 'text-right' },
+            template: function (data) {
+                if (data["BeforeNum"] == null) {
+                    return "";
+                } else {
+                    return data["BeforeNum"];
+                }
+            }
+        },
+        {
+            field: "PrevNum",
+            title: "前補後",
+            width: "70px",
+            attributes: { 'class': 'text-right' },
+            template: function (data) {
+                if (data["PrevNum"] == null) {
+                    return "";
+                } else {
+                    return data["PrevNum"];
+                }
+            }
+        },
+        {
+            field: "ThisNum",
+            title: "現在庫",
+            width: "70px",
+            attributes: { 'class': 'text-right' }
+        },
+        {
+            field: "UsedNum",
+            title: "使用",
+            width: "70px",
+            attributes: { 'class': 'text-right' }
+        },
+        {
+            field: "AfterNum",
+            title: "補充後",
+            width: "70px",
+            attributes: { 'class': 'text-right' }
+        },
+        {
+            field: "Money",
+            title: "金額",
+            width: "82px",
+            attributes: { 'class': 'text-right' },
+            template: function (data) {
+                return asmat.format("{0:n0}", Number(data.Money));
+            }
+        },
+        {
+            field: "FreshDate",
+            title: "賞味期限",
+            width: "130px",
+            attributes: { 'class': 'text-center' },
+            template: function (data) {
+                if (data["FreshDate"] != null && data["FreshDate"] != "") {
+                    return asmat.toString(asmat.parseDate(data["FreshDate"]), "yyyy/MM/dd");
+                } else {
+                    return "";
+                }
+            }
+        }
+       ];
+
+    function detailInit(dataItem) {
+        //初始化grid
+        $("#deliveryRouteRefer-list-gridDetail_" + dataItem["No"]).smatGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: "/DeliveryRoute/GetHoClientItems?showAll=1&ShopCD=" + dataItem["ShopCD"] + "&ClientCD=" + dataItem["ClientCD"] + "&HoDate=" + dataItem["HoDate"] + "&TantoCD=" + dataItem["StaffCD"] + "&Route=" + dataItem["Route"]
+                }
+            },    //数据源
+            columns: columnsDetail           //列信息
+        });
+    }
+
+    function templateHoDate(dataItem) {
+        var templateStr = '';
+
+        //if (dataItem["AfterStopFlag"] == "1") {
+        //    templateStr = asmat.toString(new Date(dataItem["HoDate"]), "yyyy/MM/dd") + '<span style="color:red;">今ｽﾄ</span>';
+        //} else if (dataItem["AfterStopFlag"] == "2") {
+        //    templateStr = "<span style='text-decoration:line-through;'>" + asmat.toString(new Date(dataItem["HoDate"]), "yyyy/MM/dd") + "</span><br />" + '<span style="color:red;">→' + asmat.toString(new Date(dataItem["AfterDate"]), "yyyy/MM/dd") + '</span>';
+        //} else {
+        //    templateStr = asmat.toString(new Date(dataItem["HoDate"]), "yyyy/MM/dd");
+        //}
+
+        templateStr = asmat.toString(new Date(dataItem["HoDate"]), "yyyy/MM/dd");
+
+        return templateStr;
+    }
+
+    var deliveryRouteReferDataBound = function (e) {
+        var grid = $("#deliveryRouteRefer-list-grid").data('asmatGrid');
+        var trs = e.sender.tbody.children('tr');
+        $.each(trs, function (n, value) {
+
+            var dataItem = grid.dataItem($(this));
+            if (dataItem["AfterStopFlag"] == "1" || dataItem["AfterStopFlag"] == "2") {
+                $(this).find("label.i-checks").remove();
+                $(this).find("button").remove();
+
+                $(this).children(":last-child").remove();
+                $(this).children(":last-child").remove();
+
+                $(this).children(":last-child").attr("colspan", 3);
+                $(this).children(":last-child").css("text-align", "left");
+                $(this).children(":last-child").css("height", "32px");
+
+                var templateStr = ""
+                if (dataItem["AfterStopFlag"] == "1") {
+                    templateStr = '<span style="color:red;">今スト</span>';
+                } else if (dataItem["AfterStopFlag"] == "2") {
+                    templateStr = '<span style="color:red">後日【' + asmat.toString(new Date(dataItem["AfterDate"]), "yyyy/MM/dd") + '】</span>';
+                } 
+
+                $(this).children(":last-child").html(templateStr);
+
+                $(this).children().addClass("tr-after-stop");
+            }
+
+            if (dataItem["状態"] != "0") {
+                $(this).children(":first-child").html("");
+            }
+
+        });
+
+    }
+</script>
+<script id="template" type="text">
+    <div id="deliveryRouteRefer-list-gridDetail_#: No#"></div>
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        @using (Html.Smat().BeginForm("deliveryRouteReferForm", new { @class = "panel-body", style = "padding:5px 20px" }
+            ).Actions(actions =>
+                {
+                    actions.Action("/DeliveryRoute/DeliveryRouteUndoRefer").ActionBtn("deliveryRouteRefer_Llist_search_btn").GetParam("ddl_refer_getParam").ResultHandler("deliveryRouteRefer-list-pager").CheckForm("checkReferCondition");
+                    actions.Action("/DeliveryRoute/DeliveryCancel").ActionBtn("btnCancel").Confirm("選択された未処理予約をキャンセルしますか？").GetParam("getPdfParam").CheckForm("checkPDFOpen").Success("cancelDone").Async(false);
+                }
+            ))
+        {
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                            {
+                                @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                                @Html.Smat().TextBox("ShopName").Name("shopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                            }
+                            else
+                            {
+                                @Html.Smat().Refer("ShopName").Name("shopCD").Label("店舗").ReferKey("referShop").AfterSetValue("afterReferShop").HtmlAttributes(new { cookie = "shopCD" })
+                            }
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @(Html.Smat().DropDownList("ddlStaff")
+                                    .Name("staffCD")
+                                    .Label(label =>
+                                    {
+                                        label.Text("担当者");
+                                    })
+                                    .DataTextField("StaffName")
+                                    .DataValueField("StaffCD")
+                                    .DataType("json")
+                //.Url("/Staff/GetStaffList")
+                                    .EmptyText("")
+                                    .HtmlAttributes(new { @class = " input-s-date", style="width:160px;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @Html.Smat().Refer("editClientName").Name("clientCD").Label("顧客").ReferKey("referClient").Enable(true)
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @(Html.Smat().DropDownList("ddlRoute")
+                                        .Name("route")
+                                        .Label("ルート")
+                                        .DataTextField("RouteCD")
+                                        .DataValueField("RouteCD")
+                                        //.BindTo(ViewData["routeList"] as List<object>)
+                                        .HtmlAttributes(new { @class = " input-s", style = "width:110px; margin-left: 0px;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="input-s-sm control-label">補充日</label>
+                        <div class="col-fix-2 radio-group">
+                            <div class="row form-group radio-group-box" style="display:none;">
+                                <label class="radio m-l-md   i-checks input-s-md"><input type="radio" class="chs-item" id="chs-hoDate-type-last" name="name1"><i></i>直近表示</label>
+                            </div>
+                            <div class="row form-group radio-group-box" style="display:none;">
+                                <label class="radio m-l-md  i-checks input-s-md"><input type="radio" id="chs-hoDate-type-month" class="chs-item" name="name1"><i></i>月</label>
+                                @Html.Smat().DatePicker("ddl_hoDate_month").Enable(false).HtmlAttributes(new { @class = " s-datepicker input-s-date" }).Depth(Smat.Mvc.Extensions.CalendarView.Year).Start(Smat.Mvc.Extensions.CalendarView.Year).Value(DateTime.Now).Format("yyyy/MM")
+                            </div>
+                            <div class="row form-group radio-group-box">
+                                <label class="radio m-l-md  i-checks input-s-md" style="display:none;"><input type="radio" id="chs-hoDate-type-date" class="chs-item" name="name1" checked="checked"><i></i>任意期間</label>
+                                @Html.Smat().DatePicker("ddl_hoDate_from").Enable(false).HtmlAttributes(new { @class = "s-datepicker input-s-date" })  ～
+                                @Html.Smat().DatePicker("ddl_hoDate_to").Enable(false).HtmlAttributes(new { @class = "s-datepicker input-s-date" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row row-tool">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("deliveryRouteRefer_Llist_search_btn").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                    @Html.Smat().Button("btnCancel").Content("予定キャンセル").HtmlAttributes(new { @class = "btn-danger" })
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("deliveryRouteRefer-list-pager").DataHandler("deliveryRouteRefer-list-grid").HtmlAttributes(new { @class = "pagination pagination-sm m-t-xs m-b-none" })
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("deliveryRouteRefer-list-grid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(" ").DataType("checkBox-selecter").Width("30px").CheckAll(true).SelectedDataName("selectedList").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("お客様").Title("お客様");
+                          columns.Bound("HoDate").Title("補充日").Width("104px").TemplateBound("templateHoDate").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("Route").Title("ルート").Width("54px").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("担当者").Title("担当者").Width("110px");
+                          columns.Bound("売上額").Title("売上額").Width("90px").HtmlAttributes(new { @class = "text-right" }).TemplateBound("formatMoney");
+                          columns.Bound("集金額").Title("集金額").Width("90px").HtmlAttributes(new { @class = "text-right" }).TemplateBound("formatMoney2");
+                          columns.Bound("状態").Title("状態").Width("40px").HtmlAttributes(new { @class = "text-center" }).TemplateBound("formatStats");
+                          //columns.Bound("").Title("").Width("70px").HtmlAttributes(new { @class = "text-center" })
+                          //      .Actions(actions =>
+                          //      {
+                          //          actions.Text("<i class='icon-list'></i>").ActionType("showRowDetail");
+                          //      });
+                      })
+                //.DataSource("dataSource")
+                        .DetailTemplateId("template")
+                        .DetailTemplateInit("detailInit")
+                  .DataBound("deliveryRouteReferDataBound")
+                )
+            </div>
+        }
+    </section>
+</section>
+<script>
+
+    function openItemPdfForm(dataItem) {
+
+        var grid = $("#deliveryRouteRefer-list-grid").ui();
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            smat.service.notice({ msg: "対象となるデータがありません。データを選択してください。", type: "error" });
+        } else {
+            debugger;
+            var selectDatas = grid.getSelectedDatas()["selectedList"];
+
+            var clientList = [];
+            for (var index in selectDatas) {
+                clientList.push({
+                    ShopCD: selectDatas[index]["ShopCD"],
+                    ClientCD: selectDatas[index]["ClientCD"],
+                    Seq: selectDatas[index]["Seq"],
+                });
+            }
+            var checkUrl = "/Report/DeliveryRouteCheck?hoClientJson=" + JSON.stringify(clientList);
+            var url = "/Report/DeliveryRoute?hoClientJson=" + JSON.stringify(clientList);
+            var hasData = false;
+            smat.service.loadJosnData({
+                url: checkUrl,
+                async: false,
+                success: function (result) {
+                    hasData = result.hasData;
+                }
+            });
+
+            if (hasData) {
+                window.open("/Main/PDFView?Path=" + encodeURIComponent(url));
+            }
+            else {
+                smat.service.notice({ msg: "補充明細データがありません。", type: "info" });
+            }
+        }
+    }
+
+    $(document).ready(function () {
+
+        //radio group
+
+
+        $.each($(".radio-group"), function (n, value) {
+
+            var groupTarger = $(this);
+            setRadioGroupState(groupTarger);
+
+            var radios = $(this).find(" .radio-group-box input[type='radio']");
+            $.each(radios, function (n, value) {
+
+                $(this).bind("click", function (e) {
+
+                    setRadioGroupState(groupTarger);
+                });
+            });
+        });
+
+        $("#editClientName").ui().config.getParam = GetReferClient;
+    });
+
+    function setRadioGroupState(target) {
+        var radios = target.find(" .radio-group-box input[type='radio']");
+
+        $.each(radios, function (n, value) {
+
+            var datePickers = $(this).parent().parent().find('input.s-datepicker');
+
+            if (this.checked) {
+                if (datePickers.length > 0) {
+                    $.each(datePickers, function (n, value) {
+
+                        $(this).data("asmatDatePicker").enable(true);
+                    });
+                }
+
+            } else {
+                if (datePickers.length > 0) {
+                    $.each(datePickers, function (n, value) {
+
+                        $(this).data("asmatDatePicker").enable(false);
+                    });
+                }
+            }
+        });
+    }
+
+    function GetReferClient() {
+        var param = {
+            ShopCD: $("#ShopName").ui().value()
+        }
+
+        return param;
+    }
+
+    
+</script>
+
+@if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+{
+    <script>
+
+
+        jQuery(document).ready(function () {
+            var data = {
+                ShopCD: "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD)",
+                defaultStaff: true
+            };
+
+            afterReferShop(data);
+        });
+
+
+
+    </script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnCancel").remove();
+        }
+    });
+</script>

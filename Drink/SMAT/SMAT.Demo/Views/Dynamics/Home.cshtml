@@ -1,0 +1,63 @@
+﻿@using SafeNeeds.DySmat.Model
+@{
+    ViewBag.Title = "配置ドリンク ";
+}
+<section class="scrollable wrapper" style="padding: 0 0 0 2px;">
+    <section class="panel panel-default">
+        <div class="panel-body">
+            @{
+                List<Y_MenuGroup> menuGroupList = ViewData["menuGroupList"] as List<Y_MenuGroup>;
+                foreach (Y_MenuGroup group in menuGroupList)
+                {
+                    <section class="panel panel-home no-borders">
+                        <header class="panel-heading font-bold"><span class="panel-title">@group.GroupDesc</span></header>
+                        <div class="panel-body">
+                            @foreach (Y_Menu menu in group.Menus)
+                            {
+                                <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                    <div class="item">
+                                        <a href="javascript:void(0)" url="@menu.MenuUrl" urltype="@menu.ObjetType" class="panel-brand text-lt">
+                                            <i class="home-menu-icon @menu.MenuIcon"></i>
+                                            <span class="hidden-nav-xs m-l-sm">@menu.MenuDesc</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+            }
+        </div>
+
+        <script>
+            var links = $("a[url]");
+            $.each(links, function () {
+                $(this).bind("click", function () {
+                    var url = $(this).attr("url");
+                    var urlType = $(this).attr("urltype");
+
+                    if (urlType == "menu")
+                    {
+                        smat.service.openForm({
+                            url: url,
+                            fillTarget: "main_form_content"
+                        });
+                    } else if (urlType == "dynamics") {
+                        var reg = /\/(\w+)\/(\w+)/;
+                        var regArr = reg.exec(url);
+                        var projID = "@ViewBag.ProjID";
+                        var entityName = regArr[1];
+                        var formName = regArr[2];
+                        url = "/Dynamics/FormPage?ProjID=" + projID + "&EntityName=" + entityName + "&FormName=" + formName;
+                        smat.service.openForm({
+                            url: url,
+                            fillTarget: "main_form_content"
+                        });
+                    }
+                    
+                });
+            });
+        </script>
+
+    </section>
+</section>

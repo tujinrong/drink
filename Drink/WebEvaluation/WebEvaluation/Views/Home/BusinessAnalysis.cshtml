@@ -1,0 +1,42 @@
+﻿@model WebEvaluation.ViewModels.HomeViewModel
+
+@{
+    ViewBag.IMG = "../Content/images/ic-logo.png";
+    ViewBag.Title = "データ分析";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+    ViewBag.color = "#2e2e2e";
+}
+
+<style>
+
+    .s-tabstrip .s-content.s-state-active {
+    overflow: hidden;
+}
+
+</style>
+
+<div id="main_box" class="jumbotron fill-box" style="top: 20px; padding-top: 4px; bottom:40px; min-height:740px;">
+
+
+</div>
+
+<script>
+
+    $(".body-content").width("100%").css("padding", "0").css("min-height", "740px");
+
+
+    smat.dynamics.role.type = "1";
+
+    smat.service.openPage({
+        page: {
+            projID: 1,
+            entityName: "@ViewBag.entityName",
+            pageName: "@ViewBag.pageName"
+        },
+        fillTarget: "main_box",
+        afterOpen: function (smatWindow) {
+            //smatWindow.parent().css('z-index', 1);
+        }
+    });
+
+</script>

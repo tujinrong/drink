@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "郵便番号保守";
+}
+<script type="text/javascript">
+
+
+
+    function checkForm() {
+        debugger;
+        if ($("#fileName").val() == "") {
+            smat.service.notice({msg:"CSVファイルを選択してください！", type:"error"});
+            return false;
+        }
+        else {
+            var fileName = $("#fileName").val().split(".");
+            if (fileName[fileName.length - 1].toLocaleUpperCase() != "CSV") {
+                smat.service.notice({ msg: "CSVファイルを選択してください！", type: "error" });
+                return false;
+            }
+
+        }
+
+        smat.service.openLoding();
+        return true;
+    }
+
+    $(document).ready(function () {
+
+        var msg = "@ViewBag.msg";
+        var msgType = "@ViewBag.msgType";
+        if (msg.length > 0) {
+            if (msgType.length > 0) {
+                smat.service.notice({ msg: msg, type: msgType });
+            } else {
+                smat.service.notice({ msg: msg });
+            }
+        }
+
+    });
+
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+
+        @using (Html.BeginForm("ZipcodeSave", "Main", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", @onsubmit = "return checkForm()" }))
+        {
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            <label class="input-s-sm control-label">ファイル</label>
+                            @Html.Smat().TextBox("fileName").HtmlAttributes(new { @class = "form-control input-s-lg" })
+                            <input type="file" id="zipcoderfile" name="datafile" style="display:none;" />
+                            @*<button id="btnSelect" class="btn-primary">選択</button>*@
+                            <a href="#" class="s-button btn-primary" id="btnSelect">選択</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group text-center">
+                            @Html.Smat().Button("mainZipcodeImport_edit_readin_btn").Content("取込").HtmlAttributes(new { @class = "btn-warning" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+    <script>
+
+        $("#btnSelect").click(function () {
+            $("#zipcoderfile").click();
+        });
+
+
+        //$("#btnSelect").asmatButton({
+        //    click: function () {
+        //        $("#zipcoderfile").click();
+        //    }
+        //});
+
+        $(document).ready(function () {
+            $("#zipcoderfile").bind("change", function (e) {
+                var fileName = $(this).val().split("\\");
+                $("#fileName").val(fileName[fileName.length - 1]);
+            });
+        });
+    </script>
+</section>

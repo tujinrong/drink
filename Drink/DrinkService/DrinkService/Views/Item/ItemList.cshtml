@@ -1,0 +1,252 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "商品マスタ";
+    var roleCD = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD;
+}
+
+<script>
+    function openItemEditForm(dataItem) {
+
+        smat.service.openForm({
+            url: "/Item/ItemEdit",
+            fillTarget: "body_id",
+            params: {
+                itemCD: dataItem.ItemCD == undefined ? "" : dataItem.ItemCD,
+            },
+            afterClose: function (result) {
+                if (result == true) {
+
+                    if ($("#itemListPager").ui().dataSource != undefined && $("#itemListPager").ui().dataSource.pageData.length > 0) {
+                        $("#itemListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+    }
+
+    function downloadItemCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+
+    function formatMoney(dataItem) {
+        //return dataItem.GetMoney;
+        return asmat.format("{0:n0}", Number(dataItem.StandardPrice));
+    }
+
+    function formatMoney2(dataItem) {
+        //return dataItem.GetMoney;
+        return asmat.format("{0:n0}", Number(dataItem.ShopPrice));
+    }
+
+    var saleEndDayTemplate = function (dataItem) {
+        if (dataItem.SaleEndDay) {
+            return asmat.toString(asmat.parseDate(dataItem.SaleEndDay), "yyyy/MM/dd");
+        } else {
+            return "";
+        }
+        
+    }
+
+    function templateItemName(dataItem) {
+        var today = new Date();
+        if (dataItem.SaleStartDay) {
+            if (today < new Date(dataItem.SaleStartDay)) {
+                return dataItem.ItemName + "&nbsp;<span style='color:red;vertical-align:super; font-size:14px;'>適用前</span>";
+            }
+        }
+        if (dataItem.FreezingDay) {
+            if (today > new Date(dataItem.FreezingDay)) {
+                return dataItem.ItemName + "&nbsp;<span style='color:red;vertical-align:super; font-size:14px;'>凍結</span>";
+            }
+        }
+        return dataItem.ItemName;
+    }
+
+    function templateTaxTypeCD(dataItem) {
+        if (dataItem.TaxTypeCD == "0") {
+            return "★";
+        }
+        return "";
+    }
+
+    function getParam(params) {
+        if ($('#chk-box-all').prop("checked") == true) {
+            params.searchAll = true;
+        } else {
+            params.searchAll = false;
+        }
+    }
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag)
+    {
+        editStr = "参照";
+    }
+}
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+                @using (Html.Smat().BeginForm("itemListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                    {
+                        actions.Action("/Item/ItemSearch").ActionBtn("btnSearch").GetParam("getParam").ResultHandler("itemListPager");
+                        actions.Action("/Item/ItemCsv").ActionBtn("btnCsv").GetParam("getParam").Success("downloadItemCsv");
+                    }
+                ))
+                {
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @Html.Smat().TextBox("txtItemCD").Name("itemCD").Label("コード").HtmlAttributes(new { @class = "form-control input-s", style = "width:200px" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @Html.Smat().TextBox("txtItemName").Name("itemName").Label("商品名").HtmlAttributes(new { @class = "form-control input-s", style = "width:200px" })
+                            </div>
+                        </div>
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                <input id="ddlMainMakerCD" name="MakerCD" class="input-s" style="width:200px;" />
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                     <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                <label class="input-s-sm control-label">表示</label>
+                                <label class="checkbox m-l-md  i-checks input-s-sm"><input id="chk-box-all" type="checkbox" class="chs-item" name="name1"><i></i>全件表示</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                }
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row row-tool">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                    @Html.Smat().Button("btnCsv").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                    @if (roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_本部参照)
+                    { 
+                        @(Html.Smat().Button("btnNew")
+                                        .Content("新規")
+                                        .HtmlAttributes(new { @class = "btn-primary" })
+                                        .Events(events =>
+                                        {
+                                            events.Click("openItemEditForm");
+                                        })
+                        )
+                        
+                        
+                        @Html.Smat().Button("btnImport").Content("EXCEL取込").HtmlAttributes(new { @class = "btn-primary" })
+                    }
+                    
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("itemListPager").DataHandler("itemListGrid").HtmlAttributes(new { @class = "ccc1" })
+                </div>
+            </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("itemListGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("TaxTypeCD").Title(" ").TemplateBound("templateTaxTypeCD").Width("30px").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("ItemCD").Title("コード").Width("100px");
+                          columns.Bound("ItemName").Title("商品名").TemplateBound("templateItemName");
+                          columns.Bound("SaleEndDay").Title("販売終了日").Width("110px").TemplateBound("saleEndDayTemplate");
+                          columns.Bound("StandardPrice").Title("標準単価").Width("140px").HtmlAttributes(new { @class = "text-right" }).TemplateBound("formatMoney");
+                          columns.Bound("ShopPrice").Title("店舗単価").Width("140px").HtmlAttributes(new { @class = "text-right" }).TemplateBound("formatMoney2");
+                          columns.Bound("InNum").Title("入数").Width("80px").HtmlAttributes(new { @class = "text-right" });
+                          columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                            ).Actions(actions =>
+                             {
+                                 if (roleCD == DrinkService.Models.ModelBase.CN役割_本部参照 || roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者)
+                                 {
+                                     actions.Text(editStr).Click("openItemEditForm");
+                                 }
+                                 
+                             });
+                      })
+                )
+            </div>
+        </div>
+
+        <script>
+    $(document).ready(function () {
+        if (Modernizr.ios || Modernizr.android) {
+            $("#btnCsv").hide();
+            $("#btnImport").hide();
+        };
+
+
+        $("#btnImport").bind("click", function () {
+            smat.dynamics.service.dyImport({
+                projID: 1,
+                entityName: "M_Item",
+                fromEntityName: "M_Item",
+                fromFormName: "M_Item",
+                ImportField: {
+                    "コード": "ItemCD"
+                 , "商品名": "ItemName"
+                 , "略称": "ShortName"
+                 , "適用開始日": "SaleStartDay"
+                 , "販売終了日": "SaleEndDay"
+                 , "凍結日": "FreezingDay"
+                 , "標準単価": "StandardPrice"
+                 , "店舗単価": "ShopPrice"
+                 , "入数": "InNum"
+                 , "研修資格コード": "QualifiedCD"
+                 , "メーカーコード": "MakerCD"
+                 , "種別コード": "ItemTypeCD"
+                },
+                success: function (result) {
+
+                }
+
+            });
+        })
+
+        var ds2 = [];
+
+        var MakerMstListStr = "@ViewBag.MakerMstList";
+
+        var MakerMstList = MakerMstListStr.split(",");
+
+        ds2.push({ Text: "", Value: "" });
+        if (MakerMstListStr) {
+            for (var i in MakerMstList) {
+                ds2.push({ Text: MakerMstList[i].split("|")[1], Value: MakerMstList[i].split("|")[0] })
+            }
+        }
+
+        $("#ddlMainMakerCD").smatDropDownList({
+            label: {
+                text: "メーカー",
+                attrs: {
+                    class: "input-s-sm",
+                    style: "width:80px;white-space: nowrap;"
+                }
+            },
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: ds2
+        });
+    });
+        </script>
+
+    </section>
+</section> 

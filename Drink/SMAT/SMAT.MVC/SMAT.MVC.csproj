@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DA4DDE6D-1029-4DC8-AC42-0806319FC0F0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SMAT.MVC</RootNamespace>
+    <AssemblyName>Asmat.SMAT.MVC</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\AjaxDataSource.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Common\MvcUtil.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\ComponentExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\TimePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\ITimePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\ITextAreaExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\TextAreaExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridColumnAction.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridColumn.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridColumnActionExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridColumnExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridDataSource.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\GridExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\IGridColumnAction.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\IGridColumn.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\IGridColumnInternal.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\IGridExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\CheckBoxExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\CalendarView.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\DateTimePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\ICheckBoxExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\IDropDownListExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\DropDownListExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\IDateTimePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\IReferExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\ReferExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\ITextBoxExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\TextBoxExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\FormAction.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\FormActionExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\FormExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\IFormAction.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\IFormExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\IPagerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\PagerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Framework\SmatMvcForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SMAT.Mvc.Extensions\ISmatEvent.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\ITemplateExtensions.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\MvcHtmlExtensions.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Navigation\IRadioButtonExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Navigation\RadioButtonExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Navigation\ButtonExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Navigation\NavigationExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\Navigation\IButtonExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\OrientationType.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\ScriptBuilder.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\DatePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\IDatePickerExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\DataManagement\Editor\EditorExtension.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\SmatEvent.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\SmatTooltip.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\SmatLabel.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\SmatManager.cs" />
+    <Compile Include="SMAT.Mvc.Extensions\TemplateExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ASMAT.UI\images\temp-user.png" />
+    <Content Include="ASMAT.UI\Scripts\asmat.all.min.js" />
+    <Content Include="ASMAT.UI\Scripts\jquery.min.js" />
+    <Content Include="ASMAT.UI\Scripts\js\app.js" />
+    <Content Include="ASMAT.UI\Scripts\js\app.plugin.js" />
+    <Content Include="ASMAT.UI\Scripts\js\bootstrap.js" />
+    <Content Include="ASMAT.UI\Scripts\js\ie\excanvas.js" />
+    <Content Include="ASMAT.UI\Scripts\js\ie\html5shiv.js" />
+    <Content Include="ASMAT.UI\Scripts\js\ie\respond.min.js" />
+    <Content Include="ASMAT.UI\Scripts\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="ASMAT.UI\Scripts\smat.core.js" />
+    <Content Include="ASMAT.UI\Scripts\smat.Service.js" />
+    <Content Include="ASMAT.UI\Scripts\smat.ui.js" />
+    <Content Include="ASMAT.UI\Styles\asmat.common-material.min.css" />
+    <Content Include="ASMAT.UI\Styles\asmat.common.min.css" />
+    <Content Include="ASMAT.UI\Styles\asmat.material.min.css" />
+    <Content Include="ASMAT.UI\Styles\asmat.mobile.all.min.css" />
+    <Content Include="ASMAT.UI\Styles\asmat.silver.min.css" />
+    <Content Include="ASMAT.UI\Styles\css\animate.css" />
+    <Content Include="ASMAT.UI\Styles\css\app.css" />
+    <Content Include="ASMAT.UI\Styles\css\bootstrap.css" />
+    <Content Include="ASMAT.UI\Styles\css\font-awesome.min.css" />
+    <Content Include="ASMAT.UI\Styles\css\font.css" />
+    <Content Include="ASMAT.UI\Styles\css\simple-line-icons.css" />
+    <Content Include="ASMAT.UI\Styles\fonts\fontawesome-webfont.svg" />
+    <Content Include="ASMAT.UI\Styles\fonts\Simple-Line-Icons.dev.svg" />
+    <Content Include="ASMAT.UI\Styles\fonts\Simple-Line-Icons.svg" />
+    <Content Include="ASMAT.UI\Styles\Material\editor.png" />
+    <Content Include="ASMAT.UI\Styles\Material\imagebrowser.png" />
+    <Content Include="ASMAT.UI\Styles\Material\indeterminate.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\loading-image.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\loading.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\loading_2x.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\slider-h.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\slider-v.gif" />
+    <Content Include="ASMAT.UI\Styles\Material\sprite.png" />
+    <Content Include="ASMAT.UI\Styles\Material\sprite_2x.png" />
+    <Content Include="ASMAT.UI\Styles\Material\sprite_kpi.png" />
+    <Content Include="ASMAT.UI\Styles\Material\sprite_kpi_2x.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\editor.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\imagebrowser.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\indeterminate.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\loading-image.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\loading.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\loading_2x.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\markers.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\markers_2x.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\slider-h.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\slider-v.gif" />
+    <Content Include="ASMAT.UI\Styles\Silver\sprite.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\sprite_2x.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\sprite_kpi.png" />
+    <Content Include="ASMAT.UI\Styles\Silver\sprite_kpi_2x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

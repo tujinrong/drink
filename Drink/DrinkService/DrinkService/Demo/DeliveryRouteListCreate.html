@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="Home.html" id="home-link" class="text-muted">
+                        <i class="icon icon-home text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">補充集金リスト作成</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
+                            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                                <img src="images/temp-user.png" alt="...">
+                            </span>
+                            本社　　江坂　太郎 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight">
+                            <li>
+                                <span class="arrow top"></span>
+                                <a href="PasswordChange.html">パスワード設定</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="Login.html" >ログアウト</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:5px 20px">
+
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">店舗</label>
+                                                    <span class="s-widget s-dropdown s-header form-control input-s picker2">
+                                                        <span class="s-dropdown-wrap s-state-default ">
+                                                            <span class="s-input">南森町店</span>
+                                                            <span class="s-select">
+                                                                <span class="s-icon s-i-hbars">select</span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">担当者</label>
+                                                    <input id="input2" type="text" class="form-control input-s">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">ルート</label>
+                                                    <input id="input3" type="text" class="form-control input-s-md">
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">日付</label>
+                                                    <input id="input4" type="text" class="form-control input-s" value="2015/02/24">
+                                                </div>
+                                            </div>
+                                        </div>
+      
+                                        </div>
+
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                                    <div class="row">
+
+
+                                        <div class="col-sm-8 text-left text-center-xs">
+                                            <button id="button1" class="btn-primary">リスト作成</button>
+                                            <button id="button2" class="btn-primary">検索</button>
+                                            <button id="button3" class="btn-primary">レポート用紙出力</button>
+                                            <button id="button4" class="btn-primary">商品出庫リスト</button>
+
+                                        </div>
+                                        <div class="col-sm-4 text-right text-center-xs">
+                                            <ul class="pagination pagination-sm m-t-xs m-b-none">
+                                                <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                                <li><a href="#">1</a></li>
+                                                <li><a href="#">2</a></li>
+                                                <li><a href="#">3</a></li>
+                                                <li><a href="#">4</a></li>
+                                                <li><a href="#">5</a></li>
+                                                <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                    <div class="row">
+                                        <div id="demo_list" class="col-xs12 grid-no-cell-border"></div>
+
+                                    </div>
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        // create DropDownList from input HTML element
+        $(".picker2").bind('click', function () {
+            smat.service.doOpenSubForm({
+                url: "ReferShop.html",
+                title: "店舗検索"
+            });
+        });
+
+        $("#input2").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+                { text: " ", value: "" },
+            { text: "伊藤　一郎", value: "1" },
+            { text: "伊藤　二郎", value: "2" },
+            { text: "伊藤　三郎", value: "3" },
+            { text: "伊藤　四郎", value: "4" }
+            ],
+            index: 0
+        });
+
+        $("#input3").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "0301", value: "1" },
+            { text: "0302", value: "2" },
+            { text: "0303", value: "3" },
+            { text: "0304", value: "4" }
+            ],
+            index: 0
+        });
+
+        $("#input4").asmatDatePicker();
+
+        $("#button1").asmatButton({
+            click: function () { window.location.href = "DeliveryRouteListDoCreate.html"; }
+        });
+        $("#button2").asmatButton();
+        $("#button3").asmatButton({
+            click: function () { window.open("/Main/PDFView?Path=11"); }
+        });
+        $("#button4").asmatButton({
+            click: function () { window.open("/Main/PDFView?Path=33"); }
+        });
+        
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "1", "FIELD2": "ニッシンシステム1", "FIELD3": "大阪市北区東天満 1丁目3番3号 ロイヤル東天満ビル　6階", "FIELD4": "済", "FIELD5": "○", "FIELD6": "伊藤　一郎" },
+            { "FIELD1": "2", "FIELD2": "ニッシンシステム2", "FIELD3": "大阪市北区東天満 1丁目3番3号 ロイヤル東天満ビル　7階", "FIELD4": "未", "FIELD5": "", "FIELD6": "伊藤　一郎" },
+            { "FIELD1": "3", "FIELD2": "ニッシンシステム3", "FIELD3": "大阪市北区東天満 1丁目3番3号 ロイヤル東天満ビル　8階", "FIELD4": "未", "FIELD5": "", "FIELD6": "伊藤　一郎" },
+            { "FIELD1": "4", "FIELD2": "ニッシンシステム4", "FIELD3": "大阪市北区東天満 1丁目3番3号 ロイヤル東天満ビル　9階", "FIELD4": "済", "FIELD5": "", "FIELD6": "伊藤　一郎" },
+            { "FIELD1": "5", "FIELD2": "ニッシンシステム5", "FIELD3": "大阪市北区東天満 1丁目3番3号 ロイヤル東天満ビル　10階", "FIELD4": "済", "FIELD5": "", "FIELD6": "伊藤　一郎" }
+        ];
+
+        //列信息
+        var columns =
+           [
+               
+            {
+                field: "FIELD1",
+                title: "№",
+                attributes: {
+                    "class": "text-center"
+                },
+                width: "40px"
+            },
+            {
+                field: "FIELD4",
+                title: "状態",
+                attributes: {
+                    "class": "text-center"
+                },
+                width: "60px"
+            },
+            {
+                field: "FIELD5",
+                title: "初回",
+                attributes: {
+                    "class": "text-center"
+                },
+                width: "60px"
+            },
+            {
+                field: "FIELD6",
+                title: "担当者",
+                headerAttributes: {
+                    style: "text-align: left; "
+                },
+                width: "110px"
+            },
+            {
+                field: "FIELD2",
+                title: "お客様",
+                width: "180px",
+                headerAttributes: {
+                    style: "text-align: left; "
+                }
+            },
+            {
+                field: "FIELD3",
+                title: "住所",
+                headerAttributes: {
+                    style: "text-align: left; "
+                }
+            }
+           ];
+
+        $("#demo_list").asmatGrid({
+            dataSource: dataSource,
+            sortable: true,
+            scrollable: false,
+            columns: columns,
+            dataBound: function(e) {
+               
+            }
+        });
+    });
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

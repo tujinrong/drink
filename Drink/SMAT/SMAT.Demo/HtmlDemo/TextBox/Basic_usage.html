@@ -1,0 +1,171 @@
+﻿
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-fix-1 form-group">
+                    <label class="input-s-sm control-label">Base TextBox:</label>
+                    <input id="base_text" value="123456789" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-1 form-group">
+                    <label class="input-s-sm control-label">Phone number:</label>
+                    <input id="phone_number" value="555 123 4567" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-1 form-group">
+                    <label class="input-s-sm control-label">Credit Card number:</label>
+                    <input id="credit_card" value="1234 1234 1234 1234" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-1 form-group">
+                    <label class="input-s-sm control-label">Social security number:</label>
+                    <input id="ssn" value="003-12-3456" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-1 form-group">
+                    <label class="input-s-sm control-label">UK postcode:</label>
+                    <input id="postcode" value="W1N 1AC" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+            
+        $("#base_text").smatTextBox({
+        });
+
+        $("#phone_number").smatTextBox({
+            mask: "(999) 000-0000"
+        });
+
+        $("#credit_card").smatTextBox({
+            mask: "0000 0000 0000 0000"
+        });
+
+        $("#ssn").smatTextBox({
+            mask: "000-00-0000"
+        });
+
+        $("#postcode").smatTextBox({
+            mask: "L0L 0LL"
+        });
+    });
+</script>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul">
+            
+        </ul>
+    </div>
+
+</div>
+
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                    <code >
+                        <!-- ====code显示区域 =====-->
+                        <script class="source-code" type="text">
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-fix-1 form-group">
+			<label class="input-s-sm control-label">Base TextBox:</label>
+			<input id="base_text" value="123456789" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-fix-1 form-group">
+			<label class="input-s-sm control-label">Phone number:</label>
+			<input id="phone_number" value="555 123 4567" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-fix-1 form-group">
+			<label class="input-s-sm control-label">Credit Card number:</label>
+			<input id="credit_card" value="1234 1234 1234 1234" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-fix-1 form-group">
+			<label class="input-s-sm control-label">Social security number:</label>
+			<input id="ssn" value="003-12-3456" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-fix-1 form-group">
+			<label class="input-s-sm control-label">UK postcode:</label>
+			<input id="postcode" value="W1N 1AC" />
+		</div>
+	</div>
+</div>
+
+<script>
+    $(document).ready(function () {
+            
+        $("#base_text").smatTextBox({
+        });
+
+        $("#phone_number").smatTextBox({
+            mask: "(999) 000-0000"
+        });
+
+        $("#credit_card").smatTextBox({
+            mask: "0000 0000 0000 0000"
+        });
+
+        $("#ssn").smatTextBox({
+            mask: "000-00-0000"
+        });
+
+        $("#postcode").smatTextBox({
+            mask: "L0L 0LL"
+        });
+    });
+</script>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+	hljs.configure({tabReplace: '    '}); // 4 spaces
+	$('pre code').each(function (i, e) {
+        
+	    if ($(this).find('.source-code').length > 0) {
+
+	       $(this).html((asmat.htmlEncode($(this).find('.source-code').html())) + " &lt;/script&gt;");
+
+	    }
+
+	    hljs.highlightBlock(e)
+	});
+</script>

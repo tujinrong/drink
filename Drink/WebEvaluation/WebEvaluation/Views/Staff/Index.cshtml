@@ -1,0 +1,83 @@
+﻿@model IEnumerable<WebEvaluation.Models.M_Staff>
+
+@{
+    ViewBag.Title = "社員管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br>
+<div class="jumbotron">
+<p>
+    @*Html.ActionLink("Create New", "Create")*@
+    @Html.ButtonAction(false, "新規社員", "../Staff/Create/" + null, null, new { @class = "btn btn-primary btn-sm" })
+</p>
+<table class="table" border="1">
+    <thead>
+    <tr style="background-color:#b0b0b0;">
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.StaffName)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.StaffKana)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.Sex)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.EnrollmentDate)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.Duty)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.UnitCD)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.UpdateTime)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr style="background-color:white">
+        <td>
+            @Html.DisplayFor(modelItem => item.StaffName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StaffKana)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnrollmentDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Duty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateUserID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateTime)
+        </td>
+        <td>           
+            @* @Html.ActionLink("Edit", "Edit", new { id = item.StaffCD })*@
+            @Html.ButtonAction(false, "編集", "Edit/" + @*@item.StaffCD,*@ @item.StaffCD, new { }, new { @class = "btn btn-primary btn-xs" }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.StaffCD })*@
+            @Html.ButtonAction(false, "詳細", "Details/" + @*@item.StaffCD,*@ @item.StaffCD, new { }, new { @class = "btn btn-primary btn-xs" }) |
+            @*@Html.ActionLink("Delete", "Delete", new { id=item.StaffCD })*@
+            @Html.ButtonAction(false, "削除", "Delete/" + @*@item.StaffCD,*@ @item.StaffCD, new { }, new { @class = "btn btn-primary btn-xs" })
+        </td>
+    </tr>
+}
+     </tbody>
+
+</table>
+</div>

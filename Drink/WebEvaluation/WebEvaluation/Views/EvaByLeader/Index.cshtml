@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WebEvaluation.Models.T_EvaByLeader>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LeaderEva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateTime)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeaderEva)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateUserID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateTime)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PartyID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PartyID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PartyID })
+        </td>
+    </tr>
+}
+
+</table>

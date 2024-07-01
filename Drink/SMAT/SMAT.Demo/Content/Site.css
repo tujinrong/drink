@@ -1,0 +1,45 @@
+﻿pre {
+display: block;
+padding: 0;
+margin: -0.3em -0.92em;
+font-size: 13px;
+line-height: 1.42857143;
+color: #333;
+word-break: break-all;
+word-wrap: break-word;
+background-color: transparent;
+border: 0px solid #ccc;
+border-radius: 0px;
+margin-top: -20px;
+}
+
+pre code {
+padding: 0;
+font-size: inherit;
+color: inherit;
+white-space: pre-wrap;
+background-color: transparent;
+border-radius: 0;
+}
+
+.other-source {
+float: right;
+margin-top: -1.8em;
+}
+
+.other-source h2, .other-source h4, .other-source ul, .other-source ul li {
+display: inline-block;
+zoom: 1;
+}
+
+.other-source h4, .other-source ul, .other-source ul li {
+font-size:12px;
+}
+
+.other-source ul li {
+padding: 0 .6em;
+border-right: 1px solid #c5c5c5;
+}
+.other-source ul li:last-child {
+border-right-width: 0px;
+}

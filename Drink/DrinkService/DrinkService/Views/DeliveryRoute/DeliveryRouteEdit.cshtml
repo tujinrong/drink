@@ -1,0 +1,1298 @@
+﻿@{
+    Layout = "~/Views/Shared/_SubFormLayout.cshtml";
+    ViewBag.Title = "実績登録";
+    ViewBag.ContentId = "btnClose";
+}
+
+<script>
+
+    var ddl_edit_ShopCD = "@ViewBag.ShopCD";
+    var ddl_edit_ShopName = "@ViewBag.ShopName";
+    var ddl_edit_ClientCD = "@ViewBag.ClientCD";
+    var ddl_edit_ClientName = "@ViewBag.ClientName";
+    var ddl_edit_HoDate = "@ViewBag.HoDate";
+    var ddl_edit_Route = "@ViewBag.Route";
+    var ddl_edit_StaffCD = "@ViewBag.StaffCD";
+    var ddl_edit_StaffName = "@ViewBag.StaffName";
+    var ddl_edit_FirstFlag = "@ViewBag.FirstFlag";
+    var ddl_edit_DoneFlag = "@ViewBag.DoneFlag";
+    var ddl_edit_Seq = "@ViewBag.Seq";
+    var ddl_edit_NextHoDate = "@ViewBag.NextHoDate";
+    var hoClientUpdateTime = "@ViewBag.hoClientUpdateTime";
+    var signData = "@ViewBag.signData";
+    var saveFlag = false;
+
+    if (signData) {
+        $("#signImg").attr("src", signData);
+    }
+
+    function getPreMonthDayNum(dateStr) {
+
+
+        var dateTemp = asmat.parseDate(dateStr);
+        if (dateTemp == null) {
+            return;
+        }
+
+        var strs = asmat.toString(dateTemp, "yyyy/MM/dd").split("/");
+
+        var yearStr = strs[0];
+        var monthNum = Number(strs[1]) + 1;
+        var dayNum = Number(strs[2]);
+
+        if (monthNum > 12) {
+            monthNum = 1;
+            yearStr = "" + (Number(strs[0]) + 1);
+        }
+
+        var dateStrPre = yearStr + "/" + (monthNum < 10 ? ("0" + monthNum) : monthNum) + "/" + (dayNum < 10 ? ("0" + dayNum) : dayNum);
+        var date = asmat.parseDate(dateStrPre);
+
+        while (date == null) {
+            dayNum = dayNum - 1;
+            dateStrPre = yearStr + "/" + (monthNum < 10 ? ("0" + monthNum) : monthNum) + "/" + (dayNum < 10 ? ("0" + dayNum) : dayNum);
+            date = asmat.parseDate(dateStrPre);
+        }
+
+        return Number(asmat.toString(date, "yyyyMMdd"));
+    }
+
+    var numHoDate = getPreMonthDayNum(ddl_edit_HoDate);
+    var numNextHoDate = getPreMonthDayNum(ddl_edit_NextHoDate);
+
+    //var numHoDate = Number(asmat.toString(asmat.parseDate(ddl_edit_HoDate), "yyyyMMdd"));
+    //var numNextHoDate = Number(asmat.toString(asmat.parseDate(ddl_edit_NextHoDate), "yyyyMMdd"));
+
+    function doSumAfterNum() {
+        var ds = $("#ddl_edit_client_item_list").ui().config.dataSource;
+        var afterNumSum = $.Enumerable.From(ds).Sum("Number($.AfterNum)");
+
+        var dsAdd = $("#ddl_edit_client_item_add_list").ui().config.dataSource;
+        var afterNumSum2 = $.Enumerable.From(dsAdd).Sum("Number($.AfterNum)");
+        $("#txtAfterNumSum").val(afterNumSum + afterNumSum2);
+    }
+    function doSumThisNum() {
+        var ds = $("#ddl_edit_client_item_list").ui().config.dataSource;
+        var numSum = $.Enumerable.From(ds).Sum("Number($.ThisNum)")
+        $("#txtThisNumSum").val(numSum);
+    }
+
+    $(document).ready(function () {
+        $("#ddl_edit_client_item_add_list").hide();
+        getHoClientItemsData();
+
+        //$("#ddl_edit_mone").maxByteLength(200);
+    });
+
+    function getHoClientItemsData() {
+
+        smat.service.openLoding();
+        smat.service.loadJosnData({
+            url: "/DeliveryRoute/GetHoClientItems",
+            params: {
+                ShopCD: ddl_edit_ShopCD,
+                ClientCD: ddl_edit_ClientCD,
+                FirstFlag: ddl_edit_FirstFlag,
+                TantoCD: ddl_edit_StaffCD,
+                HoDate: ddl_edit_HoDate,
+                Route: ddl_edit_Route
+            },
+            success: function (result) {
+
+                $("#ddl_edit_client_item_list").ui().setDataSource(result.clientItems);
+
+                if (ddl_edit_Seq != "0") {
+                    $("#ddl_edit_client_item_list").ui().accessChange();
+
+                }
+
+                $("#ddl_edit_client_item_add_list").ui().setDataSource(result.clientItemsAdd);
+                $("#ddl_edit_client_item_add_list").ui().accessChange();
+
+                if (result.clientItemsAdd == null || result.clientItemsAdd == undefined || result.clientItemsAdd.length == 0) {
+                    $("#ddl_edit_client_item_add_list").hide();
+                } else {
+                    $("#ddl_edit_client_item_add_list").show();
+                }
+
+                culMoney()
+            }
+        });
+    }
+
+    function clickFunc() {
+        smat.service.closeForm({
+            contentId: "btnClose"
+        });
+    }
+
+
+    function databound1(e) {
+        //debugger;
+        e.sender.thead.find('tr').remove();
+        //alert(asmat.template($('#head-template').html())({}));
+        e.sender.thead.html($('#head-template').html());
+
+        /*
+        var shelfNos = $("#ddl_edit_client_item_list").find('.edit-numeric-ShelfNo');
+        shelfNos.onlyNum();
+        shelfNos.bind('change', function (e) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            var value = $(this).val();
+
+            dataItem["ShelfNo"] = value;
+
+            $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+        });
+        */
+
+        var shelfNos = $("#ddl_edit_client_item_list").find('.edit-numeric-ShelfNo');
+        $.each(shelfNos, function (n, value) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatDropDownList({
+                codeKind: "@DrinkService.Models.ModelBase.CN棚",
+                change: function (e) {
+                    var value = e.ui.value();
+                    dataItem["ShelfNo"] = value;
+                    $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+        /*
+        var shelfSubNos = $("#ddl_edit_client_item_list").find('.edit-numeric-ShelfSubNo');
+        shelfSubNos.onlyNum();
+        shelfSubNos.bind('change', function (e) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            var value = $(this).val();
+
+            dataItem["ShelfSubNo"] = value;
+
+            $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+        });
+        */
+
+        var shelfSubNos = $("#ddl_edit_client_item_list").find('.edit-numeric-ShelfSubNo');
+        $.each(shelfSubNos, function (n, value) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+                    dataItem["ShelfSubNo"] = value;
+                    $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+        var numsNows = $("#ddl_edit_client_item_list").find('.edit-numeric-now');
+        $.each(numsNows, function (n, value) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+
+                    debugger;
+                    if (value != null) {
+                        //use
+                        var use = Number(dataItem["PrevNum"]) - value;
+                        dataItem["UsedNum"] = use;
+                        target.closest('tr').children().eq(7).html(use);
+
+                        //Money
+                        var money = Number(dataItem["Price"]) * use;
+                        dataItem["Money"] = money;
+                        target.closest('tr').children().eq(9).html(money);
+
+                        dataItem["ThisNum"] = value;
+                        dataItem["AddNum"] = Number(dataItem["AfterNum"]) - Number(value);
+                        if (ddl_edit_FirstFlag == "1") {
+                            dataItem["AddNum"] = Number(dataItem["AfterNum"]);
+                        }
+                    } else {
+                        //use
+                        dataItem["UsedNum"] = null;
+                        target.closest('tr').children().eq(7).html("");
+
+                        //Money
+                        dataItem["Money"] = null;
+                        target.closest('tr').children().eq(9).html("");
+
+                        dataItem["ThisNum"] = value;
+                        dataItem["AddNum"] = null;
+                    }
+
+
+                    $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+                    culMoney();
+                }
+            });
+        });
+        var numsAfterNum = $("#ddl_edit_client_item_list").find('.edit-numeric-AfterNum');
+        $.each(numsAfterNum, function (n, value) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+
+                    dataItem["AfterNum"] = value;
+                    dataItem["AddNum"] = Number(value) - Number(dataItem["ThisNum"]);
+                    if (ddl_edit_FirstFlag == "1") {
+                        dataItem["AddNum"] = Number(dataItem["AfterNum"]);
+                    }
+                    $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+
+                    if (value != null && Number(value) == 0) {
+                        target.closest('tr').children().addClass("tr-del");
+                    } else {
+                        target.closest('tr').children().removeClass("tr-del");
+                    }
+                    doSumAfterNum();
+                }
+            });
+        });
+
+
+        var numsFreshDate = $("#ddl_edit_client_item_list").find('.edit-date');
+        $.each(numsFreshDate, function (n, value) {
+            var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            if (dataItem["AfterNum"] == "0") {
+                $(this).parent().parent().children().addClass("tr-del");
+            }
+
+            $(this).smatDatePicker({
+                change: function (e) {
+                    debugger;
+                    var value = asmat.toString(e.sender.value(), "yyyy/MM/dd");
+                    if (dataItem["FreshDate"] != value) {
+                        dataItem["FreshDate"] = value;
+
+                        $("#ddl_edit_client_item_list").ui().config.dataSource[rowKey] = dataItem;
+
+                    }
+
+                    var td = $(e.sender.element).closest('td');
+                    td.children('i').remove();
+                    var numDate = Number(asmat.toString(e.sender.value(), "yyyyMMdd"));
+                    if (numDate <= numHoDate && numDate > 0) {
+                        td.children('span:first').before('<i class="text-danger fa fa-times"></i>');
+                    } else if (numDate <= numNextHoDate && numDate > 0) {
+                        td.children('span:first').before('<i class="text-warning fa fa-exclamation-triangle"></i>');
+                    }
+                }
+            });
+        });
+
+        //if (mainRoleCD == mainCN役割_本部参照) {
+        //    var uis = $("#ddl_edit_client_item_list").find("[uuid]");
+        //    $.each(uis, function () {
+        //        $(this).ui().enable(false);
+        //    })
+
+        //    var uis = $("#ddl_edit_client_item_list").find(".edit-numeric-ShelfNo");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+
+        //    var uis = $("#ddl_edit_client_item_list").find(".edit-numeric-ShelfSubNo");
+        //    $.each(uis, function () {
+        //        $(this).attr("disabled", "disabled");
+        //    })
+        //}
+    }
+
+    function culMoney() {
+        var sumMoney = 0;
+        var dataSource = $("#ddl_edit_client_item_list").ui().config.dataSource;
+        for (var key in dataSource) {
+            sumMoney = sumMoney + Number(dataSource[key]["Money"]);
+        }
+        $("#edit_salesMeter").val(sumMoney);
+        $("#edit_salesMeter").val(asmat.format("{0:n0}", Number($("#edit_salesMeter").val())));
+
+        culGetMoney();
+        doSumAfterNum();
+        doSumThisNum();
+    }
+
+    function culGetMoney() {
+        $("#edit_deficiency").val($("#edit_collectionAmount").ui().value() - Number($("#edit_salesMeter").val().replace(/,/g, "")));
+        $("#edit_deficiency").val(asmat.format("{0:n0}", Number($("#edit_deficiency").val())));
+
+    }
+
+    var databound2 = function (e) {
+
+        var shelfNos = $("#ddl_edit_client_item_add_list").find('.edit-numeric-ShelfNo');
+        /*
+        shelfNos.onlyNum();
+        shelfNos.bind('change', function (e) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            var value = $(this).val();
+
+            dataItem["ShelfNo"] = value;
+
+            $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+        });
+        */
+        $.each(shelfNos, function (n, value) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatDropDownList({
+                codeKind: "@DrinkService.Models.ModelBase.CN棚",
+                change: function (e) {
+                    var value = e.ui.value();
+                    dataItem["ShelfNo"] = value;
+                    $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+        var shelfSubNos = $("#ddl_edit_client_item_add_list").find('.edit-numeric-ShelfSubNo');
+        /*
+        shelfSubNos.onlyNum();
+        shelfSubNos.bind('change', function (e) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            var value = $(this).val();
+
+            dataItem["ShelfSubNo"] = value;
+
+            $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+        });
+        */
+        $.each(shelfSubNos, function (n, value) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+                    dataItem["ShelfSubNo"] = value;
+                    $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+                }
+            });
+        });
+
+        var numsAfterNumAdd = $("#ddl_edit_client_item_add_list").find('.edit-numeric-AfterNum');
+        $.each(numsAfterNumAdd, function (n, value) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatNumericTextBox({
+                format: "n0",
+                pick: true,
+                change: function (e) {
+
+                    var target = this.target;
+                    if (this.target == undefined) {
+                        target = $(e.sender.element);
+                    }
+                    var value = target.ui().value();
+
+                    if (dataItem["AfterNum"] != value) {
+                        dataItem["AfterNum"] = value;
+
+                        dataItem["AddNum"] = Number(value) - Number(dataItem["ThisNum"]);
+                        if (ddl_edit_FirstFlag == "1") {
+                            dataItem["AddNum"] = Number(dataItem["AfterNum"]);
+                        }
+                        $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+                    }
+                    doSumAfterNum();
+                }
+            });
+        });
+
+
+        var numsFreshDateAdd = $("#ddl_edit_client_item_add_list").find('.edit-date');
+        $.each(numsFreshDateAdd, function (n, value) {
+            var grid = $("#ddl_edit_client_item_add_list").data('asmatGrid');
+            var rowKey = $(this).parent().parent().index()
+            var dataItem = grid.dataItem($(this).parent().parent());
+
+            $(this).smatDatePicker({
+                change: function (e) {
+                    var value = asmat.toString(e.sender.value(), "yyyy/MM/dd");
+                    if (dataItem["FreshDate"] != value) {
+                        dataItem["FreshDate"] = value;
+
+                        $("#ddl_edit_client_item_add_list").ui().config.dataSource[rowKey] = dataItem;
+                    }
+
+                    var td = $(e.sender.element).closest('td');
+                    td.children('i').remove();
+
+                    debugger;
+                    var numDate = Number(asmat.toString(e.sender.value(), "yyyyMMdd"));
+                    if (numDate <= numHoDate && numDate > 0) {
+                        td.children('span:first').before('<i class="text-danger fa fa-times"></i>');
+                    } else if (numDate <= numNextHoDate && numDate > 0) {
+                        td.children('span:first').before('<i class="text-warning fa fa-exclamation-triangle"></i>');
+                    }
+                }
+            });
+        });
+    }
+    var rowIndex = 1;   
+    var rowTemplate = function (dataItem) {
+
+        var altStr = "";
+        if (rowIndex % 2 == 0) {
+            altStr = "s-alt";
+        }
+        rowIndex++;
+
+        var grid = $("#ddl_edit_client_item_list").data('asmatGrid');
+
+        var index = grid.dataSource.indexOf(dataItem);
+
+        var result = '<tr  data-uid="' + dataItem.uid + '" role="row" class="' + altStr + '">';
+        result += '<td role="gridcell" class="text-center cell-display" ><input type="text" style="width:100%" colindex="0" class="edit-numeric-ShelfNo " maxlength="1" max="9" min="0" value="' + dataItem.ShelfNo + '"></td>';
+        result += '<td role="gridcell" class="text-center cell-display" ><input type="text" style="width:100%" colindex="1" class="edit-numeric-ShelfSubNo " maxlength="1" max="9" min="0" value="' + dataItem.ShelfSubNo + '"></td>';
+        result += '<td role="gridcell" class="text-center cell-display" >' + (dataItem.SaleFlag == "1" ? "X" : "") + '</td>';
+
+        result += '<td role="gridcell" class="cell-display" >' + dataItem.ItemsName + '</td>';
+
+        if (ddl_edit_FirstFlag == "1") {
+            result += '<td role="gridcell" class="text-right cell-display"></td>';
+            result += '<td role="gridcell" class="text-right cell-display"></td>';
+        } else {
+            result += '<td role="gridcell" class="text-right cell-display" >' + dataItem.BeforeNum + '</td>';
+            result += '<td role="gridcell" class="text-right cell-display">' + dataItem.PrevNum + '</td>';
+        }
+
+
+        if (ddl_edit_FirstFlag == "1" || dataItem.ItemAddFlag == "1") {
+            result += '<td role="gridcell" class="text-right cell-display">' + dataItem.ThisNum + '</td>';
+        } else {
+            result += '<td role="gridcell" class="text-right"><input class="edit-numeric-now " colindex="6" style="width:100%" type="number" value="' + dataItem.ThisNum + '" max="999" min="0" maxlength="3" step="1"/></td>';
+
+        }
+
+        result += '<td role="gridcell" class="text-right cell-display">' + dataItem.UsedNum + '</td>';
+        result += '<td role="gridcell" class="text-right"><input class="edit-numeric-AfterNum " colindex="8" style="width:100%" type="number" value="' + dataItem.AfterNum + '" max="999" min="0" maxlength="3" step="1"/></td>';
+        result += '<td role="gridcell" class="text-right cell-display">' + dataItem.Money + '</td>';
+
+        var color = "";
+        var infoNode = '';
+
+        //if (dataItem.FIELD12 == "1") {
+        //    //color = "color:blue;";
+        //} else
+
+        if (dataItem.FreshDate != "") {
+            var numDate = Number(asmat.toString(asmat.parseDate(dataItem.FreshDate), "yyyyMMdd"));
+            if (numDate < numHoDate) {
+                infoNode = '<i class="text-danger fa fa-times"></i>';
+            } else if (numDate < numNextHoDate) {
+                infoNode = '<i class="text-warning fa fa-exclamation-triangle"></i>';
+            } else {
+                infoNode = '';
+            }
+        }
+
+        var dateStr = "";
+        if (dataItem.FreshDate != null && dataItem.FreshDate != undefined && dataItem.FreshDate != "") {
+            dateStr = asmat.toString(asmat.parseDate(dataItem.FreshDate), "yyyy/MM/dd");
+        }
+        result += '<td role="gridcell" class="text-right" >' + infoNode + '<span>&nbsp;</span><input type="text" colindex="9" class="edit-date"  style="width:134px;' + color + '" value="' + dateStr + '"/></td>';
+        result += '</tr>';
+        return result;
+    }
+
+    var templateBound1 = function (dataItem) {
+        return '<input type="text" colindex="0" style="width:100%" class="edit-numeric-ShelfNo" maxlength="1" max="9" min="0" value="' + dataItem.ShelfNo + '">';
+    }
+
+    var templateBound2 = function (dataItem) {
+        return '<input type="text" colindex="1" style="width:100%" class="edit-numeric-ShelfSubNo " maxlength="1" max="9" min="0" value="' + dataItem.ShelfSubNo + '">';
+        //return '';
+    }
+
+
+    var templateBound4 = function (dataItem) {
+        return '<input colindex="6" class="edit-numeric-AfterNum " style="width:100%" type="number" value="' + dataItem.AfterNum + '" maxlength="3" max="999" min="1" step="1"/>';
+    }
+
+    var templateBound5 = function (dataItem) {
+
+        var infoNode = '';
+        if (dataItem.FreshDate != "") {
+            var numDate = Number(asmat.toString(asmat.parseDate(dataItem.FreshDate), "yyyyMMdd"));
+            if (numDate < numHoDate) {
+                infoNode = '<i class="text-danger fa fa-times"></i>';
+            } else if (numDate < numNextHoDate) {
+                infoNode = '<i class="text-warning fa fa-exclamation-triangle"></i>';
+            } else {
+                infoNode = '';
+            }
+        }
+
+        var dateStr = "";
+        if (dataItem.FreshDate != null && dataItem.FreshDate != undefined && dataItem.FreshDate != "") {
+            dateStr = asmat.toString(asmat.parseDate(dataItem.FreshDate), "yyyy/MM/dd");
+        }
+
+        return infoNode + '<span>&nbsp;</span><input colindex="8" type="text" class="edit-date"  style="width:134px;" value="' + dateStr + '" />';
+    }
+
+    var doSign = function () {
+        smat.service.canvasDraw({
+            title: "署名入力",
+            data: signData,
+            //width: "95%",
+            //height: "92%",
+            width: "972px",
+            height: "470px",
+            afterDraw: function (data) {
+                signData = data;
+                $("#signImg").attr("src", data);
+            }
+        });
+    }
+
+    var ddlEditAddProductForm = function () {
+
+        smat.service.refer({
+            referKey: "referItem",
+            param: getIgnoreItem(),
+            afterSelected: function (data) {
+                //alert(data.selectedRows.ItemCD)
+
+                var grid = $("#ddl_edit_client_item_add_list").ui();
+                var rs = [];
+                for (var index in data.selectedRows) {
+                    var item = data.selectedRows[index];
+
+
+                    rs.push({
+                        ShopCD: ddl_edit_ShopCD,
+                        ClientCD: ddl_edit_ClientCD,
+                        ShelfNo: "0",
+                        Price: item.StandardPrice,
+                        ThisNum: null,
+                        NextPrice: item.StandardPrice,
+                        ShelfSubNo: 0,//$("#ddl_edit_client_item_add_list").find('tr').length,
+                        ItemCD: item.ItemCD,
+                        ItemsName: item.ShortName,
+                        ItemAddFlag: 1
+                    });
+                }
+                grid.addRow(rs);
+
+                $("#ddl_edit_client_item_add_list").show();
+            }
+        });
+
+    }
+
+    function getIgnoreItem() {
+        var param = {};
+        param.IgnoreItems = new Array();
+        var grid = $("#ddl_edit_client_item_list").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+
+        var grid = $("#ddl_edit_client_item_add_list").ui();
+        for (var key in grid.config.dataSource) {
+            param.IgnoreItems.push(grid.config.dataSource[key].ItemCD);
+        }
+
+        param.ShopCD = "@ViewBag.ShopCD";
+
+        return param;
+    }
+
+    function ddl_item_edit_del_addItem(dataItem, index) {
+        var gridTo = $("#ddl_edit_client_item_add_list").ui();
+        gridTo.delRow(index);
+
+        //if ($("#ddl_edit_client_item_add_list").find('tr').length == 1) {
+        //    $("#ddl_edit_client_item_add_list").hide();
+        //}
+        doSumAfterNum()
+    }
+
+    function ddl_item_edit_SetPrice(dataItem, index) {
+
+        //var gridTo = $("#ddl_edit_client_item_add_list").ui();
+
+        //gridTo.delRow(index);
+
+        //if ($("#ddl_edit_client_item_add_list").find('tr').length == 1) {
+        //    $("#ddl_edit_client_item_add_list").hide();
+        //}
+
+        var ebox = $('<section id="routeEdit_newPrice" class="panel panel-default " style="margin: 0;padding: 10px;"></section>');
+        $('<div class="row" style="margin:8px 0;"><div class=" form-group" ><label class="control-label input-s-sm text-right" style="margin-right:5px;">単価</label><input id="routeEdit_newPrice_input" class="form-control input-s-date s-textbox " type="number" autocomplete="off" min="0" max="9999" > <button id="_mstPrice" class="btn-primary  s-button" style="margin-left:10px;">マスタ単価</button> </div></div>').appendTo(ebox);
+        $('<div class="row" style="margin:8px 0;"><div class=" form-group text-center" ><button id="_pick_newPrice" class="btn-primary  s-button" style="margin-left:10px;">確定</button></div></div>').appendTo(ebox);
+        var newPriceInput = ebox.find("#routeEdit_newPrice_input");
+        newPriceInput.val(dataItem.Price);
+
+        var pickNewPrice = ebox.find("#_pick_newPrice");
+
+        pickNewPrice.bind("click", function () {
+            if (isNaN(Number(newPriceInput.val()))) {
+                smat.service.notice({ type: "error", msg: "数字を入力してください。" })
+                return;
+            }
+
+            if (Number(newPriceInput.val()) < 0 || Number(newPriceInput.val()) > 9999) {
+                smat.service.notice({ type: "error", msg: "単価を0～9999で入力してください。" })
+                return;
+            }
+
+            smat.service.closeForm({
+                contentId: 'routeEdit_newPrice',
+                result: {
+                    price: Number(newPriceInput.val())
+                }
+            });
+        });
+
+        var _mstPrice = ebox.find("#_mstPrice");
+
+        _mstPrice.bind("click", function () {
+
+            smat.service.openLoding();
+            smat.service.loadJosnData({
+                url: smat.dynamics.commonURL.getEntityDataItem,
+                async: false,
+                params: {
+                    ProjID: 1,
+                    EntityName: "M_Item",
+                    dataItem: {
+                        ItemCD: dataItem.ItemCD
+                    }
+                },
+                success: function (result2) {
+                    if (result2.dataItem) {
+                        newPriceInput.val(result2.dataItem.StandardPrice);
+                    }
+                }
+            });
+        });
+        
+
+        smat.service.openForm({
+            //m_opacity: 0,
+            contentDom: ebox,
+            width: "390px",
+            top: "20%",
+            title: "単価設定",
+            afterClose: function (result) {
+                if (result) {
+                    var dataItemNew = $("#ddl_edit_client_item_add_list").data('asmatGrid').dataItem($("#ddl_edit_client_item_add_list").find("tbody").children(":eq(" + index + ")"));
+                    dataItemNew.Price = result.price
+                    debugger
+                    dataItemNew.NextPrice = result.price
+                    $("#ddl_edit_client_item_add_list").ui().config.dataSource[index] = dataItemNew;
+                    $("#ddl_edit_client_item_add_list").find("tbody").children(":eq(" + index + ")").children(":eq(4)").text(result.price);
+                }
+            }
+        });
+    }
+
+    function GetDoneFlag() {
+        ddl_edit_checkform();
+
+        if (smat.service.isEmpty(smat.global.errorInfos) == false) {
+            smat.global.errorInfos = {};
+            return "2";
+        } else {
+            return "1";
+
+        }
+    }
+
+    function ddl_edit_checkform() {
+        var grid = $("#ddl_edit_client_item_list").ui();
+
+        if ($('#edit_collectionAmount').ui().value() == null) {
+            smat.service.addErrorInfo("edit_collectionAmount", $('#edit_collectionAmount'), "【集金額】を入力してくだい。");
+        }
+
+        var dateOk = false;
+        var dateNode = null;
+
+        if (grid.config.dataSource != undefined) {
+            for (dataKey in grid.config.dataSource) {
+                var dataItem = grid.config.dataSource[dataKey];
+
+                if (dataItem["ShelfNo"] == null || dataItem["ShelfNo"] == undefined || String(dataItem["ShelfNo"]) == "") {
+
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='0']");
+
+                    smat.service.addErrorInfo(grid.uuid + "ShelfNo", node, "【棚】を入力してくだい。");
+                }
+                if (dataItem["ShelfSubNo"] == null || dataItem["ShelfSubNo"] == undefined || String(dataItem["ShelfSubNo"]) == "") {
+
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='1']");
+
+                    smat.service.addErrorInfo(grid.uuid + "ShelfSubNo", node, "【順】を入力してくだい。");
+                }
+
+                if (dataItem["ThisNum"] == null || dataItem["ThisNum"] == undefined || String(dataItem["ThisNum"]) == "") {
+
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='6']");
+
+                    smat.service.addErrorInfo(grid.uuid + "ThisNum", node, "【現在庫】を入力してくだい。");
+                }
+
+                if (dataItem["AfterNum"] == null || dataItem["AfterNum"] == undefined || String(dataItem["AfterNum"]) == "") {
+
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='8']");
+
+                    smat.service.addErrorInfo(grid.uuid + "AfterNum", node, "【補充後】を入力してくだい。");
+                }
+
+                if (dateOk == false && (dataItem["FreshDate"] == null || dataItem["FreshDate"] == undefined || String(dataItem["FreshDate"]) == "") == false && Number(dataItem["AfterNum"]) > 0) {
+                    dateOk = true;
+                }
+
+                if (dateNode == null && (dataItem["FreshDate"] == null || dataItem["FreshDate"] == undefined || String(dataItem["FreshDate"]) == "") == true && Number(dataItem["AfterNum"]) > 0) {
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='9']");
+                    dateNode = node;
+                }
+            }
+        }
+
+        var gridAdd = $("#ddl_edit_client_item_add_list").ui();
+        if (gridAdd.config.dataSource != undefined) {
+            for (dataKey in gridAdd.config.dataSource) {
+                var dataItem = gridAdd.config.dataSource[dataKey];
+
+                if (dataItem["ShelfNo"] == null || dataItem["ShelfNo"] == undefined || String(dataItem["ShelfNo"]) == "") {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='0']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "ShelfNo", node, "【商品追加:棚】を入力してくだい。");
+                }
+                if (dataItem["ShelfSubNo"] == null || dataItem["ShelfSubNo"] == undefined || String(dataItem["ShelfSubNo"]) == "") {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='1']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "ShelfSubNo", node, "【商品追加:順】を入力してくだい。");
+                }
+
+
+                if (dataItem["AfterNum"] == null || dataItem["AfterNum"] == undefined || String(dataItem["AfterNum"]) == "") {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='6']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "AfterNum", node, "【商品追加:補充後】を入力してくだい。");
+                } else if (Number(dataItem["AfterNum"]) == 0) {
+
+                    var node = gridAdd.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='6']");
+
+                    smat.service.addErrorInfo(gridAdd.uuid + "AfterNum", node, "【商品追加:補充後】を0より大きい値を入力してください。");
+                }
+
+                if (dateOk == false && (dataItem["FreshDate"] == null || dataItem["FreshDate"] == undefined || String(dataItem["FreshDate"]) == "") == false && Number(dataItem["AfterNum"]) > 0) {
+                    dateOk = true;
+                }
+
+                if (dateNode == null && (dataItem["FreshDate"] == null || dataItem["FreshDate"] == undefined || String(dataItem["FreshDate"]) == "") == true && Number(dataItem["AfterNum"]) > 0) {
+                    var node = grid.uiControl.tbody.children("tr:eq(" + dataKey + ")").find("input[colindex='8']");
+                    dateNode = node;
+                }
+            }
+        }
+
+        if (dateOk == false && dateNode != null) {
+            smat.service.addErrorInfo(gridAdd.uuid + "FreshDate", dateNode, "【賞味期限】を入力してくだい。");
+        }
+    }
+
+    function ddl_edit_getParam(params) {
+        params.hoClient = {
+            ShopCD: ddl_edit_ShopCD,
+            ClientCD: ddl_edit_ClientCD,
+            Seq: ddl_edit_Seq,
+            HoDate: ddl_edit_HoDate,
+            Route: ddl_edit_Route,
+            TantoCD: ddl_edit_StaffCD,
+            SoldMoney: $("#edit_salesMeter").val().replace(/,/g, ""),
+            GetMoney: $("#edit_collectionAmount").ui().value(),
+            DiffMoney: $("#edit_deficiency").val().replace(/,/g, ""),
+            Memo: $("#ddl_edit_mone").val(),
+        }
+        params.hoClientUpdateTime = hoClientUpdateTime;
+        params.doneFlag = GetDoneFlag();
+
+        var gridAdd = $("#ddl_edit_client_item_add_list").ui();
+        var grid = $("#ddl_edit_client_item_list").ui();
+        if (ddl_edit_Seq == "0") {
+            //new
+            var addList = grid.getAddDatas();
+            var tempAdd = gridAdd.getAddDatas();
+            for (var key in tempAdd) {
+                addList.push(tempAdd[key]);
+            }
+
+            params.addList = addList;
+        }
+        else {
+            //update
+            params.addList = gridAdd.getAddDatas();
+            params.delList = gridAdd.getDeleteDatas();
+            params.updateList = grid.getUpdateDatas();
+
+            var addUpdateList = gridAdd.getUpdateDatas();
+            for (var iKey in addUpdateList) {
+                params.updateList.push(addUpdateList[iKey]);
+            }
+        }
+        params.signData = signData;
+        //params.hoDay = {
+        //    ShopCD: shopCD,
+        //    HoDate: asmat.parseDate(hoDate, "yyyyMMdd"),
+        //    Route: route
+        //}
+    }
+    function close_ddl_edit_form() {
+        var result = undefined;
+        if (saveFlag == true) {
+            result = saveFlag;
+        }
+        smat.service.closeForm({
+            contentId: "ddl_edit_Form",
+            result: result
+        });
+    }
+    function ddl_edit_successFunc(result) {
+        ddl_edit_Seq = result.seq;
+        hoClientUpdateTime = result.updateTime;
+        smat.service.notice({ msg: "保存完了しました。" });
+        $("#ddl_edit_btnDelete").show();
+        $("#ddl_edit_client_item_list").ui().accessChange();
+        $("#ddl_edit_client_item_add_list").ui().accessChange();
+        saveFlag = true;
+    }
+    function ddl_edit_successFunc2(result) {
+        ddl_edit_Seq = result.seq;
+        hoClientUpdateTime = result.updateTime;
+        smat.service.notice({ msg: "保存完了しました。" });
+        smat.service.closeForm({
+            contentId: "ddl_edit_Form",
+            result: true
+        });
+    }
+    function ddl_edit_successFunc3() {
+        smat.service.notice({ msg: "削除完了しました。" });
+        smat.service.closeForm({
+            contentId: "ddl_edit_Form",
+            result: true
+        });
+    }
+
+    function checkDel() {
+        return "実績を変消しますか？";
+    }
+
+    function delConfirm(dataItem) {
+        return "追加商品【" + dataItem.ItemsName + "】を削除しますか？";
+    }
+
+    function ddl_edit_client_item_listDataBound() {
+
+    }
+</script>
+
+<style>
+    span.s-numerictextbox {
+   /*min-width: 60px;*/
+}
+</style>
+
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding-top:0;">
+        
+@using (Html.Smat().BeginForm("ddl_edit_Form", new { @class = "form-horizontal" }).Actions(actions =>
+                {
+                    actions.Action("/DeliveryRoute/SaveHoClient").ActionBtn("ddl_edit_btnSubSave").GetParam("ddl_edit_getParam").Success("ddl_edit_successFunc");
+                    actions.Action("/DeliveryRoute/SaveHoClient").ActionBtn("ddl_edit_btnSave").CheckForm("ddl_edit_checkform").GetParam("ddl_edit_getParam").Success("ddl_edit_successFunc2");
+                    actions.Action("/DeliveryRoute/DelHoClient").ActionBtn("ddl_edit_btnDelete").GetParam("ddl_edit_getParam").ConfirmFunc("checkDel").Success("ddl_edit_successFunc3");
+                }
+            ))
+{
+                <div class="row">
+
+                    <div class="col-sm-6 text-left text-center-xs">
+                        @Html.Smat().Button("ddl_edit_btnSubSave").Content("一時保存").HtmlAttributes(new { @class = "btn-warning" })
+                        @Html.Smat().Button("ddl_edit_btnSave").Content("保存").HtmlAttributes(new { @class = "btn-warning" })
+                        @(Html.Smat().Button("ddl_edit_btnClose")
+                            .Content("閉じる")
+                            .HtmlAttributes(new { @class = "btn-primary" })
+                            .Events(events =>
+                            {
+                                events.Click("close_ddl_edit_form");
+                            }))
+                        @Html.Smat().Button("ddl_edit_btnDelete").Content("変消").HtmlAttributes(new { @class = "btn-danger" }).Visible((ViewBag.Seq) >0)
+                    </div>
+                    <div class="col-sm-6 text-right text-center-xs">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="row text-right text-center-xs">
+                    <a href="#" class="hidden">顧客管理</a>
+                </div>
+
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("edit_shopName").Label("店舗").Value(ViewBag.ShopName as string).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                        </div>
+                    </div>
+                    <div class="col-fix-1" style="width:240px;">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("ddl_edit_Staff").Label("担当者").Value(ViewBag.StaffName as string).Enable(false).HtmlAttributes(new { @class = "form-control input-s-date" })
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            <label class="input-s-sm control-label">備考</label>
+                            <textarea id="ddl_edit_mone" class="s-widget s-textbox input-s" maxlength="200" rows="5" style="position:absolute;width:260px;resize:none; ">@(ViewBag.Memo as string)</textarea>
+                         </div>
+                    </div>
+                    <div style ="position:absolute;right:0">
+                        <div class="form-group">
+                            @(Html.Smat().Button("btnSign")
+                                .Content("署名入力")
+                                .Events(events =>
+                                {
+                                    events.Click("doSign");
+                                })
+                                .HtmlAttributes(new { @class = "btn-primary", style = "float:right;margin-left: 5px;" })
+                            )
+
+                        </div>
+                        <div class="form-group" style="position:absolute;right:0">
+                            <img id="signImg" class="s-image" width="100" height="46" style="float:right; border:1px solid #ccc" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("edit_clientName").Label("顧客").Value(ViewBag.ClientName as string).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                        
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group" style="width:240px;">
+                           @Html.Smat().TextBox("edit_HoDate").Label("補充日").Value(string.Format("{0:yyyy/MM/dd}", ViewBag.HoDate as DateTime?)).Enable(false).HtmlAttributes(new { @class = "form-control input-s-date" })
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                           
+                            @Html.Smat().TextBox("ddl_edit_Route").Label("ルート").Value(ViewBag.Route as string).Enable(false).HtmlAttributes(new { @class = "form-control input-s-date", style = "width:110px; margin-left: 0px;" })
+                        </div>
+                    </div>
+                    <div class="col-fix-1">
+                        <div class="form-group" style="width:240px;">
+                            @Html.Smat().TextBox("edit_nextDate").Label("次回日").Value(string.Format("{0:yyyy/MM/dd}", ViewBag.NextHoDate as DateTime?)).Enable(false).HtmlAttributes(new { @class = "form-control input-s-date" })
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-t-sm ">
+                    <div class="col-sm-10" style="padding:0;width: calc(75% + 60px);">
+                        <div class="form-group m-b-none" style="width:310px;float: left;">
+                            @Html.Smat().TextBox("edit_salesMeter").Label("売上計").Enable(false).HtmlAttributes(new { @class = "form-control input-s-date  text-right" })円
+                        </div>
+                        <div class="form-group m-b-none " style="width:260px;float: left;">
+                            @(Html.Smat().TextBox("edit_collectionAmount")
+                            .Label("集金額").DataType("onlyNum")
+                    .Pick(true).Value(ViewBag.GetMoney as decimal?)
+                            .MaxLength(5)
+                            .HtmlAttributes(new { @class = "input-s-date", max="99999" ,min="0"})
+                            .Events(events =>
+                            {
+                                events.Change(@"culGetMoney");
+                            })
+                            )
+                            円
+                        </div>
+
+                        <div class="form-group m-b-none" style="width:230px;float: left;">
+                            <label class="input-s-sm control-label" style="width:60px;">過不足</label>
+                            @Html.Smat().TextBox("edit_deficiency").Enable(false).HtmlAttributes(new { @class = "form-control input-s-date text-right" })円
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="padding:0;width: calc(25% - 60px);">
+                        <div class="form-group m-b-none">
+                            
+                            @(Html.Smat().Button("btnAdd")
+                                .Content("商品追加")
+                                .Events(events =>
+                                {
+                                    events.Click("ddlEditAddProductForm");
+                                })
+                                .HtmlAttributes(new { @class = "btn-primary", style = "float:right;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+}
+
+            <div class="row">
+                <script id="head-template" type="text/x-asmat-template">
+                    <tr role="row">
+                        <th role="columnheader" class="s-header">棚</th>
+                        <th role="columnheader" class="s-header">　 順 　</th>
+                        <th role="columnheader" class="s-header"> </th>
+                        <th role="columnheader" class="s-header">商品名</th>
+                        <th role="columnheader" class="s-header">前補充</th>
+                        <th role="columnheader" class="s-header">前補後</th>
+                        <th role="columnheader" class="s-header">現在庫</th>
+                        <th role="columnheader" class="s-header">使用</th>
+                        <th role="columnheader" class="s-header">補充後</th>
+                        <th role="columnheader" class="s-header">金額</th>
+                        <th role="columnheader" class="s-header">賞味期限</th>
+                    </tr>
+                </script>
+
+                <div id="demo_list" class="col-xs12" ></div>
+                @(Html.Smat().Grid("ddl_edit_client_item_list")
+                    .Columns(columns =>
+                    {
+                        columns.Bound("FIELD01").Title("").Width("72px");
+                        columns.Bound("FIELD13").Title("").Width("72px");
+                        columns.Bound("FIELD14").Title("").Width("40px");
+                        columns.Bound("FIELD02").Title("");
+                        columns.Bound("FIELD03").Title("").Width("70px");
+                        columns.Bound("FIELD04").Title("").Width("70px");
+                        columns.Bound("FIELD06").Title("").Width("90px");
+                        columns.Bound("FIELD05").Title("").Width("70px");
+                        columns.Bound("FIELD06").Title("").Width("90px");
+                        columns.Bound("FIELD07").Title("").Width("80px");
+                        columns.Bound("FIELD08").Title("").Width("166px");
+                    })
+                    .DataBound("databound1")
+                    .RowTemplate("rowTemplate")
+                    //.HtmlAttributes(new { style = "min-width:990px;" })
+                )
+
+                @(Html.Smat().Grid("ddl_edit_client_item_add_list")
+                    .Columns(columns => {
+                        columns.Bound("ShelfNo")
+                            .Title("棚")
+                            .Width("72px")
+                            .HtmlAttributes(new { @class = "text-center cell-display" })
+                            .TemplateBound("templateBound1");
+                        columns.Bound("ShelfSubNo")
+                            .Title("　 順 　")
+                            .Width("72px")
+                            .HtmlAttributes(new { @class = "text-center cell-display" })
+                            .TemplateBound("templateBound2");
+                        columns.Bound("ItemName")
+                            .Title(" ")
+                            .Width("40px")
+                            .HtmlAttributes(new { @class = "text-center cell-display" })
+                            .TemplateBound(@"
+                                function (dataItem) {
+                                   return ' '; 
+                                }
+                            ");
+                        columns.Bound("ItemsName")
+                            .Title("新規追加商品")
+                            .HtmlAttributes(new { @class = "cell-display" });
+                        columns.Bound("Price")
+                            .Title("単価")
+                            .Width("70px")
+                            .HtmlAttributes(new { @class = "text-right cell-display" });
+
+                        columns.Bound("FIELD1")
+                            .Title("  ")
+                            .Width("230px").Actions(actions =>
+                            {
+                                actions.Text("単価設定").Click("ddl_item_edit_SetPrice");
+                                actions.Text("削除").Template("<button class='btn-danger  s-button' >削除</button>").Click("ddl_item_edit_del_addItem").ActionConfirm("delConfirm");
+                            });
+                        columns.Bound("AfterNum")
+                            .Title("補充後")
+                            .Width("90px")
+                            .HtmlAttributes(new { @class = "cell-display" })
+                            .TemplateBound("templateBound4");
+                        columns.Bound("FreshDate")
+                            .Title("  ")
+                            .Width("80px")
+                            .HtmlAttributes(new { @class = "text-center cell-display" })
+                            .TemplateBound(@"
+                                function (dataItem) {
+                                    return '';
+                                }
+                            ");
+                        columns.Bound("FreshDate")
+                            .Title("賞味期限")
+                            .Width("166px")
+                            .HtmlAttributes(new { @class = "text-right" })
+                            .TemplateBound("templateBound5");
+                    })
+                    .DataBound("databound2")
+                )
+                
+                <div class="row">
+                    <div class="s-grid s-widget" style="border-color: transparent;">
+                        <table role="grid">
+                            <colgroup>
+                                <col style="width:72px">
+                                <col style="width:72px">
+                                <col style="width:40px">
+                                <col>
+                                <col style="width:70px">
+                                <col style="width:70px">
+                                <col style="width:90px">
+                                <col style="width:70px">
+                                <col style="width:90px">
+                                <col style="width:80px">
+                                <col style="width:166px">
+                            </colgroup>
+                            <tbody role="rowgroup">
+                                <tr>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-top-color: transparent;text-align:right;">合計：</td>
+                                    <td style="border-top-color: transparent;">
+
+                                        <div id="ThisNumSum" style="">
+                                            @Html.Smat().TextBox("txtThisNumSum").Enable(false).HtmlAttributes(new { @class = "form-control input-s-date text-right", style = "width:100%;height: 2em;" })
+
+                                        </div>
+                                    </td>
+                                    <td style="border-top-color: transparent;"></td>
+                                    <td style="border-top-color: transparent;">
+                                        <div id="AfterNumSum" style="">
+                                            @Html.Smat().TextBox("txtAfterNumSum").Enable(false).HtmlAttributes(new { @class = "form-control input-s-date text-right", style = "width:100%;height: 2em;" })
+                                        </div>
+                                    </td>
+                                    <td style="border-color: transparent;"></td>
+                                    <td style="border-color: transparent;">
+                                        <div class="col-sm-12" style="padding:0;">
+                                            <div class="form-group m-b-none">
+                                                @(Html.Smat().Button("btnAddBottom")
+                                                    .Content("商品追加")
+                                                    .Events(events =>
+                                                    {
+                                                        events.Click("ddlEditAddProductForm");
+                                                    })
+                                                    .HtmlAttributes(new { @class = "btn-primary", style = "float:right;" })
+                                                )
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="row m-t-sm ">
+                    
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <script>
+
+        $(document).ready(function () {
+
+            if (ddl_edit_FirstFlag == "1" && ddl_edit_Seq == "0") {
+                $("#edit_collectionAmount").ui().value("0");
+            }
+            if (Modernizr.ie9 == true) {
+                $("#ddl_edit_mone").bind("change keydown keyup", function () {
+                    if (this.value.length > 200) this.value = this.value.substring(0, 200);
+                })
+            }
+
+            if (!Modernizr.ios && !Modernizr.android) {
+                
+            };
+        });
+    </script>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#ddl_edit_btnSubSave").ui().visible(false);
+            $("#ddl_edit_btnSave").ui().visible(false);
+            $("#ddl_edit_btnDelete").ui().visible(false);
+            //$("#btnSign").ui().visible(false);
+            //$("#btnAdd").ui().visible(false);
+            //$("#btnAddBottom").ui().visible(false);
+            //$("#edit_collectionAmount").ui().enable(false);
+            //$("#ddl_edit_mone").attr("disabled", "disabled");
+        }
+    });
+</script> 

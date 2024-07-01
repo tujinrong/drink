@@ -1,0 +1,642 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+    <script src="./SMAT.UI/Scripts/smat.ui.NumericTextBox.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="DeliveryRouteList.html" id="home-link" class="text-muted">
+                        <i class="fa fa-mail-reply text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">補充集金登録</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding-top:0;">
+
+                                    <div class="form-horizontal">
+
+                                        <div class="row">
+
+
+                                            <div class="col-sm-6 text-left text-center-xs">
+                                                <button id="button1" class="btn-warning">一時保存</button>
+
+                                                <button id="button2" class="btn-warning">保存</button>
+
+                                                <button id="button3" class="btn-primary">閉じる</button>
+
+                                                <button id="button4" class="btn-danger">削除</button>
+
+                                            </div>
+                                            <div class="col-sm-6 text-right text-center-xs">
+
+                                            </div>
+
+                                        </div>
+                                        <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                        <div class="row text-right text-center-xs">
+                                            <a href="#" class="hidden">顧客管理</a>
+                                        </div>
+                                       
+
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">店舗</label>
+                                                    <input id="input1" type="text" class="form-control input-s s-textbox s-state-disabled" value="南森町店" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1" style="width:240px;">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">担当者</label>
+                                                    <input type="text" class="form-control input-s-date s-textbox s-state-disabled" value="伊藤　一郎" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">備考</label>
+                                                    <textarea class="s-widget s-textbox input-s" rows="5" style="position:absolute;width:360px;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">顧客</label>
+                                                    <input id="input5" type="text" class="form-control input-s s-textbox s-state-disabled" value="ニッシンシステム" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-fix-1">
+                                                <div class="form-group" style="width:240px;">
+                                                    <label class="input-s-sm control-label">補充日</label>
+                                                    <input type="text" class="form-control input-s-date s-textbox s-state-disabled" value="2015/02/02" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">ルート</label>
+                                                    <input id="input3" type="text" class="form-control input-s-sm s-textbox s-state-disabled"  value="0301" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1">
+                                                <div class="form-group" style="width:240px;">
+                                                    <label class="input-s-sm control-label">次回日</label>
+                                                    <input type="text" class="form-control input-s-date s-textbox s-state-disabled" value="2015/02/24" disabled="disabled" readonly="readonly">
+                                                </div>
+                                            </div>
+                                        </div>
+      
+
+                                        <div class="row m-t-sm ">
+                                            <div class="col-sm-10">
+                                                <div class="form-group m-b-none" style="width:280px;float: left;">
+                                                    <label class="input-s-sm control-label">売上計</label>
+                                                    <input type="text" class="form-control input-s-date s-textbox s-state-disabled" disabled="disabled" style="height: 35px;" readonly="readonly">円
+                                                </div>
+
+                                                <div class="form-group m-b-none" style="width:280px;float: left;">
+                                                    <label class="input-s-sm control-label">集金額</label>
+                                                    <input type="text" id="number6" class="form-control input-s-date " maxlength="5">円
+                                                </div>
+
+                                                <div class="form-group m-b-none" style="width:280px;float: left;">
+                                                    <label class="input-s-sm control-label">過不足</label>
+                                                    <input type="text" class="form-control input-s-date s-textbox s-state-disabled" disabled="disabled" style="height: 35px;" readonly="readonly">円
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <div class="form-group m-b-none">
+                                                    <button id="button5" class="btn-primary" style="float:right;">商品追加</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                    
+
+                                    <div class="row">
+
+                                        <script id="head-template" type="text/x-asmat-template">
+                                            <tr role="row">
+                                                <th role="columnheader" class="s-header" >棚</th>
+                                                <th role="columnheader" class="s-header">順</th>
+                                                <th role="columnheader" class="s-header"> </th>
+                                                <th role="columnheader" class="s-header" >商品名</th>
+                                                <th role="columnheader" class="s-header" >前補充</th>
+                                                <th role="columnheader" class="s-header">前補後</th>
+                                                <th role="columnheader" class="s-header">現在庫</th>
+                                                <th role="columnheader" class="s-header">使用</th>
+                                                <th role="columnheader" class="s-header">補充後</th>
+                                                <th role="columnheader" class="s-header">金額</th>
+                                                <th role="columnheader" class="s-header" >賞味期限</th>
+                                            </tr>
+
+                                        </script>
+                                        
+
+                                        <div id="demo_list" class="col-xs12"></div>
+                                       
+                                        <div id="demo_list2" class="col-xs12"></div>
+                                    </div>
+
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        // create DropDownList from input HTML element
+
+        $("#input2").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "伊藤　一郎", value: "1" },
+            { text: "伊藤　二郎", value: "2" },
+            { text: "伊藤　三郎", value: "3" },
+            { text: "伊藤　四郎", value: "4" }
+            ],
+            index: 0
+        });
+
+        
+
+        $("#input4").asmatDatePicker();
+
+        $("#input6").asmatNumericTextBox({
+            format: "#"
+        });
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton({
+            click: function () { window.location.href = "DeliveryRouteList.html"; }
+        });
+        $("#button3").asmatButton({
+            click: function () { window.location.href = "DeliveryRouteList.html"; }
+        });
+        $("#button4").asmatButton({
+            click: function () { window.location.href = "DeliveryRouteList.html"; }
+        });
+        $("#button5").asmatButton({
+            click: function () {
+                smat.service.doOpenSubForm({
+                    url: "ReferItem.html",
+                    title: "商品検索"
+                });
+            }
+        });
+        $("#number6").smatNumericTextBox({
+            format: "#",
+            pick: true
+        });
+        var rowIndex = 1;
+
+        //数据
+        var dataSource = [
+            {
+                "FIELD01": "1",
+                "FIELD02": "プラセンタ20000",
+                "FIELD03": "15",
+                "FIELD04": "2",
+                "FIELD05": "13",
+                "FIELD06": "10",
+                "FIELD07": "",
+                "FIELD08": "12",
+                "FIELD09": "100",
+                "FIELD10": "1300",
+                "FIELD11": "2015/2/1",
+                "FIELD12": "1",
+                "FIELD13": "0",
+                "FIELD14": " "
+            },
+            {
+                "FIELD01": "1",
+                "FIELD02": "コカ・コーラ",
+                "FIELD03": "25",
+                "FIELD04": "2",
+                "FIELD05": "23",
+                "FIELD06": "",
+                "FIELD07": "2",
+                "FIELD08": "0",
+                "FIELD09": "100",
+                "FIELD10": "2300",
+                "FIELD11": "2015/3/19",
+                "FIELD12": "2",
+                "FIELD13": "1",
+                "FIELD14": " "
+            },
+            {
+                "FIELD01": "2",
+                "FIELD02": "大塚製薬 ポカリスエット",
+                "FIELD03": "18",
+                "FIELD04": "3",
+                "FIELD05": "15",
+                "FIELD06": "10",
+                "FIELD07": "",
+                "FIELD08": "13",
+                "FIELD09": "100",
+                "FIELD10": "1500",
+                "FIELD11": "2015/3/1",
+                "FIELD12": "3",
+                "FIELD13": "2",
+                "FIELD14": "X"
+            },
+            {
+                "FIELD01": "2",
+                "FIELD02": "ホワイトグレープ味　140ml",
+                "FIELD03": "12",
+                "FIELD04": "4",
+                "FIELD05": "8",
+                "FIELD06": "10",
+                "FIELD07": "",
+                "FIELD08": "14",
+                "FIELD09": "100",
+                "FIELD10": "800",
+                "FIELD11": "2015/4/1",
+                "FIELD13": "3",
+                "FIELD14": "X"
+            },
+            {
+                "FIELD01": "2",
+                "FIELD02": "キリンまもるチカラのみず",
+                "FIELD03": "22",
+                "FIELD04": "11",
+                "FIELD05": "11",
+                "FIELD06": "10",
+                "FIELD07": "",
+                "FIELD08": "21",
+                "FIELD09": "100",
+                "FIELD10": "1100",
+                "FIELD11": "2015/4/1",
+                "FIELD13": "4",
+                "FIELD14": " "
+            },
+            {
+                "FIELD01": "3",
+                "FIELD02": "キリンまもる",
+                "FIELD03": "22",
+                "FIELD04": "11",
+                "FIELD05": "11",
+                "FIELD06": "10",
+                "FIELD07": "",
+                "FIELD08": "21",
+                "FIELD09": "100",
+                "FIELD10": "1100",
+                "FIELD11": "2015/4/1",
+                "FIELD13": "5",
+                "FIELD14": "X"
+            }
+        ];
+
+        //列信息
+        var columns =
+           [
+            {
+                field: "FIELD01",
+                title: "",
+                width: "50px"
+            }, {
+                field: "FIELD13",
+                title: "",
+                width: "50px"
+            }, {
+                field: "FIELD14",
+                title: "",
+                width: "40px"
+            }, {
+                field: "FIELD02",
+                title: ""
+            }, {
+                field: "FIELD03",
+                title: "",
+                width: "70px"
+            }, {
+                field: "FIELD04",
+                title: "",
+                width: "70px"
+            }, {
+                field: "FIELD04",
+                title: "",
+                width: "80px"
+            }, {
+                field: "FIELD05",
+                title: "",
+                width: "70px"
+            }, {
+                field: "FIELD06",
+                title: "",
+                width: "80px"
+            }, {
+                field: "FIELD07",
+                title: "",
+                width: "80px"
+            }, {
+                field: "FIELD08",
+                title: "",
+                width: "186px"
+            }
+           ];
+
+        $("#demo_list").asmatGrid({
+            dataSource: dataSource,
+            sortable: false,
+            scrollable: false,
+            columns: columns,
+            dataBound: function(e) {
+                this.thead.find('tr').remove();
+                //alert(asmat.template($('#head-template').html())({}));
+                this.thead.html($('#head-template').html());
+
+                $("#demo_list").find('.edit-numeric').smatNumericTextBox({
+                    format: "#",
+                    pick:true
+                });
+                
+                
+                $("#demo_list").find('.edit-date').asmatDatePicker({
+                    format: "yyyy/MM/dd"
+                });
+
+
+
+                $("#demo_list").find('.edit-code2').asmatDropDownList({
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: [
+                    { text: "上", value: "0" },
+                    { text: "１", value: "1" },
+                    { text: "２", value: "2" }
+                    ],
+                    index: 0
+                });
+            },
+            rowTemplate: function (dataItem) {
+
+                var altStr = "";
+                if (rowIndex % 2 == 0) {
+                    altStr = "s-alt";
+                }
+                rowIndex++;
+
+                var grid = $("#demo_list").data('asmatGrid');
+
+                var index = grid.dataSource.indexOf(dataItem);
+
+                var filed1Rowspan = 0;
+
+                if (index != 0 && dataItem.FIELD01 == dataSource[index - 1].FIELD01) {
+                    filed1Rowspan = 0;
+                }
+                else
+                {
+                    filed1Rowspan = 1;
+                    for (var i = index + 1 ; i < dataSource.length ; i++)
+                    {
+                        if (dataItem.FIELD01 == dataSource[i].FIELD01) {
+                            filed1Rowspan += 1;
+                        }
+                    }
+                }
+
+                
+
+                var result = '<tr  data-uid="' + dataItem.uid + '" role="row" class="' + altStr + '">';
+                //if (filed1Rowspan > 0)
+                //{
+                //    result += '<td role="gridcell" class="text-center " rowspan="' + filed1Rowspan + '">' + dataItem.FIELD01 + '</td>';
+                //}
+                result += '<td role="gridcell" class="text-center cell-display" ><input type="text" style="width:100%" class="form-control s-textbox " value="' + dataItem.FIELD01 + '"></td>';
+                result += '<td role="gridcell" class="text-center cell-display" ><input type="text" style="width:100%" class="form-control s-textbox" value="' + dataItem.FIELD13 + '"></td>';
+                result += '<td role="gridcell" class="text-center cell-display" >' + dataItem.FIELD14 + '</td>';
+
+                result += '<td role="gridcell" class="cell-display" >' + dataItem.FIELD02 + '</td>';
+                result += '<td role="gridcell" class="text-right cell-display" >' + dataItem.FIELD03 + '</td>';
+                result += '<td role="gridcell" class="text-right cell-display">' + dataItem.FIELD05 + '</td>';
+                result += '<td role="gridcell" class="text-right"><input class="edit-numeric " style="width:100%" type="number" value="' + dataItem.FIELD06 + '" maxlength="2" step="1"/></td>';
+                result += '<td role="gridcell" class="text-right cell-display">' + dataItem.FIELD07 + '</td>';
+                result += '<td role="gridcell" class="text-right"><input class="edit-numeric " style="width:100%" type="number" value="' + dataItem.FIELD08 + '" maxlength="2" step="1"/></td>';
+                result += '<td role="gridcell" class="text-right cell-display">' + dataItem.FIELD09 + '</td>';
+
+                var color = "";
+                var infoNode = '&nbsp;&nbsp;&nbsp;&nbsp;';
+
+                if (dataItem.FIELD12 == "1") {
+                    color = "color:blue;";
+                } else if (dataItem.FIELD12 == "2") {
+                    infoNode = '<i class="text-danger fa fa-times"></i>&nbsp;';
+                } else if (dataItem.FIELD12 == "3") {
+                    infoNode = '<i class="text-warning fa fa-exclamation-triangle"></i>&nbsp';
+                }
+
+                result += '<td role="gridcell" class="text-right" >' + infoNode + '<input type="text" class="edit-date"  style="width:154px;' + color + '" value="' + dataItem.FIELD11 + '"/></td>';
+                result += '</tr>';
+
+
+                
+
+                //alert(dataItem.uid);
+
+                //<tr data-uid="ca341b5e-a26c-4d2c-abb3-bbb6a19d04b9" role="row"><td role="gridcell">1</td><td role="gridcell">【アウトレット】常盤薬品　BEAUPOWERプラセンタ20000</td><td role="gridcell">15</td><td role="gridcell">2</td><td role="gridcell">13</td><td role="gridcell">10</td><td role="gridcell"></td><td role="gridcell">12</td></tr>
+
+                return result;
+            }
+        });
+
+
+
+        //======================================================================
+        //数据
+        var dataSource2 = [
+            { "FIELD1": "1", "FIELD2": "キリンビバレッジ", "FIELD3": "1", "FIELD4": "22" },
+            { "FIELD1": "2", "FIELD2": "キリンビバレッジ", "FIELD3": "2", "FIELD4": "23" }
+            ];
+
+        //列信息
+        var columns2 =
+           [
+               {
+                   field: "FIELD1",
+                   title: "棚",
+                       width: "50px",
+                       attributes: {
+                           "class": "text-center cell-display"
+                       }, template: function (dataItem) {
+                           return '<input type="text" style="width:100%" class="form-control s-textbox " value="' + dataItem.FIELD1 + '">';
+
+                       }
+               }, {
+                   field: "FIELD3",
+                   title: "順",
+                   width: "50px",
+                   attributes: {
+                       "class": "text-center cell-display"
+                   }, template: function (dataItem) {
+                       return '<input type="text" style="width:100%" class="form-control s-textbox " value="' + dataItem.FIELD3 + '">';
+
+                   }
+               }, {
+                   field: "FIELD3",
+                   title: " ",
+                   width: "40px",
+                   attributes: {
+                       "class": "text-center cell-display"
+                   },
+                   template: function (dataItem) {
+                       return ' ';
+
+                   }
+               },
+               {
+                    field: "FIELD2",
+                    title: "新規追加商品",
+                    attributes: {
+                        "class": "cell-display"
+                    }
+                },
+               {
+                    field: "FIELD1",
+                    title: "  ",
+                    template: function (dataItem) {
+                        return '<button  class="btn-danger btn-command1 s-button" >削除</button>';
+
+                    },
+                    width: "290px"
+                },
+               {
+                    field: "FIELD4",
+                    title: "補充後",
+                    width: "80px",
+                    attributes: {
+                        "class": "text-right"
+                    },
+                    template: function (dataItem) {
+                        return '<input class="edit-numeric " style="width:100%" type="number" value="' + dataItem.FIELD4 + '" maxlength="2" step="1"/>';
+
+                    }
+                },
+               {
+                    field: "FIELD3",
+                    title: "  ",
+                    width: "80px",
+                    attributes: {
+                        "class": "text-center cell-display"
+                    },
+                    template: function (dataItem) {
+                        return '';
+
+                    }
+               },
+               {
+                   field: "FIELD3",
+                   title: "賞味期限",
+                   width: "186px",
+                   attributes: {
+                       "class": "text-right "
+                   },
+                   template: function (dataItem) {
+                       return '<input type="text" class="edit-date"  style="width:154px;" />';
+
+                   }
+               }
+               ];
+
+        $("#demo_list2").asmatGrid({
+                dataSource: dataSource2,
+                sortable: false,
+                scrollable: false,
+                dataBound: function (e) {
+                    $("#demo_list2").find('.edit-numeric').smatNumericTextBox({
+                        format: "#",
+                        pick: true
+                    });
+
+                    $("#demo_list2").find('.edit-date').asmatDatePicker({
+                        format: "yyyy/MM/dd"
+                    });
+                },
+                columns: columns2
+            });
+    });
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

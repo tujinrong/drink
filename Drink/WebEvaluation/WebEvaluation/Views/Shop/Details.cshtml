@@ -1,0 +1,58 @@
+﻿@model WebEvaluation.Models.M_Shop
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Shop</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaCD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlaceCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlaceCD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DivCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DivCD)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShopCD }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

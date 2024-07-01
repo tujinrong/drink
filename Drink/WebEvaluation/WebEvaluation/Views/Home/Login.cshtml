@@ -1,0 +1,163 @@
+﻿@model WebEvaluation.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "ログイン";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テレフォンレポートシステム</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/site.css?v=1" rel="stylesheet">
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var msg = "@ViewBag.msg";
+            var msgType = "@ViewBag.msgType";
+            if (msg.length > 0) {
+                if (msgType.length > 0) {
+                    SMAT.Service.toastr(msg,msgType);
+                } else {
+                    SMAT.Service.toastr(msg);
+                }
+            }
+        });
+    </script>
+
+</head>
+<body class="login-page asmat-plase-go-to-login-form">
+    <div class="login-box wrapper">
+        <div class="navbar navbar-black navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-brand" style="padding-top:2px">
+                    <img src="../../Content/images/logo-text.png">
+                </div>
+            </div>
+        </div>
+        <div class="row col-lg-12" style="margin:70px 0 30px 0;">
+            <div class="wrapper sys-name"></div>
+        </div>
+        <div class="row col-lg-12" style="margin-top:-80px;">
+            <div class="wrapper login-form">
+
+                @if (ViewBag.isTestVersion as string  == "true")
+                    {
+                        <div style="text-align:center;margin-top:-10px;margin-bottom:10px;">
+                            <span style="color:red;font-weight:bold;">テスト版</span>
+                        </div>
+                         
+                    }
+                @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-horizontal", @onsubmit = "return checkForm()" }))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="form-group" style="margin-bottom:30px;">
+                        <label class="col-lg-4 control-label" for="LoginName"><img alt="ユーザID" title="ユーザID" src="../../Content/images/t-userid.png" style="position:relative;top:-1px; left:12px;"></label>
+                        <div class="col-lg-4" style="width:280px">
+                            @Html.TextBoxFor(l => l.LoginName, new { @class = "form-control onlyNumAlpha", @maxlength = "8", @placeholder = "", @Style = "height:38px;" })
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:30px;">
+                        <label class="col-lg-4 control-label" for="PassWord"><img alt="パスワード" title="パスワード" src="../../Content/images/t-pwd.png" style="position:relative;top:0px;left:12px;"></label>
+                        <div class="col-lg-4" style="width:280px">
+                            @Html.PasswordFor(l => l.PassWord, new { @class = "form-control onlyNumAlpha", @maxlength = "20", @placeholder = "", @Style = "height:38px;" })
+                        </div>
+                    </div>
+                    <div class="form-group" style="text-align:center;">
+                        <button class="btn btn-primary" type="submit">ログイン</button>
+                    </div>
+                }
+                <script type="text/javascript">
+                    function checkForm() {
+
+                        if ($("#LoginName").val().trim().length == 0) {
+                            SMAT.Service.toastr("ユーザー名を入力してください！", "error");
+                            $("#LoginName").focus();
+                            return false;
+                        }
+                        if ($("#PassWord").val().trim().length == 0) {
+                            SMAT.Service.toastr("パスワードを入力してください!", "error");
+                            $("#PassWord").focus();
+                            return false;
+                        }
+                        return true;
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="row col-lg-12" style="margin:30px 0 30px 0;">
+            <div class="wrapper logo-1"></div>
+        </div>
+        <div class="row col-lg-12" style="margin:0px 0 50px 0;">
+            <div class="wrapper" style="width:500px;text-align:center;">
+                <span class="text-grey">Copyright © 2014 TAKE and GIVE NEEDS. </span>
+                <br />
+                <span class="text-grey">All Rights Reserved.</span>
+            </div>
+        </div>
+        <div class="navbar navbar-black navbar-fixed-bottom">
+            <div class="container">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+      
+        var forms = $('form');
+
+        $.each(forms, function () {
+            var form = $(this);
+            var ctrls = $(this).find('input , select');
+            if (ctrls.length > 0) {
+                ctrls.last().addClass('form-last-input')
+            }
+
+            var btns = $(this).find('input');
+
+            $.each(btns, function () {
+                $(this).bind('keydown', function (e) {
+                    
+                    if (window.event.keyCode == 13) {
+                        if ($(this).hasClass('form-last-input')) {
+                            form.submit();
+                            return;
+                        }
+                        window.event.keyCode = 9;
+                    }
+                });
+            });
+
+            var selects = $(this).find('select');
+
+            $.each(selects, function () {
+                $(this).bind('keydown', function (e) {
+                    
+
+                    if (window.event.keyCode == 13) {
+                        if ($(this).hasClass('form-last-input')) {
+                            form.submit();
+                            return;
+                        }
+                        window.event.keyCode = 9;
+                    }
+                });
+            });
+        });
+
+       
+    });
+    </script>
+
+</body>
+</html>

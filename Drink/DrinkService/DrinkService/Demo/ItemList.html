@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="Home.html" id="home-link" class="text-muted">
+                        <i class="icon icon-home text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">商品検索</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
+                            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                                <img src="images/temp-user.png" alt="...">
+                            </span>
+                            本社　　江坂　太郎 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight">
+                            <li>
+                                <span class="arrow top"></span>
+                                <a href="PasswordChange.html">パスワード設定</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="Login.html" >ログアウト</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:5px 20px">
+
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">種別</label>
+                                                    <input id="input1" class="form-control input-s " value="1" />
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">コード</label>
+                                                    <input id="input2" type="text" class="form-control input-s s-textbox">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">商品名</label>
+                                                    <input id="input2" type="text" class="form-control input-s s-textbox">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>   
+
+                                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                                    <div class="row">
+
+                                        <div class="col-sm-6 text-left text-center-xs">
+                                            <button id="button1" class="btn-primary">検索</button>
+                                            <button id="button2" class="btn-primary">CSV</button>
+                                            <button id="button3" class="btn-primary">新規</button>
+                                        </div>
+
+                                        <div class="col-sm-6 text-right text-center-xs">
+                                            <ul class="pagination pagination-sm m-t-xs m-b-none">
+                                                <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                                <li><a href="#">1</a></li>
+                                                <li><a href="#">2</a></li>
+                                                <li><a href="#">3</a></li>
+                                                <li><a href="#">4</a></li>
+                                                <li><a href="#">5</a></li>
+                                                <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                    <div class="row">
+                                        <div id="demo_list" class="col-xs12 grid-no-cell-border"></div>
+                                    </div>
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton();
+        $("#button3").asmatButton({
+            click: function () { window.location.href = "ItemEdit.html"; }
+        });
+
+        $("#input1").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "ドリンク", value: "1" },
+            { text: "ドリンク2", value: "2" },
+            { text: "ドリンク3", value: "3" },
+            { text: "ドリンク4", value: "4" }
+            ],
+            index: 0
+        });
+
+        $(".s-datepicker").asmatDatePicker({
+            format: "yyyy/MM/dd"
+        });
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "10002", "FIELD2": "商品名1", "FIELD3": "ドリンク", "FIELD4": "100", "FIELD5": "100", "FIELD6": "オレンジジュース", "FIELD7": "4", "FIELD8": "11" },
+            { "FIELD1": "10003", "FIELD2": "商品名2", "FIELD3": "ドリンク", "FIELD4": "100", "FIELD5": "100", "FIELD6": "CCレモン", "FIELD7": "3", "FIELD8": "1" }
+         ];
+
+        //列信息
+        var columns =
+           [
+               
+            {
+                field: "FIELD1",
+                title: "コード",
+                width: "100px",
+                headerAttributes: {
+                    style: "text-align: left; "
+                }
+            },
+            {
+                field: "FIELD2",
+                title: "商品名",
+                headerAttributes: {
+                    style: "text-align: left; "
+                }
+            },{
+                field: "FIELD3",
+                title: "種別",
+                width: "100px",
+                headerAttributes: {
+                    style: "text-align: left; "
+                }
+            },
+            {
+                field: "FIELD4",
+                title: "標準単価",
+                width: "140px",
+                headerAttributes: {
+                    style: "text-align: right; "
+                },
+                attributes: {
+                    "class": "text-right"
+                }
+            }, {
+                field: "FIELD5",
+                title: "店舗単価",
+                width: "140px",
+                headerAttributes: {
+                    style: "text-align: right; "
+                },
+                attributes: {
+                    "class": "text-right"
+                }
+            },
+            {
+                field: "FIELD7",
+                title: "入数",
+                headerAttributes: {
+                    style: "text-align: right; "
+                },
+                attributes: {
+                    "class": "text-right"
+                },
+                width: "80px"
+            },
+            {
+                field: "",
+                title: "",
+                width: "90px",
+                attributes: {
+                    "class": "text-center"
+                },
+                template: function (dataItem) {
+                    return '<button  class="btn-primary btn-command1 s-button" >修正</button>';
+                }
+            }
+           ];
+
+        $("#demo_list").asmatGrid({
+            dataSource: dataSource,
+            sortable: true,
+            scrollable: false,
+            columns: columns,
+            dataBound: function (e) {
+                var btns = $("#demo_list").find(".btn-command1");
+
+                $.each(btns, function (n, value) {
+
+                    $(this).bind("click", function (e) {
+
+                        window.location.href = "ItemEdit.html";
+                    });
+                });
+            }
+        });
+
+        //radio group
+
+
+        $.each($(".radio-group"), function (n, value) {
+
+            var groupTarger = $(this);
+            setRadioGroupState(groupTarger);
+
+            var radios = $(this).find(" .radio-group-box input[type='radio']");
+            $.each(radios, function (n, value) {
+
+                $(this).bind("click", function (e) {
+
+                    setRadioGroupState(groupTarger);
+                });
+            });
+        });
+    });
+
+    function setRadioGroupState(target) {
+        var radios = target.find(" .radio-group-box input[type='radio']");
+
+        $.each(radios, function (n, value) {
+
+            var datePickers = $(this).parent().parent().find('input.s-datepicker');
+
+            if (this.checked) {
+                if (datePickers.length > 0) {
+                    $.each(datePickers, function (n, value) {
+
+                        $(this).data("asmatDatePicker").enable(true);
+                    });
+                }
+
+            } else {
+                if (datePickers.length > 0) {
+                    $.each(datePickers, function (n, value) {
+
+                        $(this).data("asmatDatePicker").enable(false);
+                    });
+                }
+            }
+        });
+    }
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

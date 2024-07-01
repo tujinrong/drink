@@ -1,0 +1,135 @@
+﻿
+<script>
+    smat.global.referInfo = {
+        referDemo: {
+            title: "PersonRefer",
+            async: {
+                openFormUrl: smat.global.basePath + "/Refer/PersonRefer",//选择画面
+                loadAllUrl: smat.global.basePath + "/Refer/PersonFindAll",//获取所有数据的接口
+                loadOneUrl: smat.global.basePath + "/Refer/PersonFindindOneByKey",
+                autoCompleteUrl: smat.global.basePath + "/Refer/PersonFindDatasByKey",
+            },
+            valueField: "Id",
+            displayField: "FullName",
+            width: "700px"
+        }
+    };
+</script>
+
+
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <input id="refer_demo" class="s-input s-refer" refer-key="referDemo"  style="width:220px" />
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+            
+        $("#refer_demo").smatRefer({
+            label:{text:"Refer"},
+            getParam: function (e) {
+                var p = {
+                    p1: "test"
+                };
+
+                //alert("自定义参数：p");
+                return p;
+            }
+        });
+    });
+</script>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul">
+            
+        </ul>
+    </div>
+
+</div>
+
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                    <code >
+                        <!-- ====code显示区域 =====-->
+                        <script class="source-code" type="text">
+smatscript
+    smat.global.referInfo = {
+        referDemo: {
+            title: "PersonRefer",
+            async: {
+                openFormUrl: smat.global.basePath + "/Refer/PersonRefer",//选择画面
+                loadAllUrl: smat.global.basePath + "/Refer/PersonFindAll",//获取所有数据的接口
+                loadOneUrl: smat.global.basePath + "/Refer/PersonFindindOneByKey",
+                autoCompleteUrl: smat.global.basePath + "/Refer/PersonFindDatasByKey",
+            },
+            keyField: "Id",
+            width: "700px"
+        }
+    };
+smat2script
+
+<div class="form-horizontal">
+    <input id="refer_demo" class="s-input s-refer" refer-key="referDemo" style="width:220px" />
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#refer_demo").smatRefer({
+            label: { text: "Refer" },
+            getParam: function (e) {
+                var p = {
+                    p1: "test"
+                };
+
+                //alert("自定义参数：p");
+                return p;
+            }
+        });
+    });
+</script>
+
+
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+	hljs.configure({tabReplace: '    '}); // 4 spaces
+	$('pre code').each(function (i, e) {
+        
+	    if ($(this).find('.source-code').length > 0) {
+
+	        $(this).html((asmat.htmlEncode($(this).find('.source-code').html())).replace(new RegExp("smatscript", "gm"), "&lt;script&gt;").replace(new RegExp("smat2script", "gm"), "&lt;/script&gt;") + "&lt;/script&gt;");
+
+	    }
+
+	    hljs.highlightBlock(e)
+	});
+</script>

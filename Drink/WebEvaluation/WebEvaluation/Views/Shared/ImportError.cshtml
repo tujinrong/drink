@@ -1,0 +1,140 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ImportViewModel>
+
+@{
+    ViewBag.IMG = "../../Content/images/shop.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "インポート確認";
+}
+<body>
+    @if (null != Model && Model.ToList().Count > 0)
+    {
+        List<int> errorFieldIndex = new List<int>();
+        List<string> ErrorFields = ViewBag.ErrorFields;
+        
+    <br/>   
+    <div class="jumbotron">
+        <br />
+        <div style="height: 500px; overflow: scroll; background-color: #e5e5e5">
+            <table class="table form1 table-bordered table-hover text-center" style="border-color: #b1b5ba;border-right:none">
+                @{ var no = 0;}
+                @foreach (var item in Model)
+                {
+                    if (no == 0)
+                    {
+                        <thead>
+                            <tr class="text-center" style="background-color:#dfe3e8;border-color:#b1b5ba">
+                                <th class="text-center" width="100px" style="white-space: nowrap; background-color: #dfe3e8; border-color: #b1b5ba;border-bottom:none">
+                                    @Html.DisplayFor(modelItem => item.Type)
+                                </th>
+                                @for (int i = 0; i < item.Fields.Count; i++)
+                                {
+                                    string field = item.Fields[i];
+                                    if (ErrorFields.Contains(field))
+                                    {
+                                        errorFieldIndex.Add(i);
+                                    }
+                                    <th class="text-center" style="white-space: nowrap; background-color: #dfe3e8; border-color: #b1b5ba; border-bottom:none">@(field)</th>
+                                }                                
+                            </tr>
+                        </thead>
+                    }
+                    else
+                    {
+                        <tr class="" style="background-color:white">
+                            <td style="white-space:nowrap; background-color: #dfe3e8; border-top-color:#b1b5ba; border-color:#b1b5ba;">
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            @for (int i = 0; i < item.Fields.Count; i++)
+                            {
+                                string field = item.Fields[i];
+                                if (errorFieldIndex.Contains(i))
+                                {
+                                    <td class="text-left" style="white-space: nowrap;white-space: nowrap;border-top-color: #b1b5ba"><span style="color:red">@(field)</span></td>
+                                }
+                                else
+                                {
+                                    <td class="text-left" style="white-space: nowrap; white-space: nowrap;border-top-color: #b1b5ba;">@(field)</td>
+                                }
+                            }
+                        </tr>
+                    }
+                    no++;
+                }
+            </table>
+        </div>
+        <br />
+        <div class="menu-box" id="msg-box" style="padding: 10px 60px;">
+            <div class="panel panel-menu">
+                <div class="panel-heading">
+                    <span class="title">メッセージ</span>
+                </div>
+                <div class="panel-body">
+                    <div id="summernote-box">
+                        @if (ViewBag.hasValueError != null)
+                        {
+                            var ErrorDetail = ViewBag.ErrorDetail;
+                            <span style="color:red">@(ErrorDetail)</span>
+                            <br/>
+                            <span style="color:red">CSVファイルを修正して、再度実行してください。</span>
+                            if (ViewBag.isCreateLink == true && ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09"))
+                            {
+                                <a id="link" href="#" target="_blank">[@ViewBag.linkText]</a>
+                            }
+                        }
+                        else
+                        {
+                            <span style="color:red">ファイルが間違っています。処理はできません。</span>
+                        }
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="width:100%; text-align:center;">
+            @Html.ButtonAction(false, "戻る", ViewBag.action as string, null, new { @class = "btn btn-info " })
+        </div>
+    </div>
+    }
+    <script type="text/javascript">
+        if ($("#link")) {
+            var url = htmlDecode('@ViewBag.href')
+            var settings = {
+                trigger: 'click',
+                title: '社員登録',
+                content: '<p>This is webui popover demo.</p><p>just enjoy it and have fun !</p>',
+                width: 300,
+                multi: true,
+                closeable: false,
+                style: '',
+                padding: true,
+                cache: true
+            };
+
+            var iframeSettings = {
+                width: 1050,
+                height: 600,
+                closeable: true,
+                padding: false,
+                type: 'iframe',
+                url: url
+            };
+
+            $("#link").webuiPopover('destroy').webuiPopover($.extend({}, settings, iframeSettings)).on('show.webui.popover', function (e) {
+                SMAT.CurrentCodeName = self;
+                $('body').append('<div id="MainLodingForm_overlay" class="k-overlay" style="z-index: 1059; opacity: 0.3;"></div>');
+
+            }).on('hide.webui.popover', function (e) {
+                $('.k-overlay').remove();
+            });
+        }
+
+
+        function htmlEncode(value) {
+            return $('<div/>').text(value).html();
+        }
+
+        function htmlDecode(value) {
+            return $('<div/>').html(value).text();
+        }
+    </script>
+</body>

@@ -1,0 +1,145 @@
+﻿@model WebEvaluation.Models.T_Party
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>T_Party</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartyNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartyNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopCD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartyDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartyDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TantoCD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TantoCD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrideName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrideName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrideKana)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrideKana)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrideHomeTel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrideHomeTel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrideMobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrideMobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GroomName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GroomName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GroomKana)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GroomKana)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GroomHomeTel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GroomHomeTel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GroomMobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GroomMobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateUserID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateUserID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateTime)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,191 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "集金リスト";
+}
+<script>
+
+
+    function checkPDFOpen() {
+        var grid = $("#collection-list-grid").ui();
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            smat.service.addErrorInfo("selectedList", null, "対象となるデータがありません。データを選択してください。");
+        }
+    }
+
+    function getPdfParam(param) {
+        var grid = $("#collection-list-grid").ui();
+        var selectDatas = grid.getSelectedDatas()["selectedList"];
+        debugger;
+        var clientList = [];
+        for (var index in selectDatas) {
+            clientList.push({
+                ShopCD: selectDatas[index]["ShopCD"],
+                HoDateStr: selectDatas[index]["HoDate"],
+                StaffCD: selectDatas[index]["StaffCD"]
+            });
+        }
+
+        param.hoClientList = clientList;
+    }
+
+    function checkForm() {
+        if ($('#referShopCD').ui().value() == "") {
+            smat.service.addErrorInfo("referShopCD", $('#referShopCD'), "【店舗】を入力してください");
+        }
+    }
+
+    function formatMoney(dataItem) {
+        //return dataItem.GetMoney;
+        return asmat.format("{0:n0}", Number(dataItem.GetMoney));
+    }
+
+    var afterReferShop = function (data) {
+        if (data != undefined) {
+            smat.service.loadJosnData({
+                url: "/Staff/GetStaffList",
+                params: { "ShopCD": data["ShopCD"] },
+                success: function (result) {
+
+                    var emptyItem = {};
+                    emptyItem.staffCD = "";
+                    emptyItem.StaffName = "";
+
+                    result.unshift(emptyItem);
+
+                    $("#ddlStaff").ui().setDataSource(result);
+
+                    if (data.defaultStaff != undefined) {
+                        $("#ddlStaff").ui().value('@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).StaffCD)');
+                    }
+                }
+            });
+        } else {
+            $("#ddlStaff").ui().setDataSource([]);
+        }
+    }
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+       @using (Html.Smat().BeginForm("collectionListForm", new { @class = "panel-body", style = "padding:5px 20px" }
+            ).Actions(actions =>
+                {
+                    actions.Action("/Collection/CollectionSearch").ActionBtn("collection_Llist_search_btn").CheckForm("checkForm").ResultHandler("collection-list-pager");
+                    actions.Action("/Report/DeliveryRouteFillup").ActionBtn("btnPdf1").CheckForm("checkPDFOpen").GetParam("getPdfParam").Success("downloadPDF").Async(false);
+                    actions.Action("/Report/DeliveryRoutePayment").ActionBtn("btnPdf2").CheckForm("checkPDFOpen").GetParam("getPdfParam").Success("downloadPDF").Async(false);
+                    actions.Action("/Report/DeliveryRouteFillupList").ActionBtn("btnPdf3").CheckForm("checkPDFOpen").GetParam("getPdfParam").Success("downloadPDF").Async(false);
+                }
+            ))
+       {
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                            {
+                                @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" })
+                                @Html.Smat().TextBox("referShopCD").Name("ShopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                            }
+                            else
+                            {
+                                @Html.Smat().Refer("referShopCD").Name("ShopCD").Label("店舗").ReferKey("referShop").AfterSetValue("afterReferShop").HtmlAttributes(new { cookie = "shopCD", style = "width:260px;" })
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="input-s-sm control-label">補充日</label>
+                        @(Html.Smat().DatePicker("HoDate1")
+                              .Value(" ")
+                              .Name("StartDate")
+                              .Value((DateTime.Now).ToString("yyyy/MM/dd"))
+                              .HtmlAttributes(new { @class = "input-s-date" })
+                        )  
+                        ～
+                        @(Html.Smat().DatePicker("HoDate2")
+                              .Value(" ")
+                              .Name("EndDate")
+                              .HtmlAttributes(new { @class = "input-s-date" })
+                        )
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DropDownList("ddlStaff")
+                                    .Name("staffCD")
+                                    .Label(label =>
+                                    {
+                                        label.Text("担当者");
+                                    })
+                                    .DataTextField("StaffName")
+                                    .DataValueField("StaffCD")
+                                    .DataType("json")
+                                    .EmptyText("")
+                                    .HtmlAttributes(new { @class = "form-control input-s-date" })
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row row-tool">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("collection_Llist_search_btn").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                    @(Html.Smat().Button("btnPdf1")
+                          .Content("補充実績一覧")
+                          .HtmlAttributes(new { @class = "btn-primary" })
+                    )
+                    @(Html.Smat().Button("btnPdf2")
+                          .Content("入金通知書")
+                          .HtmlAttributes(new { @class = "btn-primary" })
+                    )
+                    @(Html.Smat().Button("btnPdf3")
+                          .Content("補充商品リスト")
+                          .HtmlAttributes(new { @class = "btn-primary" })
+                    )
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("collection-list-pager").DataHandler("collection-list-grid")
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("collection-list-grid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("").DataType("checkBox-selecter").Width("40px").HtmlAttributes(new { @class = "text-center" }).CheckAll(true).SelectedDataName("selectedList");
+                          columns.Bound("HoDate").Title("日付").DataType("Date").Width("120px");
+                          columns.Bound("StaffName").Title("担当者").Width("120px");
+                          columns.Bound("GetMoney").Title("集金額").Width("90px").HtmlAttributes(new { @class = "text-right" }).TemplateBound("formatMoney");
+                          columns.Bound("").Title("");
+                      })
+                )
+            </div>
+       }
+    </section>
+</section>
+
+@if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+{
+    <script>
+
+
+        jQuery(document).ready(function () {
+            var data = {
+                ShopCD: "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD)",
+                defaultStaff:true
+            };
+
+            afterReferShop(data);
+        });
+
+
+
+    </script>
+}

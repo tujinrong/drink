@@ -1,0 +1,279 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ImportViewModel>
+
+@{
+    ViewBag.IMG = "../../Content/images/shop.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "インポート確認";
+}
+<body>
+    @if (null != Model && Model.ToList().Count > 0)
+    {
+        <br/>
+    <div class="jumbotron">
+        <br />
+        <div class="col-lg-8 text-right pageIndex" style="padding-right:0px; float:right;"></div>
+            <div style="height:500px;overflow:scroll;background-color:#e5e5e5; width:100%">
+                <table id="data" class="table form1 table-bordered text-center" style="border-color: #b1b5ba;border-right:none">
+                    <thead>
+                        <tr class="text-center" style="background-color:#dfe3e8;border-color:#b1b5ba">
+                            <th class="text-center" width="5%" style="white-space: nowrap; background-color: #dfe3e8; border-color: #b1b5ba;border-bottom:none">
+                                @Html.DisplayFor(modelItem => Model.First().Type)
+                            </th>
+                            @foreach (string filed in Model.First().Fields)
+                            {
+                                <th class="text-center cell" style="white-space: nowrap; background-color: #dfe3e8; border-color: #b1b5ba; border-bottom:none">@(filed)</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    @*@{ var no = 0;}
+                    @foreach (var item in Model)
+                    {
+                        if (no == 0)
+                        {
+                            <thead>
+                                <tr class="text-center" style="background-color:#e5e5e5">
+                                    <th class="text-center" width="5%" style="white-space: nowrap;">
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </th>
+                                    @foreach (string filed in item.Fields)
+                                    {
+                                        <th class="text-center cell" style="white-space: nowrap;">@(filed)</th>
+                                    }
+                                </tr>
+                            </thead>
+                        }
+                        else
+                        {
+                            <tr class="" style="background-color:white">
+                                <td style="white-space: nowrap;background-color:#f2f2f2" class="cell">
+                                    @if (item.Type == "削除")
+                                    {
+                                        <span style="color:red">削除</span>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    }
+                                </td>
+                                @foreach (string filed in item.Fields)
+                                {
+                                    <td class="text-center cell" style="white-space: nowrap;">@(filed)</td>
+                                }
+                            </tr>
+                        }
+                        no++;
+                    }*@
+                </table>
+            </div>
+        <div class="col-lg-8 text-right pageIndex" style="padding-right:0px; float:right;"></div>
+            <br />
+            <div>
+                <table class="table form-table">
+                    <tr class="tr-enable">
+                        <td class="text-left" style="width:100px">
+                            <label class="edit-title">
+                                ファイル：
+                            </label>
+                        </td>
+                        <td style="width:260px">
+                            @(ViewBag.fileName)
+                        </td>
+                        <td style="width:90px"></td>
+                        <td></td>
+                        <td style="width:140px">
+                            <label class="edit-title">
+                                データ件数：
+                            </label>
+                        </td>
+                        <td>
+                            @(ViewBag.dataCount)件
+                        </td>
+                        <td style="width:150px"></td>
+                        <td></td>
+                    </tr>
+                    <tr class="tr-enable">
+                        <td class="text-left">
+                            <label class="edit-title">
+                                追加：
+                            </label>
+                        </td>
+                        <td>
+                            @(ViewBag.addCount)件
+                        </td>
+                        <td>
+                            <label class="edit-title">
+                                更新：
+                            </label>
+                        </td>
+                        <td>
+                            @(ViewBag.updateCount)件
+                        </td>
+                        <td>
+                            <label class="edit-title">
+                                変更必要なし：
+                            </label>
+                        </td>
+                        <td>
+                            @(ViewBag.sameCount)件
+                        </td>
+                        <td>
+                            <label class="edit-title">
+                                不要データ削除：
+                            </label>
+                        </td>
+                        <td>
+                            @(ViewBag.deleteCount)件
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group" style="width:100%; text-align:center;">
+                @{
+                var dataCount = ViewBag.dataCount;
+                var sameCount = ViewBag.sameCount;
+                var deleteCount = ViewBag.deleteCount;
+                }
+
+                @if (deleteCount > 0 || dataCount != sameCount)
+            {
+                    @Html.ButtonAction(false, "実行", ViewBag.action as string, ViewBag.param as object, new { @class = "btn btn-success ", @checkAction = "doOk()" })
+            }
+                @Html.ButtonAction(false, "戻る", ViewBag.action as string, null, new { @class = "btn btn-info " })
+            </div>
+        </div>
+    }
+    <script type="text/javascript">
+        var dataList = htmlDecode('@ViewBag.jsonList');
+        var data = strToJson(dataList);
+        var tbody = $("#data tbody");
+
+        if (data.length > 0) {
+            loadPageData(0);
+            loadPageIndex(0);
+        }
+
+        function doOk() {
+            $('<div id="toast-container" class="toast-top-center" aria-live="polite" role="alert"><div class="toast toast-info" style="opacity: 1;"><button class="toast-close-button" role="button"></button><div class="toast-message">処理中。。。しばらくお待ち下さい。</div></div></div>').appendTo($('body'));
+            return true;
+        }
+
+        function loadPageData(index) {
+            $(tbody).empty();
+            for (var i = 0; i < data[index].length; i++) {
+                var tr = $("<tr style='background-color:white'></tr>");
+                if (data[index][i]["Type"] == "削除") {
+                    $('<td style="white-space: nowrap;background-color:#dfe3e8; border-color: #b1b5ba;" class="cell"><span style="color:red">削除</span></td>').appendTo(tr);
+                    
+                } else {
+                    $('<td style="white-space: nowrap;background-color:#dfe3e8; border-color: #b1b5ba;" class="cell">' + data[index][i]["Type"] + '</td>').appendTo(tr);
+                }
+
+                var fields = data[index][i]["Fields"];
+                for (var fIndex in fields) {
+                    if (i == 0)
+                    { $("<td class='text-left cell' style='white-space: nowrap;border-top-color: #b1b5ba;'>" + fields[fIndex] + "</td>").appendTo(tr); }
+                    else
+                    {
+                        $("<td class='text-left cell' style='white-space: nowrap;'>" + fields[fIndex] + "</td>").appendTo(tr);
+                    }
+                }
+
+                tbody.append(tr);
+            }
+        }
+
+        function loadPageIndex(pageNumber) {
+
+            var content = $(".pageIndex");
+
+            content.empty();
+
+            var p_show = 10; //ページを表示するボタンの数
+
+            var p_total = data.length; //総ページ数
+
+            if (p_total == 0) return;
+
+            var p_begin = pageNumber - 5 <= 0 ? 1 : pageNumber - 4;
+
+            if (p_total - p_begin < p_show && p_total > p_show) {
+                p_begin = p_total - (p_show - 1);
+            }
+
+            //フレーム
+            var box = $('<div class="pagination-container"></div>').appendTo(content);
+
+            var ul = $('<ul class="pagination"></ul>').appendTo(box);
+
+            //最初のページ
+            var goFirst = $('<li class="PagedList-skipToFirst"><a href="#" onclick="clickPageIndex(0);">««</a><li>');
+            if (p_begin > 1) {
+                goFirst.appendTo(ul);
+            }
+            //前に
+            var goPre = $('<li class="PagedList-skipToPrevious"><a href="#" onclick="clickPageIndex('+ (pageNumber -1) +');" rel="prev">«</a><li>');
+            if (pageNumber > 0) {
+                goPre.appendTo(ul);
+            }
+            //ページ先頭もっと
+            if (p_begin > 1) {
+                $('<li class="disabled PagedList-ellipses"><a>…</a></li>').appendTo(ul);
+            }
+
+            var maxIndex = p_total > p_show ? p_begin + 9 : p_total;
+
+            for (var index = p_begin; index <= maxIndex; index++) {
+                if (index <= p_total) {
+                    if (index == pageNumber + 1) {
+                        $('<li class="active"><a>'+ index +'</a></li>').appendTo(ul);
+                    } else {
+                        $('<li><a href="#"onclick="clickPageIndex(' + (index - 1) + ');">' + index + '</a></li>').appendTo(ul);
+                    }
+                }
+            }
+            //ページ背後もっと
+            if ((p_begin + p_show) < p_total) {
+                $('<li class="disabled PagedList-ellipses"><a>…</a></li>').appendTo(ul);
+            }
+
+            //後に
+            var goNext = $('<li class="PagedList-skipToNext"><a href="#" onclick="clickPageIndex(' + (pageNumber + 1) + ');" rel="next">»</a></li>');
+            if (pageNumber + 1 < p_total) {
+                goNext.appendTo(ul);
+            }
+
+            //最後のページ
+            var goLast = $('<li class="PagedList-skipToLast"><a href="#" onclick="clickPageIndex('+ (p_total -1) + ');">»»</a></li>');
+            if (p_begin - 1 + p_show < p_total) {
+                goLast.appendTo(ul);
+            }
+        }
+         
+        function clickPageIndex(index) {
+            loadPageData(index);
+            loadPageIndex(index);
+        };
+
+        function strToJson(str){    
+            try 
+            { 
+                return (new Function( "return " + str+";" ))();
+            } 
+            catch(err) 
+            {
+                return {};
+            }
+		      
+        }
+
+        function htmlEncode(value) {
+            return $('<div/>').text(value).html();
+        }
+
+        function htmlDecode(value) {
+            return $('<div/>').html(value).text();
+        }
+
+    </script>
+</body>

@@ -1,0 +1,152 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.TelRptViewModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "テレフォンレポート一覧プレビュー";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_self" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+
+    <script src="/Scripts/Common/SMAT.Controls.js"></script>
+    <script src="/Scripts/Common/SMAT.Service.js"></script>
+</head>
+
+<body style="padding-top: 0;">
+
+    <div class="jumbotron" style="background-color:#ffffff">
+        <!--テレーフォンレポート一覧-->
+        <div class="panel panel-default">
+            <table class="table table-bordered table-hover text-center" border="1">
+                <thead>
+                    <tr class="text-center" style="background-color:#e5e5e5">
+                        <th class="text-center" width="5%">№</th>
+                        @if (ViewBag.Sort == "partyDate")
+                        {
+                            <th class="text-center" width="7%">挙式日</th>
+                            <th class="text-center" width="7%">店舗</th>
+                            <th class="text-center" width="7%">担当者</th>
+                        }
+                        else if (ViewBag.Sort == "staff")
+                        {
+                            <th class="text-center" width="7%">担当者</th>
+                            <th class="text-center" width="7%">店舗</th>
+                            <th class="text-center" width="7%">挙式日</th>
+                        }
+                        else if (ViewBag.Sort == "shop")
+                        {
+                            <th class="text-center" width="7%">店舗</th>
+                            <th class="text-center" width="7%">挙式日</th>
+                            <th class="text-center" width="7%">担当者</th>
+                        }
+
+                        <th class="text-center" width="">電話内容</th>
+                        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02"  || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                        {
+                            <th class="text-center" width="8%">評価</th>
+                            <th class="text-center" width="10%">二次評価</th>
+                        }
+                    </tr>
+                </thead>
+                @{ var no = 0;}
+                @foreach (var item in Model)
+                {
+                    <tr class="" style="background-color:white">
+                        <td class="text-center">
+                            @(++no)
+                        </td>
+                        @if (ViewBag.Sort == "partyDate")
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HoldDate)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.ShopName)
+                            </td>
+                            <td class="text-left" nowrap>
+                                @Html.DisplayFor(modelItem => item.StaffName)
+                            </td>
+                        }
+                        else if (ViewBag.Sort == "staff")
+                        {
+                            <td class="text-left" nowrap>
+                                @Html.DisplayFor(modelItem => item.StaffName)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.ShopName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HoldDate)
+                            </td>
+                        }
+                        else if (ViewBag.Sort == "shop")
+                        {
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.ShopName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HoldDate)
+                            </td>
+                            <td class="text-left" nowrap>
+                                @Html.DisplayFor(modelItem => item.StaffName)
+                            </td>
+                        }
+                        @if (ViewBag.showType1 == "1")
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TelMemo)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-left">
+                                <div class="tab-content">
+                                    @{
+                            List<string> tel = ViewBag.Tel;
+                                    }
+                                    <!--by 屠　-->
+                                    @if (null != tel && tel.Contains("memo_special") && !String.IsNullOrEmpty(item.TelMemo_special))
+                                    {
+                                        <h5 class="list-group-item-heading">【特記事項】</h5>
+                                        <pre style="width: 670px;background: transparent;border: none;">
+                                    @Html.DisplayFor(modelItem => item.TelMemo_special)
+                                </pre>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.TelMemo))
+                                    {
+                                        <h5 class="list-group-item-heading">【電話内容】</h5>
+                                        <pre style="width: 670px;background: transparent;border: none;">
+                                    @Html.DisplayFor(modelItem => item.TelMemo)
+                                </pre>
+                                    }
+
+                                </div>
+                            </td>
+
+                        }
+                        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StaffEva)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LeaderEva)
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</body>
+</html>

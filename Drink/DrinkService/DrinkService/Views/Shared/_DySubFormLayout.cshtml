@@ -1,0 +1,62 @@
+﻿@{
+    var version = "?v=102";
+}
+
+<script>
+    $(document).ready(function () {
+        $("#sub_form_content@(ViewBag.id) .back-link-sub").bind("click", function () {
+            smat.service.closeForm({
+                contentId: "sub_form_content@(ViewBag.id)"
+            });
+        });
+
+    });
+
+</script>
+
+<section id="sub_form_content@(ViewBag.id)" class="vbox " style="height:100%;">
+    <header class="bg-white-only header header-md navbar navbar-fixed-top-xs" style="position: absolute;width: 100%;">
+        <ul class="nav navbar-nav hidden-xs">
+            <li>
+                <a href="#" id="back-link" class="text-muted back-link-sub">
+                    <i class="fa fa-mail-reply text"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search" style="width: 80%;">
+            <div class="form-group">
+                <span id="sub_nav_title" class="nav-title">@ViewBag.Title</span>
+                @if (ViewBag.isTestVersion as string == "test")
+                {
+                    <span style="color:red;font-weight:bold;">テスト環境</span>
+
+                }
+                else if (ViewBag.isTestVersion as string == "kensyu")
+                {
+                    <span style="color:red;font-weight:bold;">研修環境</span>
+
+                }
+            </div>
+        </div>
+        <div class="navbar-right ">
+            <ul class="nav navbar-nav m-n hidden-xs nav-user user"></ul>
+        </div>
+    </header>
+    <section style="overflow: auto;top: 0;padding-top: 40px;">
+        <section class="hbox stretch">
+            <section id="content">
+                <section class="vbox">
+                    <!-- contentBody -->
+                    @RenderBody()
+                    <!-- /contentBody -->
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+
+<script>
+    $(document).ready(function () {
+        smat.service.uiAfterInit("#sub_form_content");
+    });
+</script>

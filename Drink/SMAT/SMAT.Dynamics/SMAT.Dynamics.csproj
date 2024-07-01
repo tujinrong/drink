@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C9E1262A-BF2A-479F-9103-9219CD9CEC4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SMAT.Dynamics</RootNamespace>
+    <AssemblyName>SMAT.Dynamics</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.2400\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.Registration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\AdapterBase.cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\DynamicView.cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\EntityAdapter.cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\EntityAdapter.Engine..cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\EntityAdapter.Old..cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\EntityAdapter.Util.cs" />
+    <Compile Include="SafeNeeds.DySmat\Adapter\ViewAdapter.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\DBTransationScope.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\DynamicContext.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\Global.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\Relation.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\Request.cs" />
+    <Compile Include="SafeNeeds.DySmat\Common\Result.cs" />
+    <Compile Include="SafeNeeds.DySmat\Logic\DyEntityLogic.cs" />
+    <Compile Include="SafeNeeds.DySmat\Logic\DyLogicBase.cs" />
+    <Compile Include="SafeNeeds.DySmat\Logic\DyLogLogic.cs" />
+    <Compile Include="SafeNeeds.DySmat\Logic\DyNoteLogic.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Common\CharType.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Common\DataType.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Form\Y_EntityUserControlItem.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Form\Y_EntityUserControl.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Form\Y_EntityForm.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Form\Y_EntityFormControl.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Graph\Y_EntityGraph.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Graph\Y_EntityGraphFilter.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Graph\Y_EntityGraphItem.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Rela\Y_EntityRela1N.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Rela\Y_EntityRelaN1.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\View\Y_EntityFilter .cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\View\Y_EntityFilterControl.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\View\Y_EntityView.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\View\Y_EntityViewFilter.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\View\Y_EntityViewItem.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Y_Entity.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Y_EntityField.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Entity\Y_ModelBase.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Log\Y_Log.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_Menu.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_MenuGroupDetail.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_MenuGroup.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_Role.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_RoleMenuAuth.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Menu_Security\Y_RoleMenu.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Note\Y_Note.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Y_OptionSet.cs" />
+    <Compile Include="SafeNeeds.DySmat\Model\Y_Proj.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Common\DBConfig.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Common\DBGlobal.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Common\DBOption.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Common\EnumType.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Common\SqlConfig.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Connection\DBConnectionBase.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Connection\DBNewConnnection.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Connection\DBOneConnection.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Connection\IDBConnection.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Exception\ConnectException.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Exception\NotSupportException.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Exception\HaitaException.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Exception\UpdateException.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\DBParameter.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.ODBC.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.ODP.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.OLEDB.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.ORACLE.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Provider\ProviderManager.SQL.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\Common.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlBuilder.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlConstructor.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlDataTime.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlElse.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlLogic.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlMath.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlString.cs" />
+    <Compile Include="SafeNeeds.SMAT.DB\Util\SqlType.cs" />
+    <Compile Include="SafeNeeds.SMAT.Security\IAuthentication.cs" />
+    <Compile Include="SafeNeeds.SMAT.Security\IExcetionService.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\ExcelUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\CsvFile.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\DataSetUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\DataUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\DateTimeUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\FileUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\IniFile.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\LogWriter.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\StringUtil.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\SystemApp.cs" />
+    <Compile Include="SafeNeeds.SMAT.Util\XmlFile.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SafeNeeds.DySmat\Model\ChangeSQL\20160715.sql" />
+    <Content Include="SafeNeeds.DySmat\Model\ChangeSQL\20160122.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

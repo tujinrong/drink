@@ -1,0 +1,305 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "売上データ出力";
+    var roleCD = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD;
+}
+
+<script>
+    function checkSaleDataForm(){
+        if ($('#referShopCD').ui().value() == "") {
+            smat.service.addErrorInfo("referShopCD", $('#referShopCD'), "【店舗】を入力してください");
+        }
+
+        var dtFrom = "";
+        var dtTo = "";
+
+        if ($('#rdoDownLoadTime').val()=="2") {
+            if ($('#start_datepicker').ui().value() == null) {
+                smat.service.addErrorInfo("start_datepicker", $('#start_datepicker'), "【開始期間】を入力ください");
+            }
+
+            if ($('#start_datepicker').ui().value() != null) dtFrom = asmat.toString($("#start_datepicker").ui().value(), "yyyyMMdd");
+            if ($('#end_datepicker').ui().value() != null) dtTo = asmat.toString($("#end_datepicker").ui().value(), "yyyyMMdd");
+
+            if (
+                $('#start_datepicker').ui().value() != null
+                && $('#end_datepicker').ui().value() != null
+                && (Number(asmat.toString($("#start_datepicker").ui().value(), "yyyyMMdd")) > Number(asmat.toString($("#end_datepicker").ui().value(), "yyyyMMdd")))
+
+                ) {
+                smat.service.addErrorInfo("end_datepicker", $('#start_datepicker'), "【期間】関係不正");
+            }
+        }
+
+        //if (smat.service.isEmpty(smat.global.errorInfos) == true) {
+
+        //    smat.service.loadJosnData({
+        //        url: "/DeliveryRoute/CheckPasedPlanDoneRange",
+        //        async:false,
+        //        params: {
+        //            shopCD: $('#referShopCD').ui().value(),
+        //            hoDateFrom: dtFrom,
+        //            hoDateTo: dtTo
+        //        },
+        //        success: function (result) {
+        //            if (result.type == "1") {
+        //                smat.service.addErrorInfo("referShopCD", $('#referShopCD'), result.msg + "に未完了実績が存在するので、指定店舗の売上データを出力できません。");
+        //            } 
+
+        //        }
+        //    });
+        //}
+    }
+
+    function checkFDForm() {
+        var grid = $("#mainSaleData-list-grid").ui();
+        var selectIndexs = grid.getSelectedIndexs("selectedList");
+
+        if (selectIndexs.length == 0) {
+            smat.service.addErrorInfo("selectedList", null, "対象となるデータがありません。データを選択してください。");
+        } 
+    }
+
+    function getFDParam(param) {
+        var grid = $("#mainSaleData-list-grid").ui();
+        var selectDatas = grid.getSelectedDatas()["selectedList"];
+
+        
+
+        param.ShopCD = $('#referShopCD').ui().value();
+        param.saleViewDatas = selectDatas;
+    }
+
+    //function downloadFD(result) {
+    //    debugger;
+    //    if (result.ResultType == "Success") {
+    //        $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="/Report/DownLoad?fileName=' + encodeURIComponent(result.Path) + '">'));
+    //    } else {
+    //        smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+    //    }
+    //}
+
+
+    function doDownLoad(dataItem) {
+        debugger;
+        smat.service.loadJosnData({
+            url: "/DeliveryRoute/CheckPasedPlanDoneRange",
+            async: false,
+            params: {
+                shopCD: $('#referShopCD').ui().value(),
+                hoDateFrom: asmat.toString(asmat.parseDate(dataItem.HoDate), "yyyyMMdd"),
+                hoDateTo: asmat.toString(asmat.parseDate(dataItem.HoDate), "yyyyMMdd")
+            },
+            success: function (result) {
+                if (result.type == "1") {
+                    smat.service.notice({ msg: result.msg + "に未完了実績が存在するので、売上データを出力できません。", type: "error" });
+                } else {
+
+                    var param = {};
+                    param.saleViewDatas = new Array();
+
+                    param.ShopCD = dataItem.ShopCD;
+                    dataItem.HoDate = asmat.toString(asmat.parseDate(dataItem.HoDate), "yyyy/MM/dd");
+                    param.saleViewDatas.push(dataItem);
+
+                    smat.service.loadJosnData({
+                        url: "/Report/FDReport",
+                        params: param,
+                        success: function (result) {
+                            if (result.ResultType == "Success") {
+                                $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="/Report/DownLoad?fileName=' + encodeURIComponent(result.Path) + '">'));
+                                $("#mainSaleData_Llist_search_btn").click();
+                            } else {
+                                smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+                                $("#mainSaleData_Llist_search_btn").click();
+                            }
+                        }
+                    })
+                }
+
+            }
+        });
+    }
+
+    var databound = function (e) {
+
+        if (Modernizr.ios || Modernizr.android) {
+            $("#mainSaleData-list-grid").find('.s-button').hide();
+        };
+        
+        var trs = e.sender.tbody.children('tr');
+        var index = 1;
+        $.each(trs, function (n, value) {
+            if (index > 1 && $(this).children().eq(2).text() =="") {
+
+                $(this).children().eq(4).children().remove();
+            }
+            index++;
+        });
+    }
+
+    var HoDateTemplate = function(dataItem)
+    {
+        return asmat.toString(asmat.parseDate(dataItem.HoDate), "yyyy/MM/dd");
+    }
+
+    var DownloadDateTemplate = function (dataItem) {
+        debugger;
+        if (dataItem.DownloadDate == null || dataItem.DownloadDate =="") {
+            return "";
+        } else {
+            return asmat.toString(asmat.parseDate(dataItem.DownloadDate), "yyyy/MM/dd HH:mm:ss");
+        }
+    }
+
+</script>
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+       @using (Html.Smat().BeginForm("mainSaleDataListForm", new { @class = "panel-body", style = "padding:5px 20px" }).Actions(actions =>{
+           actions.Action("/Main/MainSaleDataSearch").ActionBtn("mainSaleData_Llist_search_btn").ResultHandler("mainSaleData-list-page").CheckForm("checkSaleDataForm");
+                } 
+        ))
+        {
+            <div class="form-horizontal" id="radioGroup">
+                <div class="row">
+                    <div class="col-fix-1">
+                        <div class="form-group">
+                            @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                            {
+                                @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s"})
+                                @Html.Smat().TextBox("referShopCD").Name("ShopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                            }
+                            else
+                            {
+                                @Html.Smat().Refer("referShopCD").Name("ShopCD").Label("店舗").ReferKey("referShop").HtmlAttributes(new { cookie = "shopCD" })
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="input-s-sm control-label">対象</label>
+                        <div class="col-fix-2 radio-group">
+                            <div class="row form-group radio-group-box">
+                                @(Html.Smat().RadioButton("rdoUndownload")
+                                  .Name("handingFlag")
+                                  .DataSource(new List<object>() {
+                                    new{text="未処理",value="1"}
+                                  }).HtmlAttributes(new { style = "width:100px;" })
+                                  .Value("1")
+                                )
+                            </div>
+                            <div class="row form-group radio-group-box">
+                                @(Html.Smat().RadioButton("rdoDownLoadTime")
+                                  .Name("handingFlag")
+                                  .DataSource(new List<object>() {
+                                    new{text="再発行",value="2"}
+                                  }).HtmlAttributes(new { style = "width:100px;" })
+                                )
+                                @(Html.Smat().DatePicker("start_datepicker")
+                                      .Name("StartDate")
+                                      .Value(" ")
+                                      .Value((DateTime.Now).ToString("yyyy/MM") + "/01")
+                                      .HtmlAttributes(new { @class = "input-s-date", id = "start" })
+                                )
+                                ～
+                                @(Html.Smat().DatePicker("end_datepicker")
+                                      .Value(" ")
+                                      .Name("EndDate")
+                                      .HtmlAttributes(new { @class = "input-s-date", id = "end" })
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    </div>
+
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row row-tool">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("mainSaleData_Llist_search_btn").Content("検索").HtmlAttributes(new { @class = "btn-primary"})
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("mainSaleData-list-page").DataHandler("mainSaleData-list-grid")
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+               @(Html.Smat().Grid("mainSaleData-list-grid")
+                      .Columns(columns =>
+                      {
+                          //columns.Bound("mainSaleData_Select").DataType("checkBox-selecter").Width("40px").HtmlAttributes(new { @class = "text-center" }).CheckAll(true).SelectedDataName("selectedList");
+                          columns.Bound("HoDate").Title("日付").Width("110px").TemplateBound("HoDateTemplate");
+                          columns.Bound("DownloadStaffCD").Title("処理者").Width("120px");
+                          columns.Bound("DownloadDate").Title("ダウンロード時間").Width("220px").TemplateBound("DownloadDateTemplate");
+                          columns.Bound("").Title("");
+                          columns.Bound("").Title("").Width("130px").HtmlAttributes(new { @class = "text-center" }
+                            ).Actions(actions =>
+                            {
+                                if (roleCD != DrinkService.Models.ModelBase.CN役割_本部参照)
+                                {
+                                    actions.Text("ダウンロード").Click("doDownLoad");
+                                }
+                                
+                            });
+                      })
+                       .DataBound("databound")
+                )
+            </div>
+       }
+    </section>
+    <script>
+
+        $(document).ready(function () {
+
+            $.each($(".radio-group"), function (n, value) {
+
+                var groupTarger = $(this);
+                setRadioGroupState(groupTarger);
+
+                var radios = $(this).find(" .radio-group-box input[type='radio']");
+                $.each(radios, function (n, value) {
+
+                    $(this).bind("click", function (e) {
+                        setRadioGroupState(groupTarger);
+                    });
+                });
+            });
+
+            if (Modernizr.ios || Modernizr.android) {
+                $("#mainSaleData_Llist_csv_btn").hide();
+            };
+        });
+
+        function setRadioGroupState(target) {
+            var radios = target.find(" .radio-group-box input[type='radio']");
+
+            $.each(radios, function (n, value) {
+
+                var datePickers = $(this).parent().parent().find('[data-role="datepicker"]');
+
+                if (this.checked) {
+                    if (datePickers.length > 0) {
+                        $.each(datePickers, function (n, value) {
+
+                            $(this).data("asmatDatePicker").enable(true);
+                        });
+                    }
+
+                } else {
+                    if (datePickers.length > 0) {
+                        $.each(datePickers, function (n, value) {
+
+                            $(this).data("asmatDatePicker").enable(false);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+</section>

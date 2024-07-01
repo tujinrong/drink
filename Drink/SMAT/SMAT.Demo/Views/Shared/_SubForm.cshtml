@@ -1,0 +1,77 @@
+﻿
+<script>
+    $(document).ready(function () {
+        $(".back-link-sub").bind("click", function () {
+            smat.service.closeForm({
+                contentId: "sub_form_content"
+            });
+        });
+
+    });
+
+</script>
+
+    <section id="sub_form_content" class="vbox">
+    <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+        <div class="navbar-header aside bg-info nav-xs">
+            <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen,open" data-target="#nav,html">
+                <i class="icon-list"></i>
+            </a>
+            <a href="/" class="navbar-brand text-lt">
+                <i class="fa fa-html5"></i>
+                <span class="hidden-nav-xs m-l-sm">SMAT</span>
+            </a>
+            <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".user">
+                <i class="icon-settings"></i>
+            </a>
+        </div>
+        <ul class="nav navbar-nav hidden-xs">
+            <li>
+                <a href="javascript:void(0)" class="text-muted back-link-sub">
+                    <i class="icon-action-undo"></i>
+                </a>
+            </li>
+        </ul>
+
+        <div class="navbar-form navbar-left input-s-bg m-t m-l-n-xs hidden-xs" role="search">
+            <div class="form-group">
+                <span id="title-text" class="nav-title">@ViewBag.Title</span>
+            </div>
+        </div>
+
+        <div class="navbar-right ">
+            <ul class="nav navbar-nav m-n hidden-xs nav-user user"></ul>
+        </div>
+    </header>
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            <aside class="bg-black dk  aside hidden-print nav-xs" id="nav">
+                <section class="vbox">
+                    <section class="w-f-md scrollable">
+                        <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railopacity="0.2">
+
+                            <!-- nav -->
+                            <nav id="nav-menu" class="nav-primary hidden-xs">
+
+
+                            </nav>
+                            <!-- / nav -->
+                        </div>
+                    </section>
+
+                    <footer class="footer hidden-xs no-padder text-center-nav-xs"></footer>
+                </section>
+            </aside>
+            <!-- /.aside -->
+            <section id="content">
+
+                <section id="RenderBody" class="vbox">
+                    <section class="scrollable wrapper">
+                        @RenderBody()
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>

@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "データ抽出";
+}
+
+<div id="page_1_Y_EntityForm_BusinessSearchFormList"></div>
+
+
+<script>
+
+    smat.uiConfig.CodeMst = {
+        cache: true,
+        codeListUrl: "/Dynamics/GetOptionSet",
+        kindField: "OptSetName",
+        codeField: "CD",
+        nameField: "Name",
+        memoField: "Memo"
+
+    }
+
+
+    smat.dynamics.role.type = "1";
+
+    smat.dynamics.service.getEntityFieldTreeData(1, "M_Client", function () {
+
+    });
+
+    smat.dynamics.openPage({
+        projID: 1,
+        formName: "BusinessSearchFormList",
+        entityName: "Y_EntityForm",
+        contextOn: $("#page_1_Y_EntityForm_BusinessSearchFormList")
+    })
+
+</script>
+

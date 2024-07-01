@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebTest Name="LocalWebTest" Id="57f0af30-454c-48ab-8399-e7558fdb9740" Owner="" Priority="2147483647" Enabled="True" CssProjectStructure="" CssIteration="" Timeout="0" WorkItemIds="" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010" Description="" CredentialUserName="" CredentialPassword="" PreAuthenticate="True" Proxy="default" StopOnError="False" RecordedResultFile="LocalWebTest.5f1a6ead-112a-40d9-ad31-6bb46cd9e019.rec.webtestresult" ResultsLocale="">
+  <Items>
+    <Comment CommentText="ログイン" />
+    <Request Method="POST" Guid="ea5de746-3b5f-4d51-9111-618e789f388e" Version="1.1" Url="http://localhost:16010/Main/Login" ThinkTime="6" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="http://localhost:16010/Main/Home" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="KANRI-1" RecordedValue="KANRI-1" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="userName" Value="00001" RecordedValue="00001" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="passWord" Value="1" RecordedValue="1" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="実績処理" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/DeliveryRouteList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="実績処理 実績検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/GetShopPlanedRoute" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="ShopCD" Value="8000103" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="DayStr" Value="20150625" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="実績処理 実績登録" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/GetHoClientItems" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="ShopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="ClientCD" Value="&quot;1102292&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="TantoCD" Value="&quot;00401&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="HoDate" Value="2015/01/01 00:00" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="FirstFlag" Value="&quot;0&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/SaveHoClient" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="hoClient.ClientCD" Value="1222109" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.DiffMoney" Value="-3290" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.GetMoney" Value="110" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.HoDate" Value="2015/06/29 00:00" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.Memo" Value="次回炭酸２列へ" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.Route" Value="2101" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.Seq" Value="21" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.ShopCD" Value="8001618" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.SoldMoney" Value="3290" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClient.TantoCD" Value="00407" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="doneFlag" Value="2" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="hoClientUpdateTime" Value="2015/06/29 11:59:12 770" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].AddNum" Value="12" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].AfterNum" Value="15" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].BeforeNum" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ClientCD" Value="1222109" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].FreshDate" Value="" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ItemAddFlag" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ItemCD" Value="18953700" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ItemsName" Value="ブルボ　スローバーチョコバナナ" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].Money" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].NextPrice" Value="100" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].NextStopFlag" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].No" Value="2" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].PrevNum" Value="3" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].Price" Value="100" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].SaleFlag" Value="" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].Seq" Value="21" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ShelfNo" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ShelfSubNo" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ShopCD" Value="8001618" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].ThisNum" Value="3" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="updateList[0].UsedNum" Value="0" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="実績照会" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/DeliveryRouteRefer" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="実績照会 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/DeliveryRouteListCreateRefer" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="LastFlag" Value="&quot;1&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="clientCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="staffCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="route" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="補充集金リスト作成" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/DeliveryRouteListCreate" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="補充集金リスト作成 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/DeliveryRouteListCreateSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="hoDate" Value="2015/06/18 00:00" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="route" Value="&quot;4480&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="staffCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/DeliveryRoute/GetClientList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="hoDate" Value="20150618" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="route" Value="&quot;4480&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="顧客契約管理" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Client/ClientList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="顧客契約管理 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Client/ClientSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="clientName" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Client/GetClientInitItems" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="8000103" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="clientCD" Value="1000001" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="初期キット登録" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Kit/KitList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="初期キット登録 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Kit/ItemKitSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="kitName" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Kit/KitEdit" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="kitID" Value="&quot;1&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="商品別設置リスト" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Item/ItemInList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="商品別設置リスト 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Item/ItemInSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="ShopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="売上データ出力" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Main/SaleDataList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="売上データ出力 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Main/MainSaleDataSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="ShopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="StartDate" Value="20150601" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="handingFlag" Value="&quot;2&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="集金リスト" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Collection/CollectionList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="集金リスト 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Collection/CollectionSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="ShopCD" Value="&quot;8000103&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="StartDate" Value="20150101" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="staffCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="商品マスタ" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Item/ItemList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="商品マスタ 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Item/ItemSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="itemCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="itemName" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="担当者マスタ" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Staff/StaffList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="担当者マスタ 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Staff/StaffSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="shopCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="shopType" Value="&quot;1&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="staffName" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="汎用コードマスタ" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Code/CodeList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="汎用コードマスタ 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Code/CodeSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="Kind" Value="&quot;Area&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="店舗マスタ" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Shop/ShopList" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+    <Comment CommentText="店舗マスタ 検索" />
+    <Request Method="POST" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Shop/ShopSearch" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False">
+      <FormPostHttpBody>
+        <FormPostParameter Name="regionCD" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="shopName" Value="&quot;&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="shopType" Value="&quot;1&quot;" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+      </FormPostHttpBody>
+    </Request>
+    <Comment CommentText="郵便番号保守" />
+    <Request Method="GET" Guid="0dcbbc74-d532-4986-a9ad-e23f2aec2862" Version="1.1" Url="http://localhost:16010/Main/ZipcodeImport" ThinkTime="8" Timeout="300" ParseDependentRequests="True" FollowRedirects="True" RecordResult="True" Cache="False" ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="0" ExpectedResponseUrl="" ReportingName="" IgnoreHttpStatusCode="False" />
+  </Items>
+  <ValidationRules>
+    <ValidationRule Classname="Microsoft.VisualStudio.TestTools.WebTesting.Rules.ValidateResponseUrl, Microsoft.VisualStudio.QualityTools.WebTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" DisplayName="応答 URL" Description="リダイレクト後の応答 URL が、記録された応答 URL と同じかどうかを検証します。QueryString パラメーターは無視されます。" Level="Low" ExectuionOrder="BeforeDependents" />
+    <ValidationRule Classname="Microsoft.VisualStudio.TestTools.WebTesting.Rules.ValidationRuleResponseTimeGoal, Microsoft.VisualStudio.QualityTools.WebTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" DisplayName="応答時間の目標" Description="要求の応答時間が、要求で指定された目標値以下であるかどうか検証します。応答時間の目標値が 0 の場合、この目標値は無視されます。" Level="Low" ExectuionOrder="AfterDependents">
+      <RuleParameters>
+        <RuleParameter Name="Tolerance" Value="0" />
+      </RuleParameters>
+    </ValidationRule>
+  </ValidationRules>
+</WebTest>

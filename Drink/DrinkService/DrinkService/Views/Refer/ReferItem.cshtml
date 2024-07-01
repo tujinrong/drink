@@ -1,0 +1,331 @@
+﻿@{
+    Layout = "";
+}
+
+<!--[if IE 9]>
+
+<link rel="stylesheet" href="/SMAT.UI/Styles/bootstrap.css" type="text/css" />
+
+<link rel="stylesheet" href="/SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+<link rel="stylesheet" href="/SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+<link rel="stylesheet" href="/SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+<link rel="stylesheet" href="/SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+
+<link rel="stylesheet" href="/SMAT.UI/Styles/asmat.app.css" type="text/css" />
+
+<script src="/SMAT.UI/Scripts/jquery.min.js"></script>
+<script src="/SMAT.UI/Scripts/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="/SMAT.UI/Scripts/js/jquery.linq.min.js"></script>
+
+<script src="/SMAT.UI/Scripts/js/bootstrap.js"></script>
+
+<script src="/SMAT.UI/Scripts/js/asmat.app.js"></script>
+<script src="/SMAT.UI/Scripts/js/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/SMAT.UI/Scripts/js/asmat.app.plugin.js"></script>
+
+<script src="/SMAT.UI/Scripts/asmat.all.min.js"></script>
+<script src="/SMAT.UI/Scripts/smat.core.js"></script>
+<script src="/SMAT.UI/Scripts/smat.service.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.Button.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.DatePicker.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.DateTimePicker.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.DropDownList.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.Form.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.Grid.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.NumericTextBox.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.Refer.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.RadioButton.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.Pager.js"></script>
+<script src="/SMAT.UI/Scripts/smat.ui.TextBox.js"></script>
+<script src="/SMAT.UI/Scripts/cultures/smat.culture.ja.min.js"></script>
+<script src="/Scripts/smat.config.js"></script>
+
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleSearch.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.formList.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.designer.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.tools.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.tools.editer.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Page.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Section.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Form.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Field.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.ToolBar.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Button.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Grid.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Line.js"></script>
+<script src="/SMAT.UI/Scripts/dynamics/smat.dynamics.controls.Pager.js"></script>
+<link rel="stylesheet" href="/Content/Site.css" type="text/css" />
+<style>
+    .s-icon {
+        margin-top:11px;
+    }
+</style>
+<![endif]-->
+
+<script type="text/javascript">
+    var saleEndDayTemplate = function (dataItem) {
+        if (dataItem.SaleEndDay) {
+            return asmat.toString(asmat.parseDate(dataItem.SaleEndDay), "yyyy/MM/dd");
+        } else {
+            return "";
+        }
+
+    }
+
+    function beforSearch() {
+        checkData = new smat.hashMap();
+        return true;
+    }
+
+</script>
+@if (@Request.Url.Query.Replace("?tid=", "").Split('&').Count() != 3)
+{
+    <script type="text/javascript">
+        var checkData = new smat.hashMap();
+        function referListGridDatabound(e) {
+
+
+            var checkBoxNodes = $("#referListGrid").find("tbody input[type='checkbox']");
+            $.each(checkBoxNodes, function (n, value) {
+                var rowKey = $(this).closest("tr").index();
+                var grid = $("#referListGrid").data('asmatGrid')
+                var dataItem = grid.dataItem($(this).closest("tr"));
+
+                var keyValue = dataItem["ItemCD"];
+                if (checkData.contains(keyValue)) {
+                    $(this).prop("checked", true)
+                }
+
+            });
+        }
+
+        function searchReferPick() {
+            if (!checkData.length) {
+                smat.service.notice({ msg: "商品を選択してください。", type: "info" });
+                return;
+            }
+
+            smat.service.closeForm({
+                contentId: 'referItemListForm',
+                result: {
+                    selectedRows: checkData.data
+                }
+            });
+        }
+
+        
+    </script>
+}
+<style>
+
+ td .i-checks i {
+    margin-right: 0px;
+}
+</style>
+
+
+
+<section class="scrollable wrapper" style="padding: 0 0 0 5px;max-height: 530px;min-height: 200px;">
+    <section class="panel panel-default" style="margin-bottom: 0;">
+        @using (Html.Smat().BeginForm("referItemListForm", new { @class = "panel-body", style = "padding:5px 20px" }
+            ).Actions(actions =>
+                {
+                    actions.Action("/Refer/ReferItemSearch").ActionBtn("btnSearchReferItemList").ResultHandler("referListPager").CheckForm("beforSearch");
+                }
+            ))
+        {
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-2" style="width:260px;">
+                        <div class="form-group">
+                            <label class="input-s-sm control-label" style="width:50px;">商品</label>
+                            <input type="hidden" name="IgnoreItems" value="@ViewBag.IgnoreItems" />
+                            <input type="hidden" name="ShopCD" value="@ViewBag.ShopCD" />
+                            @Html.Smat().TextBox("txtReferItemKey").Name("ItemKey").HtmlAttributes(new { @class = "form-control input-s", style = "width:200px;", placeholder = "" })
+                        </div>
+                    </div>
+
+                    <div class="col-fix-2" style="width:440px;">
+                        <div class="form-group">
+                            <input id="ddlMakerCD" name="MakerCD" class="input-s" style="width:290px;"/>
+                            @if (@Request.Url.Query.Replace("?tid=", "").Split('&').Count() != 3)
+                            {
+                                @Html.Smat().Button("btnSearchReferItemList").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            }
+                        </div>
+
+
+                    </div>
+                    <!--
+                    <div class="col-fix-2" style="width:480px;">
+                        <div class="form-group">
+                            @(Html.Smat().Refer("MakerCD")
+                            .Name("MakerCD")
+                            .Label(
+                                    label =>
+                                    {
+                                        label.Text("メーカー");
+                                        label.Attrs(new { @class = "input-s-sm" });
+                                    }
+                            )
+                            .ReferKey("メーカー情報参照画面")
+                            .HtmlAttributes(new { style = "width:290px;" }))
+                        </div>
+                    </div>
+                        -->
+                </div>
+                <div class="row">
+                    <div class="col-fix-2" style="width:100%;">
+                        <div class="text-right text-center-xs">
+                            @Html.Smat().Pager("referListPager").DataHandler("referListGrid")
+
+                            @if (@Request.Url.Query.Replace("?tid=", "").Split('&').Count() != 3)
+                            {
+                                 @Html.Smat().Button("btnSearchReferPick").Content("選択").HtmlAttributes(new { @class = "btn-primary", @style = "vertical-align: bottom;margin-right: 12px;" }).Events(events =>
+                                {
+                                events.Click("searchReferPick");
+                                })
+                            }
+                            else 
+                            { 
+                              @Html.Smat().Button("btnSearchReferItemList").Content("検索").HtmlAttributes(new { @class = "btn-primary", @style = "vertical-align: bottom;margin-right: 12px;" })
+                            }
+
+                           
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row">
+                @if (@Request.Url.Query.Replace("?tid=", "").Split('&').Count() == 3)
+                {
+                    @(Html.Smat().Grid("referListGrid")
+                .Scrollable()
+                .HtmlAttributes(new { @style = "height:422px;" })
+                      .Columns(columns =>
+                      {
+                          columns.Bound("ItemCD").Title("商品コード").Width("100px");
+                          columns.Bound("ShortName").Title("名称");
+                          columns.Bound("SaleEndDay").Title("販売終了日").Width("110px").TemplateBound("saleEndDayTemplate");
+                          columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                            ).Actions(actions =>
+                             {
+                                 actions.Text("選択").Click(@"
+                                                                   function (dataItem) {
+                                                                      smat.service.closeForm({
+                                                                          contentId: 'referItemListForm',
+                                                                          result: {
+                                                                              selectedRows: dataItem
+                                                                          }
+                                                                      });
+                          
+                                                          }");
+                             });
+                      })
+                    )
+                }
+                else
+                {
+                    @(Html.Smat().Grid("referListGrid")
+                .Scrollable()
+                .HtmlAttributes(new { @style = "height:422px;" })
+                      .Columns(columns =>
+                      {
+                          columns.Bound("").DataType("checkBox-selecter").Width("40px").HtmlAttributes(new { @class = "text-center" }).CheckAll(true).SelectedDataName("selectedList");
+                          columns.Bound("ItemCD").Title("商品コード").Width("100px");
+                          columns.Bound("ShortName").Title("名称");
+                          columns.Bound("SaleEndDay").Title("販売終了日").Width("110px").TemplateBound("saleEndDayTemplate");
+                          //                          columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                          //                            ).Actions(actions =>
+                          //                             {
+                          //                                 actions.Text("選択").Click(@"
+                          //                                         function (dataItem) {
+                          //                                            smat.service.closeForm({
+                          //                                                contentId: 'referItemListForm',
+                          //                                                result: {
+                          //                                                    selectedRows: dataItem
+                          //                                                }
+                          //                                            });
+                          //
+                          //                                }");
+                          //                             });
+                      })
+
+                    .DataBound("referListGridDatabound")
+                    )
+                }
+
+
+              
+            </div>
+        }
+    </section>
+    <script>
+
+        var ds2 = [];
+
+        var MakerMstListStr = "@ViewBag.MakerMstList";
+
+        var MakerMstList = MakerMstListStr.split(",");
+
+        ds2.push({ Text: "", Value: "" });
+        if (MakerMstListStr) {
+            for (var i in MakerMstList) {
+                ds2.push({ Text: MakerMstList[i].split("|")[1], Value: MakerMstList[i].split("|")[0] })
+            }
+        }
+
+        $("#ddlMakerCD").smatDropDownList({
+            label: {
+                text: "メーカー",
+                attrs: {
+                    class: "input-s-sm",
+                    style: "width:80px;white-space: nowrap;"
+                }
+            },
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: ds2
+        });
+
+        $("#txtReferItemKey").keypress(function (e) {
+            var key = e.which;
+            if (key == 13) {
+                $("#btnSearchReferItemList").click();
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+
+            //checkall
+           
+            $("#referListGrid").on('change', 'table thead [type="checkbox"]', function (e) {
+                $("#referListGrid").find("tbody input[type='checkbox']").prop("checked", $(this).prop("checked")).change();
+            });
+
+            $("#referListGrid").on('change', 'table tbody [type="checkbox"]', function (e) {
+                var dataItem = $("#referListGrid").ui().uiControl.dataItem($(this).closest("tr"));
+                var keyValue = dataItem["ItemCD"]
+               
+                if ($(this).is(':checked')) {
+                    checkData.set(keyValue, smat.globalObject.cloneData(dataItem));
+                } else {
+                    checkData.remove(keyValue);
+                }
+
+            });
+
+
+            $("#btnSearchReferItemList").click();
+
+
+        });
+    </script>
+</section>

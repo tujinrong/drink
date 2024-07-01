@@ -1,0 +1,432 @@
+﻿@{
+    ViewBag.Title = "配置ドリンク";
+    var roleCD = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD;
+}
+<section class="scrollable wrapper" style="padding: 0 0 0 2px;">
+    <section class="panel panel-default">
+        <div class="panel-body">
+            <section class="panel panel-home no-borders">
+                <header class="panel-heading font-bold"><span class="panel-title">店舗業務</span></header>
+                <div class="panel-body">
+                    <div class="col-xs-12 col-sm-6 col-md-4  ">
+                        <div class="item">
+                            <a href="javascript:void(0)" url="/DeliveryRoute/DeliveryRouteList" class="panel-brand text-lt">
+                                <i class="home-menu-icon fa fa-money btn-primary" style="height: 40px;width: 42px;"></i>
+                                <span class="hidden-nav-xs m-l-sm">実績処理</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 ">
+                        <div class="item">
+                            <a href="javascript:void(0)" url="/DeliveryRoute/DeliveryRouteRefer" class="panel-brand text-lt">
+                                <i class="home-menu-icon fa icon-book-open icon btn-primary" style="height: 42px;width: 42px;"></i>
+                                <span class="hidden-nav-xs m-l-sm">実績照会</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-4 ">
+                        <div class="item">
+                            <a href="javascript:void(0)" url="" formname="MessageList" entityname="T_Message" class="panel-brand text-lt">
+                                <i class="home-menu-icon fa icon-envelope icon btn-primary" style="height: 42px;width: 42px;"></i>
+                                <span class="hidden-nav-xs m-l-sm">本部からのお知らせ</span>
+                                
+                            </a>
+                            <div id="newMarkText" style="display:none;position: absolute;left: 80px;top: 36px;"><span id="newMarkDate" style="color: #428bca;margin-right: 5px;"></span><span id="newMark" class="hidden-nav-xs " style="color:red;">New!</span></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-4 ">
+                        <div class="item">
+                            <a href="javascript:void(0)" url="" formname="ClientItemLimitList" entityname="T_HoClientItem" class="panel-brand text-lt">
+                                <i class="home-menu-icon fa icon-envelope icon btn-primary" style="height: 42px;width: 42px;"></i>
+                                <span class="hidden-nav-xs m-l-sm">賞味期限切れ商品一覧</span>
+                                <div id="limitText" style="display:none;position: absolute;left: 130px;top: -18px;"><span id="newMark" class="hidden-nav-xs " style="    color: #fff;font-size: 14px;background-color: #dc0202;padding: 3px 5px;border-radius: 10px;">賞味期限切れの商品あり</span></div>
+                            </a>
+                        </div>
+                    </div>
+
+                    @*<div class="col-xs-12" id="ClientItemLimitList_box" style="display:none;">
+                        <div class="item">
+                            <a href="javascript:void(0)" url="" formname="ClientItemLimitList" entityname="T_HoClientItem" class="panel-brand text-lt">
+                                <span class="hidden-nav-xs m-l-sm" style="color: #e60c0c;">販売期限切れ、賞味期限切れの商品があります</span>
+                            </a>
+                        </div>
+                    </div>*@
+
+
+                </div>
+            </section>
+            @if (roleCD == DrinkService.Models.ModelBase.CN役割_店舗管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_ドリンクマネジメント || roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_本部参照 || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者)
+            {
+                <section class="panel panel-home no-borders">
+                    <header class="panel-heading font-bold"> <span class="panel-title">店舗管理</span></header>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/DeliveryRoute/DeliveryRouteListCreate" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">補充集金リスト作成</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Client/ClientList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">顧客契約管理</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Kit/KitList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">初期キット登録</span>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-sm-6 col-md-4 ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/DeliveryRoute/DeliveryRouteUndo" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">未処理予定検索</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="" formname="RoteTantoChange" entityname="M_Client" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">担当者一括変更</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="" formname="ItemStockManage" entityname="M_Item" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-layers icon btn-success"></i>
+                                    <span class="hidden-nav-xs m-l-sm">商品在庫管理</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="panel panel-home no-borders">
+                    <header class="panel-heading font-bold"> <span class="panel-title">実績管理</span></header>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Item/ItemInList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-notebook icon btn-warning"></i>
+                                    <span class="hidden-nav-xs m-l-sm">商品別設置リスト</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Main/SaleDataList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-notebook icon btn-warning"></i>
+                                    <span class="hidden-nav-xs m-l-sm">売上データ出力</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Collection/CollectionList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-notebook icon btn-warning" "></i>
+                                    <span class="hidden-nav-xs m-l-sm">集金リスト</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="panel panel-home no-borders">
+                    <header class="panel-heading font-bold"> <span class="panel-title">マスタ</span></header>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Item/ItemList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                    <span class="hidden-nav-xs m-l-sm">商品マスタ</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="javascript:void(0)" url="/Staff/StaffList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                    <span class="hidden-nav-xs m-l-sm">担当者マスタ</span>
+                                </a>
+                            </div>
+                        </div>
+                        @if (roleCD == DrinkService.Models.ModelBase.CN役割_本部参照 || roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者)
+                        {
+                            <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                <div class="item">
+                                    <a href="javascript:void(0)" url="/Code/CodeList" class="panel-brand text-lt">
+                                        <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                        <span class="hidden-nav-xs m-l-sm">汎用コードマスタ</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                <div class="item">
+                                    <a href="javascript:void(0)" url="/Shop/ShopList" class="panel-brand text-lt">
+                                        <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                        <span class="hidden-nav-xs m-l-sm">店舗マスタ</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            if (roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者 || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者)
+                            {
+                            <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                <div class="item">
+                                    <a href="javascript:void(0)" url="/Main/ZipcodeImport" class="panel-brand text-lt">
+                                        <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                        <span class="hidden-nav-xs m-l-sm">郵便番号保守</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                <div class="item">
+                                    <a href="javascript:void(0)" url="" formname="QualifiedList" entityname="M_Qualified" class="panel-brand text-lt">
+                                        <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                        <span class="hidden-nav-xs m-l-sm">研修資格マスタ</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="col-xs-12 col-sm-6 col-md-4  ">
+                                <div class="item">
+                                    <a href="javascript:void(0)" url="" formname="MakerList" entityname="M_Maker" class="panel-brand text-lt">
+                                        <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                        <span class="hidden-nav-xs m-l-sm">メーカーマスタ</span>
+                                    </a>
+                                </div>
+                            </div>
+                            }
+                            
+                            if (((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD) == "KANRI-9") { 
+                                @*<div class="col-xs-12 col-sm-6 col-md-4  ">
+                                    <div class="item">
+                                        <a href="/Dynamics/FormList?type=SimpleSearch" class="panel-brand text-lt">
+                                            <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                            <span class="hidden-nav-xs m-l-sm">業務分析</span>
+                                        </a>
+                                    </div>
+                                </div>*@
+                            }
+
+                        }
+                        
+                    </div>
+                </section>   
+            }
+
+            @if (roleCD == DrinkService.Models.ModelBase.CN役割_本部参照
+                            //|| roleCD == DrinkService.Models.ModelBase.CN役割_店舗管理者
+                            || roleCD == DrinkService.Models.ModelBase.CN役割_本部管理者
+                            || (
+                                roleCD == DrinkService.Models.ModelBase.CN役割_ドリンクマネジメント
+                               )
+                            || (
+                                roleCD == DrinkService.Models.ModelBase.CN役割_店舗管理者
+                                )
+                            || roleCD == DrinkService.Models.ModelBase.CN役割_システム管理者)
+            {
+
+                <section class="panel panel-home no-borders">
+                    <header class="panel-heading font-bold"> <span class="panel-title">情報管理</span></header>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="/Main/BusinessAnalysis" class="panel-brand text-lt">
+                                    <i class="home-menu-icon fa fa-bar-chart-o btn-info" style="background-color: #343492;border-color: #343492;"></i>
+                                    <span class="hidden-nav-xs m-l-sm">データ抽出</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        @if (((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD) == "KANRI-9"
+                        && ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).StaffCD) == "99999")
+                        {
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="/Dynamics/ProjectManager?ProjID=1" class="panel-brand text-lt">
+                                    <i class="home-menu-icon fa fa-gear btn-info"></i>
+                                    <span class="hidden-nav-xs m-l-sm">システム構成</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4  ">
+                            <div class="item">
+                                <a href="/Dynamics/FormList?type=SimpleMasterList" class="panel-brand text-lt">
+                                    <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                    <span class="hidden-nav-xs m-l-sm">画面デザイン</span>
+                                </a>
+                            </div>
+                        </div>
+                        @*<div class="col-xs-12 col-sm-6 col-md-4  ">
+                        <div class="item">
+                            <a href="/Dynamics/FormList?type=SystemManger" class="panel-brand text-lt">
+                                <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                <span class="hidden-nav-xs m-l-sm">システム管理</span>
+                            </a>
+                        </div>
+                    </div>*@
+                        @*<div class="col-xs-12 col-sm-6 col-md-4  ">
+                        <div class="item">
+                            <a href="http://baobaodp.eicp.net:40568/Base/report/diagramo.do" class="panel-brand text-lt">
+                                <i class="home-menu-icon icon-screen-desktop icon btn-info"></i>
+                                <span class="hidden-nav-xs m-l-sm">帳票作成</span>
+                            </a>
+                        </div>
+                    </div>*@
+                        }
+
+
+                    </div>
+                </section>
+            }
+   <script>
+
+       function showNewMark() {
+           smat.service.loadJosnData({
+               url: "/Main/GetMsgNewMark",
+               params: {},
+               async: true,
+               success: function (result) {
+
+                   if (result.BeginDate) {
+                       $("#newMarkText").show();
+                       $("#newMarkDate").text(result.BeginDate);
+                   } else {
+                       $("#newMarkText").hide();
+                       $("#newMarkDate").text("");
+                   }
+                   if (result.NewMark) {
+                       $("#newMark").show();
+                   } else {
+                       $("#newMark").hide();
+                   }
+               }
+           });
+
+           
+           showLimitLeart()
+       }
+
+       function showLimitLeart() {
+
+           if (mainRoleCD == mainCN役割_店舗管理者
+                || mainRoleCD == mainCN役割_店舗担当者
+                || mainRoleCD == mainCN役割_ドリンクマネジメント) {
+
+               //限切れ
+               smat.service.loadJosnData({
+                   url: "/Main/GetItemLimit",
+                   params: {},
+                   async: true,
+                   success: function (result) {
+                       if (result.HasLimit) {
+                           //$("#ClientItemLimitList_box").show();
+                           $("#limitText").show();
+
+
+                           var ebox = $('<section id="ClientItemLimitList_confirm_box" class="panel panel-default " style="margin: 0;padding: 10px;"></section>');
+                           $('<div class="row" style="margin:8px 0;"><span class="hidden-nav-xs m-l-sm" style="color: #e60c0c;">賞味期限切れの商品があります</span></div>').appendTo(ebox);
+                           $('<div class="row" style="margin:8px 0;"><div class=" form-group text-center" ><button id="_show_limit" class="btn-primary  s-button" style="margin-left:10px;">詳細</button></div></div>').appendTo(ebox);
+
+                           var show_limit = ebox.find("#_show_limit");
+                           show_limit.bind("click", function () {
+
+                               smat.service.closeForm({
+                                   contentId: 'ClientItemLimitList_confirm_box'
+                               });
+
+                               smat.service.openForm({
+                                   url: smat.dynamics.commonURL.dyFormPage,
+                                   params: {
+                                       ProjID: 1,
+                                       FormName: "ClientItemLimitList",
+                                       EntityName: "T_HoClientItem"
+                                   },
+                                   fillTarget: "main_form_content"
+                               });
+                           });
+
+                           smat.service.openForm({
+                               //m_opacity: 0,
+                               contentDom: ebox,
+                               width: "420px",
+                               top: "20%",
+                               title: "警告",
+                               afterClose: function (result) {
+
+                               }
+                           });
+
+                           
+
+                           setTimeout(function () { 
+                               $(".s-window-action.s-link").remove();
+                           }, 100);
+                       }
+                   }
+               });
+           }
+
+
+       }
+
+       var links = $("a[url]");
+       $.each(links, function () {
+           $(this).bind("click",function(){
+               var url = $(this).attr("url");
+               if (url) {
+                   smat.service.openForm({
+                       url: url,
+                       fillTarget: "main_form_content",
+                       afterClose: function () {
+                           showLimitLeart();
+                       }
+                   });
+               } else {
+                   var projID = 1;
+                   var formName = $(this).attr("formName");
+                   var entityName = $(this).attr("entityName");
+
+                   smat.service.openForm({
+                       url: smat.dynamics.commonURL.dyFormPage,
+                       params: {
+                           ProjID: projID,
+                           FormName: formName,
+                           EntityName: entityName
+                       },
+                       fillTarget: "main_form_content",
+                       afterClose: function () {
+                           if (formName == "MessageList") {
+                               showNewMark();
+                           }
+                           if (formName != "ClientItemLimitList") {
+                               showLimitLeart();
+                           }
+                       }
+                   });
+               }
+           });
+          
+       })
+
+       showNewMark();
+   </script>
+        </div>
+    </section>
+</section>

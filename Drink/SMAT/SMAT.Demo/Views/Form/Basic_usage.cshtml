@@ -1,0 +1,271 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<script>
+
+    function checkFormFunc() {
+        alert("checkForm1")
+        return true;
+    }
+
+    function checkFormFunc2() {
+        alert("checkForm2")
+        return true;
+    }
+
+    function checkFormFunc3() {
+        alert("checkForm3")
+        return true;
+    }
+
+    function getParamFunc(param) {
+        param["p3"] = 1;
+        alert("P3:" + param["p3"]);
+    }
+
+    function getParamFunc2(param) {
+        param["p3"] = 2;
+        alert("P3:" + param["p3"]);
+    }
+
+    function getParamFunc3(param) {
+        param["p3"] = 3;
+        alert("P3:" + param["p3"]);
+    }
+
+    function successFunc(result) {
+        alert("success1");
+    }
+
+    function successFunc2(result) {
+        alert("success2");
+    }
+
+    function successFunc3(result) {
+        alert("success3");
+    }
+
+    function clickFunc(dataItem)
+    {
+        alert("FirstName is " + dataItem.FirstName);
+    }
+
+</script>
+
+
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.Smat().BeginForm("refer-demo-pics-form", new { @class = "form-horizontal" }
+            ).Actions(actions =>
+                {
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc").GetParam("getParamFunc").Success("successFunc");
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn2").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc2").GetParam("getParamFunc2").Success("successFunc2");
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn3").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc3").GetParam("getParamFunc3").Success("successFunc3");
+                }
+            ))
+        {
+            <div class="row">
+                <div class="form-group col-fix-1">
+                    <label class="input-s-sm control-label">Id</label>
+                    @Html.Smat().TextBox("Id")
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-fix-2">
+                    <label class="input-s-sm control-label">FirstName</label>
+                    @Html.Smat().TextBox("FirstName").HtmlAttributes(new { @class = "input-s-lg" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-fix-2">
+                    <div class="form-group">
+                        @Html.Smat().Button("refer-demo-pics-search-btn").Content("検索").HtmlAttributes(new { @class="btn-primary", style = "margin-left:30px;" })
+                        @Html.Smat().Button("refer-demo-pics-search-btn2").Content("検索2").HtmlAttributes(new { @class = "btn-primary", style = "margin-left:30px;" })
+                        @Html.Smat().Button("refer-demo-pics-search-btn3").Content("検索3").HtmlAttributes(new { @class = "btn-primary", style = "margin-left:30px;" })
+                    </div>
+                </div>
+            </div>
+        }
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row">
+                <div class="col-sm-11 text-right text-center-xs">
+                    @Html.Smat().Pager("refer-demo-pics-pager").DataHandler("refer-demo-pics-grid").HtmlAttributes(new { @class = "ccc1" })
+                </div>
+            </div>
+            @(Html.Smat().Grid("refer-demo-pics-grid")
+                  .Columns(columns =>
+                  {
+                      columns.Bound("Id").Title("Id").Width("60px").Template("<strong>#: Id # </strong>");
+                      columns.Bound("FirstName").Title("FirstName");
+                      columns.Bound("LastName").Title("LastName");
+                      columns.Bound("Episodes").Title("Episodes");
+                      columns.Bound("").Title("").Width("120px").HtmlAttributes(new { @class = "text-center" })
+                             .Actions(actions =>
+                             {
+                                 actions.Text("Pick Me!").Click("clickFunc");
+                             });
+                  })
+            )
+            
+
+    </div>
+</section>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+</div>
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+
+smatscript
+
+    function checkFormFunc() {
+        alert("checkForm1")
+        return true;
+    }
+
+    function checkFormFunc2() {
+        alert("checkForm2")
+        return true;
+    }
+
+    function checkFormFunc3() {
+        alert("checkForm3")
+        return true;
+    }
+
+    function getParamFunc(param) {
+        param["p3"] = 1;
+        alert("P3:" + param["p3"]);
+    }
+
+    function getParamFunc2(param) {
+        param["p3"] = 2;
+        alert("P3:" + param["p3"]);
+    }
+
+    function getParamFunc3(param) {
+        param["p3"] = 3;
+        alert("P3:" + param["p3"]);
+    }
+
+    function successFunc(result) {
+        alert("success1");
+    }
+
+    function successFunc2(result) {
+        alert("success2");
+    }
+
+    function successFunc3(result) {
+        alert("success3");
+    }
+
+    function clickFunc(dataItem)
+    {
+        alert("FirstName is " + dataItem.FirstName);
+    }
+
+smat2script
+
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        @@using (Html.Smat().BeginForm("refer-demo-pics-form", new { @@class = "form-horizontal" }
+            ).Actions(actions =>
+                {
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc").GetParam("getParamFunc").Success("successFunc");
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn2").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc2").GetParam("getParamFunc2").Success("successFunc2");
+                    actions.Action("/Refer/PersonSearch").ActionBtn("refer-demo-pics-search-btn3").ResultHandler("refer-demo-pics-pager").CheckForm("checkFormFunc3").GetParam("getParamFunc3").Success("successFunc3");
+                }
+            ))
+        {
+            <div class="row">
+                <div class="form-group col-fix-1">
+                    <label class="input-s-sm control-label">Id</label>
+                    @@Html.Smat().TextBox("Id")
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-fix-2">
+                    <label class="input-s-sm control-label">FirstName</label>
+                    @@Html.Smat().TextBox("FirstName").HtmlAttributes(new { @@class = "input-s-lg" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-fix-2">
+                    <div class="form-group">
+                        @@Html.Smat().Button("refer-demo-pics-search-btn").Content("検索").HtmlAttributes(new { @@class="btn-primary", style = "margin-left:30px;" })
+                        @@Html.Smat().Button("refer-demo-pics-search-btn2").Content("検索2").HtmlAttributes(new { @@class = "btn-primary", style = "margin-left:30px;" })
+                        @@Html.Smat().Button("refer-demo-pics-search-btn3").Content("検索3").HtmlAttributes(new { @@class = "btn-primary", style = "margin-left:30px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row">
+                <div class="col-sm-11 text-right text-center-xs">
+                    @@Html.Smat().Pager("refer-demo-pics-pager").DataHandler("refer-demo-pics-grid").HtmlAttributes(new { @@class = "ccc1" })
+                </div>
+            </div>
+            @@(Html.Smat().Grid("refer-demo-pics-grid")
+                  .Columns(columns =>
+                  {
+                      columns.Bound("Id").Title("Id").Width("60px").Template("<strong>#: Id # </strong>");
+                      columns.Bound("FirstName").Title("FirstName");
+                      columns.Bound("LastName").Title("LastName");
+                      columns.Bound("Episodes").Title("Episodes");
+                      columns.Bound("").Title("").Width("120px").HtmlAttributes(new { @@class = "text-center" })
+                             .Actions(actions =>
+                             {
+                                 actions.Text("Pick Me!").Click("");
+                             });
+                  })
+            )
+        }
+    </div>
+</section>
+
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+    hljs.configure({ tabReplace: '    ' }); // 4 spaces
+    $('pre code').each(function (i, e) {
+
+        if ($(this).find('.source-code').length > 0) {
+
+            $(this).html((asmat.htmlEncode($(this).find('.source-code').html())).replace(new RegExp("smatscript", "gm"), "&lt;script&gt;").replace(new RegExp("smat2script", "gm"), "&lt;/script&gt;"));
+
+        }
+
+        hljs.highlightBlock(e)
+    });
+</script>

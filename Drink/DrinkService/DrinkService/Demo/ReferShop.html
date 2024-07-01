@@ -1,0 +1,109 @@
+﻿
+    <section class="vbox" style="height:460px;">
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+
+                    <section class="vbox">
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper" style="padding: 0 0 0 5px;">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:5px 20px">
+                                    <div class="form-horizontal">
+
+                                        <div class="row">
+                                            <div class="col-fix-2" style="width:450px;">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">条件</label>
+                                                    <input type="text" style="width:290px;" class="form-control input-s-lg s-textbox" placeholder="店舗コード、店舗名、カナ" />
+                                                    <button id="button71" class="btn-primary" style="margin-left:10px;">検索</button>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-fix-1" style="width:210px;">
+                                                <div class="text-right text-center-xs">
+                                                    <ul class="pagination pagination-sm m-t-xs m-b-none">
+                                                        <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                                        <li><a href="#">1</a></li>
+                                                        <li><a href="#">2</a></li>
+                                                        <li><a href="#">3</a></li>
+                                                        <li><a href="#">4</a></li>
+                                                        <li><a href="#">5</a></li>
+                                                        <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in "></div>
+
+                                    <div class="row">
+                                        <div id="demo_list7" class="col-xs12 grid-no-cell-border"></div>
+                                    </div>
+                                </div>
+                            </section>
+                            <script>
+                                $(document).ready(function () {
+
+                                    $("#button71").asmatButton();
+
+                                    //数据
+                                    var dataSource7 = [
+                                        { "FIELD1": "10002", "FIELD2": "大阪南森町店", "FIELD3": "田中　一郎", "FIELD4": "06-1234-5678", "FIELD5": "2", "FIELD6": "オレンジジュース", "FIELD7": "4", "FIELD8": "11" },
+                                        { "FIELD1": "10003", "FIELD2": "大阪天満店", "FIELD3": "田中　一郎", "FIELD4": "06-1234-5679", "FIELD5": "4", "FIELD6": "CCレモン", "FIELD7": "3", "FIELD8": "1" }
+                                    ];
+
+                                    //列信息
+                                    var columns7 =
+                                       [
+
+                                        {
+                                            field: "FIELD1",
+                                            title: "コード",
+                                            width: "100px",
+                                            headerAttributes: {
+                                                style: "text-align: left; "
+                                            }
+                                        },
+                                        {
+                                            field: "FIELD2",
+                                            title: "名称",
+                                            headerAttributes: {
+                                                style: "text-align: left; "
+                                            }
+                                        },
+                                        {
+                                            field: "",
+                                            title: "",
+                                            width: "90px",
+                                            attributes: {
+                                                "class": "text-center"
+                                            },
+                                            template: function (dataItem) {
+                                                return '<button  class="btn-primary btn-command1 s-button" >選択</button>';
+                                            }
+                                        }
+                                       ];
+
+                                    $("#demo_list7").asmatGrid({
+                                        dataSource: dataSource7,
+                                        sortable: true,
+                                        scrollable: false,
+                                        columns: columns7,
+                                        dataBound: function (e) {
+                                        }
+                                    });
+
+                                    //radio group
+
+
+                                });
+
+                            </script>
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>

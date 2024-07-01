@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutDYEmpty.cshtml";
+}
+
+<div id="page_@(ViewBag.ProjID)_@(ViewBag.EntityName)_@ViewBag.FormName"></div>
+
+
+<script>
+
+    smat.uiConfig.CodeMst = {
+        cache: true,
+        codeListUrl: "/Dynamics/GetOptionSet",
+        kindField: "OptSetName",
+        codeField: "CD",
+        nameField: "Name",
+        memoField: "Memo"
+
+    }
+
+    var projID = "@ViewBag.ProjID";
+    var formName = "@ViewBag.FormName";
+    var entityName = "@ViewBag.EntityName";
+
+    var pageObj = smat.dynamics.openPage({
+        projID: projID,
+        formName: formName,
+        entityName: entityName,
+        contextOn: $("#page_" + projID + "_" + entityName + "_" + formName),
+        callBack: function (page) {
+            $("#sub_nav_title").text(page.config.title)
+        }
+    })
+
+
+</script>
+

@@ -1,0 +1,141 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ValResultViewModel>
+@{
+    ViewBag.IMG = "../../Content/icon/m07.png";
+    ViewBag.Title = "評価構成結果";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="../../dist/js/bootstrap.min.js"></script>
+<script src="../../assets/js/docs.min.js"></script>
+
+<script src="/Scripts/Common/Chart.min.js"></script>
+<div class="jumbotron">
+    <!--統計結果＆BUTTON-->
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-lg-12 control-label">
+                @Html.OpenWindow("プレビュー", "/ValResultPreview", "1440", "800", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD }, new { @class = "btn btn-info btn-sm" })
+                @Html.ButtonAction(true, "CSV出力", "/csv", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, divisionCD = ViewBag.divisionCD, Range = ViewBag.Range, ShopCD = ViewBag.ShopCD }, new { @class = "btn btn-success btn-sm" })
+                @Html.ButtonAction(false, "再検索", "ValRptStatisticsSearch", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD }, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+    </form>
+    <!--統計結果＆範囲-->
+    <span>統計範囲</span>
+    <span>&nbsp;&nbsp;</span>
+    <span>年度&nbsp;&nbsp;半期：&nbsp;1：4～6月&nbsp;&nbsp;事業部：東日本</span>
+    <table class="table table-bordered table-hover text-center">
+        <thead>
+            <tr style="background-color:#e5e5e5">
+                <th class="text-center"></th>
+                <th class="text-center">SS</th>
+                <th class="text-center">S</th>
+                <th class="text-center">A</th>
+                <th class="text-center">B</th>
+                <th class="text-center">C</th>
+                <th class="text-center">D</th>
+                <th class="text-center">E</th>
+                <th class="text-center">F</th>
+                <th class="text-center">統計</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr class="" style="background-color:white">
+                <td class="text-left">@Html.DisplayFor(modelItem => item.Type)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaSS)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaS)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaA)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaB)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaC)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaD)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaE)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.EvaF)</td>
+                <td class="text-right">@Html.DisplayFor(modelItem => item.SumAll)</td>
+            </tr>
+        }
+    </table>
+    <div class="row">
+    <div style="text-align:center;width:100%;position:relative;">
+        <div style="width: 300px; float:left;position:relative;left:50%;margin-left:-300px">
+            <canvas id="chart-area" width="300" height="300" />
+        </div>
+        <div class="pie_info" style="width: 200px; float: left; position: relative; left: 50%; margin-left: -10px; ">
+            <ul style="list-style: none;margin-top:60px; margin-left:30px;">
+                <li style="text-align:left"><span style="background-color: #3fb618; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>SS</li>
+                <li style="text-align:left"><span style="background-color: #3E18B6; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>S</li>
+                <li style="text-align:left"><span style="background-color: #F7464A; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>A</li>
+                <li style="text-align:left"><span style="background-color: #46BFBD; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>B</li>
+                <li style="text-align:left"><span style="background-color: #FDB45C; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>C</li>
+                <li style="text-align:left"><span style="background-color: #949FB1; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>D</li>
+                <li style="text-align:left"><span style="background-color: #4D5360; display: inline-block; width: 40px; height: 10px; margin-right: 5px; "></span>E</li>
+                <li style="text-align:left"><span style="background-color: #D285F7; display: inline-block; width: 40px; height: 10px; margin-right: 5px;"></span>F</li>
+            </ul>
+        </div>
+    </div>
+     </div>
+</div>
+<script>
+    @{
+        WebEvaluation.ViewModels.ValResultViewModel data = ViewBag.pie;
+
+    }
+
+    var pieData = [
+            {
+                value: Number(@data.EvaSS),
+                color: "#3fb618",
+                highlight: "#AAF392",
+                label: "SS"
+            },
+            {
+                value: Number(@data.EvaS),
+                color: "#3E18B6",
+                highlight: "#83F2F7",
+                label: "S"
+            },
+            {
+                value: Number(@data.EvaA),
+                color: "#F7464A",
+                highlight: "#FF5A5E",
+                label: "A"
+            },
+            {
+                value: Number(@data.EvaB),
+                color: "#46BFBD",
+                highlight: "#5AD3D1",
+                label: "B"
+            },
+            {
+                value: Number(@data.EvaC),
+                color: "#FDB45C",
+                highlight: "#FFC870",
+                label: "C"
+            },
+            {
+                value: Number(@data.EvaD),
+                color: "#949FB1",
+                highlight: "#A8B3C5",
+                label: "D"
+            },
+            {
+                value: Number(@data.EvaE),
+                color: "#4D5360",
+                highlight: "#616774",
+                label: "E"
+            }
+            ,
+            {
+                value: Number(@data.EvaF),
+                color: "#D285F7",
+                highlight: "#E7CEF3",
+                label: "F"
+            }
+
+    ];
+
+    window.onload = function () {
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie = new Chart(ctx).Pie(pieData);
+    };
+
+</script>

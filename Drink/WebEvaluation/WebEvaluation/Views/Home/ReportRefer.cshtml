@@ -1,0 +1,38 @@
+﻿@model WebEvaluation.ViewModels.HomeViewModel
+
+@{
+    ViewBag.IMG = "../Content/images/ic-logo.png";
+    ViewBag.Title = "報告書";
+    Layout = "~/Views/Shared/_LayoutDYEmpty.cshtml";
+    ViewBag.color = "#2e2e2e";
+}
+
+
+<div id="main_box" class="jumbotron" style="height: 620px;">
+   
+   
+
+</div>
+
+<script>
+
+    smat.service.openPage({
+        page: {
+            projID: 1,
+            entityName: "Y_AnalysisField",
+            pageName: "PartyReportEdit"
+        },
+        params:{
+            partyData:{
+                ShopCD:"@ViewBag.ShopCD",
+                PartyID:"@ViewBag.PartyID"
+            }
+        },
+        fillTarget: "main_box",
+        afterOpen: function (smatWindow) {
+            //smatWindow.parent().css('z-index', 1);
+        }
+    });
+
+
+</script>

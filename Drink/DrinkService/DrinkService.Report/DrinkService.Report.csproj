@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A65008C5-9393-4453-AC3D-D3D5FBCC662F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrinkService.Report</RootNamespace>
+    <AssemblyName>DrinkService.Report</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Asmat.SMAT.MVC">
+      <HintPath>..\Lib\Asmat.SMAT.MVC.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\Lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xtra">
+      <HintPath>..\Lib\itextsharp.xtra.dll</HintPath>
+    </Reference>
+    <Reference Include="SMAT.Dynamics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\SMAT.Dynamics.dll</HintPath>
+    </Reference>
+    <Reference Include="SMATPDF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\SMATPDF.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel.DomainServices.EntityFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\CommonPDFLogic.cs" />
+    <Compile Include="Common\Config.cs" />
+    <Compile Include="Common\DrinkPDF.cs" />
+    <Compile Include="Common\MetaModel.cs" />
+    <Compile Include="FD\Logic\ShopWithSysLogic.cs" />
+    <Compile Include="FD\Logic\ShopWithSysLogic.old.cs" />
+    <Compile Include="FD\Model\ShopNoSysClientModel.cs" />
+    <Compile Include="FD\Model\ShopWithSysClientModel.cs" />
+    <Compile Include="FD\Model\ShopWithSysItemModel.cs" />
+    <Compile Include="FD\NewLogic\FDDbModel.cs" />
+    <Compile Include="FD\NewLogic\FDLogic.cs" />
+    <Compile Include="FD\NewLogic\FDLogicDetailModel.cs" />
+    <Compile Include="FD\NewLogic\FDLogicHeadModel.cs" />
+    <Compile Include="FD\NewLogic\FDLogicModel.cs" />
+    <Compile Include="FD\NewLogic\TaxService.cs" />
+    <Compile Include="FD\Report\FDReport.cs" />
+    <Compile Include="FD\Report\FDReportShopNoSys.cs" />
+    <Compile Include="FD\Report\FDReportShopWithSys.cs" />
+    <Compile Include="PDF\Logic\DeliveryRouteFillupListLogic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Logic\DeliveryRouteFillupLogic.cs" />
+    <Compile Include="PDF\Logic\DeliveryRouteLogic.cs" />
+    <Compile Include="PDF\Logic\DeliveryRoutePaymentLogic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Logic\DeliveryRoutePlacementLogic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Logic\DeliveryRouteStorageLogic.cs" />
+    <Compile Include="PDF\Model\DeliveryRouteFillupListModel.cs" />
+    <Compile Include="PDF\Model\DeliveryRouteFillupModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Model\DeliveryRouteModel.cs" />
+    <Compile Include="PDF\Model\DeliveryRoutePaymentModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Model\DeliveryRoutePlacementModel.cs" />
+    <Compile Include="PDF\Model\DeliveryRouteStorageModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Report\DeliveryRouteFillupListReport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Report\DeliveryRouteFillupReport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PDF\Report\DeliveryRoutePaymentReport.cs" />
+    <Compile Include="PDF\Report\DeliveryRoutePlacementReport.cs" />
+    <Compile Include="PDF\Report\DeliveryRouteReport.cs" />
+    <Compile Include="PDF\Report\DeliveryRouteStorageReport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DrinkService.Data\DrinkService.Data.csproj">
+      <Project>{2f8413ad-479c-4db4-8316-11f385a54341}</Project>
+      <Name>DrinkService.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\itextsharp.dll" />
+    <Content Include="lib\itextsharp.xtra.dll" />
+    <Content Include="lib\SMATPDF.dll" />
+    <Content Include="lib\SMATPDF.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

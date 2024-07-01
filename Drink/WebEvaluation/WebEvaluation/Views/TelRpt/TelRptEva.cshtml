@@ -1,0 +1,285 @@
+﻿@model WebEvaluation.ViewModels.TelRptEvaViewModel
+
+@{
+    ViewBag.IMG = "../../Content/icon/m04.png";
+    ViewBag.Title = "評価情報登録";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!--テレフォンレポート情報登録--BUTTON-->
+<div class="jumbotron">
+    <br>
+    @using (Html.BeginForm("TelRptEva", "TelRpt", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.Hidden("page", ViewBag.page as string)
+        @Html.Hidden("ShopCD", ViewBag.ShopCD as string)
+        @Html.Hidden("PartyDateFrom", ViewBag.PartyDateFrom as string)
+        @Html.Hidden("PartyDateTo", ViewBag.PartyDateTo as string)
+        @Html.Hidden("EvaStatus", ViewBag.EvaStatus as string)
+        @Html.Hidden("StaffEva", ViewBag.StaffEva as string)
+        @Html.Hidden("LeaderEva", ViewBag.LeaderEva as string)
+        @Html.Hidden("PartyID",Model.party.PartyID)
+
+
+    <!--パーティ情報-->
+                <h3 class="panel-title"><font color="#4d4d4d">パーティ情報</font></h3>
+
+
+        <table class="table table-striped table-hover ">
+                    <tr class="" style="background-color:white">
+                        <td>店舗：</td>
+                        <td>@Html.DisplayFor(model => model.party.ShopCD)</td>
+                        <td>会場種別：</td>
+                        <td>XXX</td>
+                        <td>パーティー：</td>
+                        <td>@Html.DisplayFor(model => model.party.PartyNo)</td>
+                        <td>挙式日：</td>
+                        <td>@Html.DisplayFor(model => model.party.PartyDate)</td>
+                        <td>担当者：</td>
+                        <td>斉藤　太郎</td>
+                    </tr>
+                    <tr class="" style="background-color:white">
+                        <td colspan="2">新郎氏名：</td>
+                        <td colspan="2">@Html.DisplayFor(model => model.party.BrideName)</td>
+                        <td>ヨミカナ：</td>
+                        <td>@Html.DisplayFor(model => model.party.BrideKana)</td>
+                        <td>自宅Tel：</td>
+                        <td>@Html.DisplayFor(model => model.party.BrideHomeTel)</td>
+                        <td>携帯：</td>
+                        <td>@Html.DisplayFor(model => model.party.BrideMobile)</td>
+                    </tr>
+                    <tr class="" style="background-color:white">
+                        <td colspan="2">新婦氏名：</td>
+                        <td colspan="2">@Html.DisplayFor(model => model.party.GroomName)</td>
+                        <td>ヨミカナ：</td>
+                        <td>@Html.DisplayFor(model => model.party.GroomKana)</td>
+                        <td>自宅Tel：</td>
+                        <td>@Html.DisplayFor(model => model.party.GroomHomeTel)</td>
+                        <td>携帯：</td>
+                        <td>@Html.DisplayFor(model => model.party.GroomMobile)</td>
+                    </tr>
+                </table>
+    <!--レポート情報登録-->
+                <h3 class="panel-title"><font color="#4d4d4d">レポート情報</font></h3>
+        <table class="table table-striped table-hover" border="0">
+                    <tr style="background-color:white">
+                       
+                        @*<td width="120">
+    <label>@Html.RadioButtonFor(model => model.report.TimeZone, "AM", new { @name = "report.TimeZone", @disabled = "disabled" }) &nbsp;AM</label>
+        </td>
+        <td width="100">
+    <label>@Html.RadioButtonFor(model => model.report.TimeZone, "PM", new { @name = "report.TimeZone", @disabled = "disabled" }) &nbsp;PM</label>
+        </td>
+        <td width="160">
+            <label>@Html.RadioButtonFor(model => model.report.TimeZone, "XX", new { @name = "report.TimeZone", @disabled = "disabled" }) &nbsp;イレギューラー</label>
+        </td>*@
+                            <td width="140"> 挙式時間帯：</td>
+                            @if (Model.report.TimeZone=="AM")
+                            {
+                            <td width="140">AM</td>
+                            }
+                            else if (Model.report.TimeZone == "PM")
+                            {
+                               <td width="140">PM</td>
+                            }
+                            else if (Model.report.TimeZone == "XX")
+                            {
+                                <td width="140">イレギュラー</td>
+                            }
+                            else 
+                            { 
+                                <td width="140"></td>
+                            }
+                             <td width="110">電話可否：</td>
+                            @if(Model.report.TelFlg == true )
+                            {
+                                <td width="50">可</td>
+                            }
+                            else if (Model.report.TelFlg == false)
+                            {
+                                <td width="50">否</td>
+                            }
+                            else { 
+                                <td width="50"></td>
+                            }
+                        <td width="110">電話相手：</td>
+                            @if (Model.report.TelWho == "新郎")
+                            {
+                            <td >新郎</td>
+                            }
+                            else if (Model.report.TelWho == "新婦")
+                            {
+                                <td>新婦</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                         
+                    </tr>
+            <tr style="background-color:white">
+                <td>特記事項：</td>
+                <td colspan="5">
+                    @Html.DisplayFor(model => model.report.Memo)
+                </td>
+            </tr>
+            @*<tr style="background-color:white">
+        <td>
+            電話可否：
+        </td>
+        <td>
+            <label>@Html.RadioButtonFor(model => model.report.TelFlg, true, new { @name = "report.TelFlg", @disabled = "disabled" }) &nbsp;可</label>
+        </td>
+        <td>
+            <label>@Html.RadioButtonFor(model => model.report.TelFlg, false, new { @name = "report.TelFlg", @disabled = "disabled" }) &nbsp;否</label>
+        </td>
+        <td></td>
+        <td></td>
+    </tr>*@
+           @* <tr style="background-color:white">
+        <td>
+            電話相手：
+        </td>
+        <td>
+            <label>@Html.RadioButtonFor(model => model.report.TelWho, "新郎", new { @name = "report.TelWho", @disabled = "disabled" }) &nbsp;新郎</label>
+        </td>
+        <td>
+            <label>@Html.RadioButtonFor(model => model.report.TelWho, "新婦", new { @name = "report.TelWho", @disabled = "disabled" }) &nbsp;新婦</label>
+        </td>
+        <td></td>
+        <td></td>
+    </tr>*@
+                </table>
+
+    <!--評価登録-->
+                <h3 class="panel-title"><font color="#4d4d4d">評価</font></h3>
+        <div>
+            @if (null != Model.evaByStaff) 
+            { 
+                @Html.Hidden("evaByStaff.PartyID", Model.evaByStaff.PartyID)
+            }
+            
+            @if (ViewBag.previous == "evaByleaderIndex")
+            {
+                if (null != Model.evaByLeader)
+                { 
+                    @Html.Hidden("evaByLeader.PartyID", Model.evaByLeader.PartyID)
+                }
+            }
+        <table class="table table-striped table-hover " border="0">
+            <tr style="background-color:white">
+                <td align="left" width="140">
+                    留意フラグ：
+                </td>
+                <td width="160">
+                    <label>@Html.RadioButtonFor(model => model.evaByStaff.CareFlg, false, new { @name = "report.TelWho" }) &nbsp;要対応</label>
+                </td>
+                <td width="120">
+                    <label>@Html.RadioButtonFor(model => model.evaByStaff.CareFlg, true, new { @name = "report.TelWho" }) &nbsp;要確認</label>
+                </td>
+                <td colspan="8"></td>
+            </tr>
+            <tr style="background-color:white">
+                <td align="left" width="120">電話内容：</td>
+                <td colspan="10">
+                    @Html.TextAreaFor(model => model.evaByStaff.Record, new { @class = "form-control", @rows = "6" })
+                </td>
+            </tr>
+
+            <tr>
+                <td></td><td align="center">日付/時間</td><td align="center">通話結果</td><td align="center" nowrap="nowrap">通話時間(分)</td><td align="center">担当</td><td></td>
+            </tr>
+
+            <tr style="background-color:white">
+                <td align="left" width="120">&lt;1回目情報&gt;</td>
+                <td width="180">
+                    @Html.DateTimePicker("evaByStaff.Eva1Date", Model.evaByStaff.Eva1Date)
+                </td>
+                <td width="170">
+                    @Html.CodeDropDownList("evaByStaff.Eva1Result", "EvaResult", Model.evaByStaff.Eva1Result, new { @class = "form-control input-sm" })
+                </td>
+                <td width="80">
+                    @Html.TextBoxFor(model => model.evaByStaff.Eva1Time, new { @class = "form-control input-sm", @size = "10" })
+                </td>
+                <td width="120">
+                    @Html.CodeNameFor("evaByStaff.Eva1StaffCD", "staff", model => model.evaByStaff.Eva1StaffCD)
+                </td>
+                <td>@Html.CodeNameLabel("evaByStaff.Eva1StaffCD")</td>
+            </tr>
+            <tr style="background-color:white">
+                <td align="left">&lt;2回目情報&gt;</td>
+                <td>
+                    @Html.DateTimePicker("evaByStaff.Eva2Date", Model.evaByStaff.Eva2Date)
+                </td>
+                <td>
+                    @Html.CodeDropDownList("evaByStaff.Eva2Result", "EvaResult", Model.evaByStaff.Eva2Result, new { @class = "form-control input-sm" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.evaByStaff.Eva2Time, new { @class = "form-control input-sm", @size = "10" })
+                </td>
+                <td>
+                    @Html.CodeNameFor("evaByStaff.Eva2StaffCD", "staff", model => model.evaByStaff.Eva2StaffCD)
+                </td>
+                <td>@Html.CodeNameLabel("evaByStaff.Eva2StaffCD")</td>
+            </tr>
+            <tr style="background-color:white">
+                <td align="left">&lt;3回目情報&gt;</td>
+                <td>
+                    @Html.DateTimePicker("evaByStaff.Eva3Date", Model.evaByStaff.Eva3Date)
+                </td>
+                <td>
+                        @Html.CodeDropDownList("evaByStaff.Eva3Result", "EvaResult", Model.evaByStaff.Eva3Result, new { @class = "form-control input-sm" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.evaByStaff.Eva3Time, new { @class = "form-control input-sm", @size = "10" })
+                </td>
+                <td>
+                    @Html.CodeNameFor("evaByStaff.Eva3StaffCD", "staff", model => model.evaByStaff.Eva3StaffCD)
+                </td>
+                <td>@Html.CodeNameLabel("evaByStaff.Eva3StaffCD")</td>
+            </tr>
+            <tr style="background-color:white">
+                <td align="left">
+                    評価結果：
+                </td>
+                <td>
+                    @Html.CodeDropDownListOrderByName("evaByStaff.StatffEva", "EvaVal", ViewBag.StaffEva as string, new { @class = "form-control input-sm" })
+                </td>
+                <td  align="left" nowrap="nowrap">
+                    二次評価結果：
+                </td>
+                <td colspan="0">
+                @if (ViewBag.previous == "evaByleaderIndex")
+                {
+                   @Html.CodeDropDownListOrderByName("evaByLeader.LeaderEva", "EvaVal", Model.evaByLeader.LeaderEva, new { @class = "form-control input-sm" }) 
+                }
+                else
+                { 
+                            <strong>@Html.DisplayFor(model => model.evaByLeader.LeaderEva)</strong>
+                }
+                </td>
+                <td nowrap="nowrap">完了：True/False</td>
+                <td></td>
+            </tr>
+                </table>
+        </div>
+                <div class="row">
+            <div class="col-lg-12 text-center">
+                @Html.Hidden("previous", ViewBag.previous as string)
+                <button class="btn btn-primary btn-sm" type="submit" style="width:60px">登録</button>
+                @if (ViewBag.previous == "evaByleaderIndex") 
+                {
+                    @Html.ButtonAction(false, "取消", "../EvaByLeader/EvaByLeaderIndex" + null, new { page = ViewBag.page, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, EvaStatus = ViewBag.EvaStatus, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva }, new { @class = "btn btn-danger btn-sm", @style = "width:60px" })
+                }
+                else
+                {
+                    @Html.ButtonAction(false, "取消", "../EvaByStaff/EvaByStaffIndex" + null, new { page = ViewBag.page, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, EvaStatus = ViewBag.EvaStatus, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva }, new { @class = "btn btn-danger btn-sm", @style = "width:60px" })
+                }
+
+
+            </div>
+        </div>
+    }
+</div>
+

@@ -1,0 +1,92 @@
+﻿
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-fix-2 form-group">
+                    <label class="input-s-sm control-label">年月日时分</label>
+                    <input id="datetimepicker" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+            
+        $("#datetimepicker").smatDateTimePicker({
+            value: new Date()
+        });
+    });
+</script>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul">
+            
+        </ul>
+    </div>
+
+</div>
+
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                    <code >
+                        <!-- ====code显示区域 =====-->
+                        <script class="source-code" type="text">
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-fix-2 form-group">
+            <label class="input-s-sm control-label">年月日时分</label>
+            <input id="datetimepicker" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#datetimepicker").smatDateTimePicker({
+            value: new Date()
+        });
+    });
+</script>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+	hljs.configure({tabReplace: '    '}); // 4 spaces
+	$('pre code').each(function (i, e) {
+        
+	    if ($(this).find('.source-code').length > 0) {
+
+	       $(this).html((asmat.htmlEncode($(this).find('.source-code').html())) + " &lt;/script&gt;");
+
+	    }
+
+	    hljs.highlightBlock(e)
+	});
+</script>

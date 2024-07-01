@@ -1,0 +1,94 @@
+﻿@model WebEvaluation.Models.S_Unit
+
+@{
+    ViewBag.Title = "組織編集";
+    ViewBag.color = "#7f00ba";
+    ViewBag.IMG = "../../Content/images/ic-staff.png";
+}
+<div class="jumbotron">
+@using (Html.BeginForm("Edit","Unit",FormMethod.Post, new { @onsubmit = "return checkForm()" }))
+{
+    @Html.AntiForgeryToken()
+    
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.UnitCD)
+       <div class="row" style="padding-left:80px;padding-right:80px">
+           <br>
+            <font color="#aaaaaa">組織基本情報</font>
+            <table class=" table form-table" style="width:100%">
+                <tr>
+                    <td align="right" width="200px">@Html.LabelFor(model => model.UnitCD)</td>
+                    <td style="border-left:1px solid #dddddd">
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @Html.DisplayFor(model => model.UnitCD)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" width="200px">@Html.LabelFor(model => model.UnitName)</td>
+                    <td style="border-left:1px solid #dddddd">
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @Html.TextBoxFor(model => model.UnitName, new { @class = "form-control isCheckChange", @maxlength = "20" })
+                            @Html.ValidationMessageFor(model => model.UnitName)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" width="200px">@*@Html.LabelFor(model => model.ShopCD)*@店舗略称</td>
+                    <td style="border-left:1px solid #dddddd">
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @Html.TextBoxFor(model => model.ShopCD, new { @class = "form-control isCheckChange", @maxlength = "5" })
+                            @Html.ValidationMessageFor(model => model.ShopCD)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" width="200px">カスタマーセンターフラグ</td>
+                    <td style="border-left:1px solid #dddddd">
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @Html.EditorFor(model => model.IsCusCenter)
+                            @Html.ValidationMessageFor(model => model.IsCusCenter)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" width="200px">店舗フラグ</td>
+                    <td style="border-left:1px solid #dddddd">
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @Html.EditorFor(model => model.IsShop)
+                            @Html.ValidationMessageFor(model => model.IsShop)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+    </div>
+
+       <div class="row">
+                <div class="col-lg-12 text-center">
+                    <button class="btn btn-success btn-sm" type="submit" style="width:60px">更新</button>
+                    @Html.ButtonAction(false, "取消", "../Unit",null, new { @class = "btn btn-primary btn-sm", @Style = "width:60px", @checkAction = "checkAction()" })
+                </div>
+        </div>
+}
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    function checkForm() {
+
+        if ($("#UnitName").val().trim().length == 0) {
+            SMAT.Service.toastr("組織名を入力してください！", "error");
+            $("#UnitName").focus();
+            return false;
+        }
+    }
+    function checkAction() {
+        if (CheckChanged()) {
+            return confirm("変更があっても破棄してよろしいでしょうか？");
+        } else {
+            return true;
+        }
+    }
+</script>

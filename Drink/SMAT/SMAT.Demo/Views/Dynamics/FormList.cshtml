@@ -1,0 +1,24 @@
+﻿@{
+    if (ViewBag.type == "SimpleYList"
+        || ViewBag.type == "SimpleMasterList"
+        || ViewBag.type == "SimpleMasterEdit")
+    {
+        ViewBag.Title = "システム構成";
+    }
+    else {
+        ViewBag.Title = "業務分析";
+    }
+}
+
+<div id="dy_desinger_form_list"></div>
+
+<script>
+
+    var type = "@ViewBag.type";
+
+    $("#dy_desinger_form_list").smatDynamicsdFormList({
+        type:type
+    });
+
+</script>
+

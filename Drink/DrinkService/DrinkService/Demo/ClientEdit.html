@@ -1,0 +1,767 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="ClientList.html" id="home-link" class="text-muted">
+                        <i class="fa fa-mail-reply text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">顧客管理</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:0;">
+                                    <div class="row">
+                                        <div class="col-sm-6 text-left text-center-xs">
+                                            <button id="button1" class="btn-warning">一時保存</button>
+                                            <button id="button2" class="btn-warning">保存</button>
+                                            <button id="button3" class="btn-primary">閉じる</button>
+                                            <button id="button4" class="btn-danger">削除</button>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                    <div class="panel-body" style="padding:0;">
+                                        <div id="tabstrip">
+                                            <ul>
+                                                <li class="s-state-active">
+                                                    基本情報
+                                                </li>
+                                                <li>
+                                                    初期在庫
+                                                </li>
+                                                <li>
+                                                    在庫照会・契約変更
+                                                </li>
+
+                                            </ul>
+                                            <div>
+                                                <div class="form-horizontal">
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">店舗</label>
+                                                                <input id="input1" type="text" class="form-control input-s s-textbox" value="南森町店" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-2">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">顧客名</label>
+                                                                <input id="input3" type="text" class="form-control input-s-bg s-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">顧客コード</label>
+                                                                <input id="input2" type="text" class="form-control input-s s-textbox">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-2">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">カナ</label>
+                                                                <input type="text" class="form-control input-s-bg s-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">電話番号</label>
+                                                                <input id="input4" type="text" class="form-control input-s s-textbox">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">FAX</label>
+                                                                <input  type="text" class="form-control input-s s-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">郵便番号</label>
+                                                                <input id="input6" type="text" class="form-control input-s-md s-textbox">
+                                                            </div>
+                                                        </div>
+                                                       
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-2">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">住所</label>
+                                                                <input id="input7" type="text" class="form-control input-s-hg s-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">従業員数</label>
+                                                                <input id="input8" type="text" class="form-control input-s-md s-textbox">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">顧客担当者</label>
+                                                                <input id="input5" type="text" class="form-control input-s s-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row " style="height:30px;">
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">ルート</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1" style="width:220px;">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">担当者</label>
+                                                                <input id="input11" class="form-control input-s-md " value="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label" style="text-align:left;">備考</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div id="demo_list1" class="col-fix-1" style="width:488px;"></div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <textarea class="s-textbox " rows="8" style="width: 450px;margin-left: 30px;"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                   
+                                                    
+                                                </div>
+
+                                                <script>
+    $(document).ready(function () {
+
+        // create DropDownList from input HTML element
+        $("#input11").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "", value: "" },
+            { text: "山田　太郎", value: "1" },
+            { text: "山田　一郎", value: "2" },
+            { text: "山田　二郎", value: "3" },
+            { text: "山田　三郎", value: "4" }
+            ],
+            index: 0
+        });
+
+        //数据
+        var dataSource1 = [
+            { "FIELD1": "A週", "FIELD2": "", "FIELD3": "", "FIELD4": "" },
+            { "FIELD1": "B週", "FIELD2": "", "FIELD3": "", "FIELD4": "" },
+            { "FIELD1": "C週", "FIELD2": "", "FIELD3": "", "FIELD4": "" },
+            { "FIELD1": "D週", "FIELD2": "", "FIELD3": "", "FIELD4": "" },
+        ];
+
+        //列信息
+        var columns1 =
+           [
+            {
+                field: "FIELD1",
+                title: "週",
+                width: "80px",
+                attributes: {
+                    "class": "text-center cell-display"
+                }
+            },
+            {
+                field: "FIELD2",
+                title: "ルール１",
+                template: function (dataItem) {
+                    return '<input type="text" style="width:100%" class="form-control s-textbox">';
+
+                }
+            },
+            {
+                field: "FIELD3",
+                title: "ルール２",
+                width: "136px",
+                template: function (dataItem) {
+                    return '<input type="text" style="width:100%" class="form-control s-textbox">';
+
+                }
+            },
+            {
+                field: "FIELD4",
+                title: "ルール３",
+                width: "136px",
+                template: function (dataItem) {
+                    return '<input type="text" style="width:100%" class="form-control s-textbox">';
+
+                }
+            },
+           ];
+
+        $("#demo_list1").asmatGrid({
+            dataSource: dataSource1,
+            sortable: false,
+            scrollable: false,
+            columns: columns1
+        });
+
+    });
+                                                </script>
+
+
+                                            </div>
+                                            <div>
+                                                <div class="form-horizontal">
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">店舗</label>
+                                                                <input  type="text" class="form-control input-s s-textbox" value="南森町店" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">顧客名</label>
+                                                                <input type="text" class="form-control input-s s-textbox" value="ニッシンシステム" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">設置日</label>
+                                                                <input id="input21" type="text" class="form-control input-s ">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">キット</label>
+                                                                <input id="input22" type="text" class="form-control input-s-md " value="1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+
+                                                    <div class="row m-t-sm ">
+                                                        <div class="form-group m-b-none">
+                                                            <button id="button21" class="btn-primary" style="float:right;margin-right: 15px;margin-top: -40px;">商品追加</button>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="row ">
+                                                        <div id="demo_list21" class="col-xs12"></div>
+                                                    </div>
+
+                                                </div>
+
+                                                <script>
+                                                    $(document).ready(function () {
+
+                                                        $("#input21").asmatDatePicker();
+
+                                                        $("#input22").asmatDropDownList({
+                                                            dataTextField: "text",
+                                                            dataValueField: "value",
+                                                            dataSource: [
+                                                            { text: "", value: "" },
+                                                            { text: "A", value: "1" },
+                                                            { text: "B", value: "2" },
+                                                            { text: "C", value: "3" },
+                                                            { text: "D", value: "4" }
+                                                            ],
+                                                            index: 0
+                                                        });
+
+
+                                                        //数据
+                                                        var dataSource21 = [
+                                                            { "FIELD1": "1", "FIELD2": "1", "FIELD3": "日清ラーメン", "FIELD4": "20", "FIELD5": "100", "FIELD6": "伊藤　一郎" },
+                                                            { "FIELD1": "2", "FIELD2": "1", "FIELD3": "日清ラーメン", "FIELD4": "10", "FIELD5": "105", "FIELD6": "伊藤　一郎" },
+                                                            { "FIELD1": "3", "FIELD2": "2", "FIELD3": "コカコーラ", "FIELD4": "21", "FIELD5": "210", "FIELD6": "伊藤　一郎" },
+                                                            { "FIELD1": "4", "FIELD2": "2", "FIELD3": "コカコーラ", "FIELD4": "31", "FIELD5": "200", "FIELD6": "伊藤　一郎" },
+                                                            { "FIELD1": "5", "FIELD2": "3", "FIELD3": "コカコーラ", "FIELD4": "9", "FIELD5": "300", "FIELD6": "伊藤　一郎" },
+                                                            {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+                                                        ];
+
+                                                        //列信息
+                                                        var columns21 =
+                                                           [
+                                                               
+                                                            {
+                                                                field: "FIELD1",
+                                                                title: "№",
+                                                                attributes: {
+                                                                    "class": "text-center cell-display"
+                                                                },
+                                                                width: "40px"
+                                                            }, {
+                                                                field: "FIELD2",
+                                                                title: "棚",
+                                                                attributes: {
+                                                                    "class": "text-center"
+                                                                },
+                                                                width: "80px",
+                                                                template: function (dataItem) {
+                                                                    return '<input type="text" class="edit-code2 " style="width:100%" class="form-control " value="' + dataItem.FIELD2 + '">';
+
+                                                                }
+                                                            },
+                                                            {
+                                                                field: "FIELD3",
+                                                                title: "商品"
+                                                            },
+                                                            {
+                                                                field: "FIELD4",
+                                                                title: "数量",
+                                                                attributes: {
+                                                                    "class": "text-right"
+                                                                },
+                                                                template: function (dataItem) {
+                                                                    var str = dataItem.FIELD4;
+                                                                    if (str == undefined) str = "";
+                                                                    return '<input type="text"  style="width:100%;text-align: right;" class="form-control s-textbox" value="' + str + '">';
+
+                                                                },
+                                                                width: "80px"
+                                                            },
+                                                            {
+                                                                field: "FIELD5",
+                                                                title: "単価",
+                                                                attributes: {
+                                                                    "class": "text-right"
+                                                                },
+                                                                template: function (dataItem) {
+                                                                    return '<input type="text" class="edit-numeric " style="width:100%" class="form-control s-textbox" value="' + dataItem.FIELD5 + '">';
+
+                                                                },
+                                                                width: "100px"
+                                                            }, {
+                                                                field: "",
+                                                                title: "",
+                                                                width: "90px",
+                                                                attributes: {
+                                                                    "class": "text-center"
+                                                                },
+                                                                template: function (dataItem) {
+                                                                    return '<button  class="btn-danger btn-command1 s-button">削除</button>';
+
+                                                                }
+                                                            },
+                                                           ];
+
+                                                        $("#demo_list21").asmatGrid({
+                                                            dataSource: dataSource21,
+                                                            sortable: false,
+                                                            scrollable: false,
+                                                            columns: columns21,
+                                                            dataBound: function (e) {
+                                                                $("#demo_list21").find('.edit-numeric').asmatNumericTextBox({
+                                                                    format: "#"
+                                                                });
+
+
+
+                                                                $(".picker1").bind('click', function () {
+                                                                    smat.service.doOpenSubForm({
+                                                                        url: "ReferItem.html",
+                                                                        title: "商品検索"
+                                                                    });
+                                                                });
+
+                                                                $("#demo_list21").find('.edit-code2').asmatDropDownList({
+                                                                    dataTextField: "text",
+                                                                    dataValueField: "value",
+                                                                    dataSource: [
+                                                                        { text: " ", value: "0" },
+                                                                    { text: "上", value: "1" },
+                                                                    { text: "１", value: "2" },
+                                                                    { text: "２", value: "3" }
+                                                                    ],
+                                                                    index: 0
+                                                                });
+                                                            }
+                                                        });
+
+                                                        $("#button21").asmatButton({
+                                                            click: function () {
+                                                                smat.service.doOpenSubForm({
+                                                                    url: "ReferItem.html",
+                                                                    title: "商品検索"
+                                                                });
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+
+                                            </div>
+                                            <div>
+                                                <div class="form-horizontal">
+                                                    <div class="row">
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">店舗</label>
+                                                                <input type="text" class="form-control input-s s-textbox" value="南森町店" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">顧客名</label>
+                                                                <input type="text" class="form-control input-s s-textbox" value="ニッシンシステム" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-fix-1">
+                                                            <div class="form-group">
+                                                                <label class="input-s-sm control-label">日付</label>
+                                                                <input type="text" class="form-control input-s s-textbox" value="2015/03/03" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row m-t-sm ">
+                                                        <div class="form-group m-b-none">
+                                                            <button id="button31" class="btn-primary" style="float:right;margin-right: 15px;margin-top: -10px;">商品追加</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row ">
+                                                        <div id="demo_list31" class="col-xs12"></div>
+                                                        <div id="demo_list32" class="col-xs12"></div>
+                                                    </div>
+
+                                                    <script id="head-template" type="text/x-asmat-template">
+                                                        
+                                                        <tr role="row">
+                                                            <th role="columnheader" rowspan="2" class="s-header">№</th>
+                                                            <th role="columnheader" rowspan="2" class="s-header">棚</th>
+                                                            <th role="columnheader" rowspan="2" class="s-header">順</th>
+                                                            <th role="columnheader" rowspan="2" class="s-header">商品</th>
+
+                                                            <th role="columnheader" rowspan="1" colspan="3" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">今回</th>
+                                                            <th role="columnheader" rowspan="1" colspan="2" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">次回</th>
+                                                        </tr>
+
+                                                        <tr role="row">
+                                                            <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">在庫数</th>
+                                                            <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">賞味期限</th>
+                                                            <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">単価</th>
+                                                            <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">単価</th>
+                                                            <th role="columnheader" rowspan="1" class="s-header" style="padding-top: 5px; padding-bottom: 5px;">中止</th>
+                                                        </tr>
+                                                    </script>
+
+                                                </div>
+
+                                                <script>
+                                                    $(document).ready(function () {
+
+                                                        //数据
+                                                        var dataSource31 = [
+                                                            { "FIELD1": "1", "FIELD2": "0", "FIELD3": "コカ・コーラ", "FIELD4": "20", "FIELD5": "100", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "1" },
+                                                            { "FIELD1": "2", "FIELD2": "0", "FIELD3": "コカ・コーラ", "FIELD4": "10", "FIELD5": "105", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "2" },
+                                                            { "FIELD1": "3", "FIELD2": "1", "FIELD3": "オレンジジュース", "FIELD4": "21", "FIELD5": "210", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "3" },
+                                                            { "FIELD1": "4", "FIELD2": "2", "FIELD3": "オレンジジュース", "FIELD4": "31", "FIELD5": "200", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "4" },
+                                                            { "FIELD1": "5", "FIELD2": "3", "FIELD3": "オレンジジュース", "FIELD4": "9", "FIELD5": "300", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "5" }
+                                                        ];
+
+                                                        var dataSource32 = [
+                                                            { "FIELD1": "1", "FIELD2": "0", "FIELD3": "コカ・コーラ", "FIELD4": "20", "FIELD5": "100", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "1" },
+                                                            { "FIELD1": "2", "FIELD2": "0", "FIELD3": "コカ・コーラ", "FIELD4": "10", "FIELD5": "105", "FIELD6": "2014/04/01", "FIELD7": "110", "FIELD8": "2" }
+                                                        ];
+
+                                                        //列信息
+                                                        var columns31 =
+                                                           [
+
+                                                            {
+                                                                field: "FIELD1",
+                                                                title: "№",
+                                                                attributes: {
+                                                                    "class": "text-center cell-display"
+                                                                },
+                                                                width: "40px"
+                                                            }, {
+                                                                field: "FIELD2",
+                                                                title: "棚",
+                                                                attributes: {
+                                                                    "class": "text-center cell-display"
+                                                                },
+                                                                width: "60px"
+                                                            }, {
+                                                                field: "FIELD8",
+                                                                title: "順",
+                                                                attributes: {
+                                                                    "class": "text-center cell-display"
+                                                                },
+                                                                width: "60px"
+                                                            },
+                                                            {
+                                                                field: "FIELD3",
+                                                                attributes: {
+                                                                    "class": " cell-display"
+                                                                },
+                                                                title: "商品"
+                                                            },
+                                                            {
+                                                                field: "FIELD4",
+                                                                title: "在庫数",
+                                                                attributes: {
+                                                                    "class": "text-right cell-display"
+                                                                },
+                                                                width: "70px"
+                                                            },
+                                                            {
+                                                                field: "FIELD6",
+                                                                title: "賞味期限",
+                                                                attributes: {
+                                                                    "class": " cell-display"
+                                                                },
+                                                                width: "120px"
+                                                            },
+                                                            {
+                                                                field: "FIELD5",
+                                                                title: "単価",
+                                                                attributes: {
+                                                                    "class": "text-right"
+                                                                },
+                                                                template: function (dataItem) {
+                                                                    return '<input type="text" style="width:100% ;text-align: right;" class="form-control s-textbox" value="' + dataItem.FIELD5 + '">';
+
+                                                                },
+                                                                width: "80px"
+                                                            },
+                                                            {
+                                                                field: "FIELD7",
+                                                                title: "次回単価",
+                                                                attributes: {
+                                                                    "class": "text-right"
+                                                                },
+                                                                template: function (dataItem) {
+                                                                    return '<input type="text" style="width:100% ;text-align: right;" class="form-control s-textbox" value="' + dataItem.FIELD7 + '">';
+
+                                                                },
+                                                                width: "86px"
+                                                            }, {
+                                                                field: "",
+                                                                title: "中止",
+                                                                width: "90px",
+                                                                attributes: {
+                                                                    "class": "text-center"
+                                                                },
+                                                                template: "<label class='checkbox m-n i-checks'><input type='checkbox' class='chs-item' name='post[]'><i></i></label>"
+                                                            },
+                                                           ];
+
+                                                        var columns32 =
+                                                          [
+
+                                                           {
+                                                               field: "FIELD1",
+                                                               title: "№",
+                                                               attributes: {
+                                                                   "class": "text-center cell-display"
+                                                               },
+                                                               width: "40px"
+                                                           }, {
+                                                               field: "FIELD2",
+                                                               title: "棚",
+                                                               attributes: {
+                                                                   "class": "text-center"
+                                                               },
+                                                               width: "60px",
+                                                               template: function (dataItem) {
+                                                                   return '<input type="text" style="width:100%" class="form-control s-textbox" value="' + dataItem.FIELD2 + '">';
+
+                                                               }
+                                                           }, {
+                                                               field: "FIELD8",
+                                                               title: "順",
+                                                               attributes: {
+                                                                   "class": "text-center"
+                                                               },
+                                                               width: "60px",
+                                                               template: function (dataItem) {
+                                                                   return '<input type="text" style="width:100%" class="form-control s-textbox" value="' + dataItem.FIELD8 + '">';
+
+                                                               }
+                                                           },
+                                                           {
+                                                               field: "FIELD3",
+                                                               title: "商品",
+                                                               attributes: {
+                                                                   "class": " cell-display"
+                                                               }
+                                                           },
+                                                           {
+                                                               field: "FIELD4",
+                                                               title: " ",
+                                                               template: function (dataItem) {
+                                                                   return ' <button  class="btn-danger btn-command1 s-button" >削除</button>';
+
+                                                               },
+                                                               width: "270px"
+                                                           },
+                                                           {
+                                                               field: "FIELD7",
+                                                               title: "次回単価",
+                                                               attributes: {
+                                                                   "class": "text-right"
+                                                               },
+                                                               template: function (dataItem) {
+                                                                   return '<input type="text" style="width:100% ;text-align: right;" class="form-control s-textbox" value="' + dataItem.FIELD7 + '">';
+
+                                                               },
+                                                               width: "86px"
+                                                           }, {
+                                                               field: "",
+                                                               title: " ",
+                                                               width: "90px",
+                                                               attributes: {
+                                                                   "class": "text-center"
+                                                               },
+                                                               template: " "
+                                                           },
+                                                          ];
+
+                                                        $("#demo_list31").asmatGrid({
+                                                            dataSource: dataSource31,
+                                                            sortable: false,
+                                                            scrollable: false,
+                                                            columns: columns31,
+                                                            dataBound: function (e) {
+                                                                this.thead.find('tr').remove();
+                                                                //alert(asmat.template($('#head-template').html())({}));
+                                                                this.thead.html($('#head-template').html());
+                                                            }
+                                                        });
+
+                                                        $("#demo_list32").asmatGrid({
+                                                            dataSource: dataSource32,
+                                                            sortable: false,
+                                                            scrollable: false,
+                                                            columns: columns32,
+                                                            dataBound: function (e) {
+                                                                $("#demo_list32").find('.edit-numeric').asmatNumericTextBox({
+                                                                    format: "#"
+                                                                });
+                                                            }
+                                                        });
+
+                                                        $("#button31").asmatButton({
+                                                            click: function () {
+                                                                smat.service.doOpenSubForm({
+                                                                    url: "ReferItem.html",
+                                                                    title: "商品検索"
+                                                                });
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    <script>
+    $(document).ready(function () {
+
+        $("#tabstrip").asmatTabStrip({});
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton({
+            click: function () { window.location.href = "ClientList.html"; }
+        });
+        $("#button3").asmatButton({
+            click: function () { window.location.href = "ClientList.html"; }
+        });
+        $("#button4").asmatButton({
+            click: function () { window.location.href = "ClientList.html"; }
+        });
+        $("#button5").asmatButton({
+            click: function () { window.location.href = "ClientList.html"; }
+        });
+
+    });
+    </script>
+</body>
+
+</html>

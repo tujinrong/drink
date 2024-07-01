@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "";
+}
+
+<div id="demo-body">
+
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        iniDemoListMenu("#nav-menu", "@ViewBag.did", "@ViewBag.aid");
+
+        var did = '@ViewBag.did'.split('|');
+
+
+        var aid = '@ViewBag.aid'.split('|');
+
+        $("#title-text").text(menuConfig[did[0]][did[1]].items[aid[0]].name + " / " + menuConfig[did[0]][did[1]].items[aid[0]].demos[aid[1]].name);
+
+        var demoInfo = menuConfig[did[0]][did[1]].items[aid[0]].demos[aid[1]];
+
+        var demoIndex = @ViewBag.index;
+
+        var item = demoInfo.demoItems[demoIndex];
+        var url = "";
+        if (item.type == "HTML5/JavaScript")
+        {
+            url = "/HtmlDemo/" + aid[0] + "/" + aid[1] + ".html";
+        } else if (item.type == "ASP.NET MVC")
+        {
+            url = "/" + aid[0] + "/" + aid[1];
+        }
+
+        //alert(demoInfo);
+
+        smat.service.load({
+            url: url,
+            target: "#demo-body",
+            success:function(e){
+                $("#demo-type-title").text(item.type+" source");
+
+                for(var index in demoInfo.demoItems){
+                    if(index == demoIndex){
+                        continue;
+                    }
+
+                    
+
+                    $('<li><a href="/SMAT/Demo?did=' + did[0] + '|' + did[1] + '&aid=' + aid[0] + '|' + aid[1] +  '&index=' + index + '">'+demoInfo.demoItems[index].type+'</a></li>').appendTo($('#other-source-ul'));
+                }
+            }
+        });
+
+    });
+</script>

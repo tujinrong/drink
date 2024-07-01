@@ -1,0 +1,268 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "顧客契約管理";
+}
+<script>
+    function openClientEditForm(dataItem) {
+
+        smat.service.openForm({
+            url: "/Client/ClientEdit",
+            fillTarget: "body_id",
+            height: "100%",
+            params: {
+                shopCD: dataItem.ShopCD == undefined ? "" : dataItem.ShopCD,
+                clientCD: dataItem.ClientCD == undefined ? "" : dataItem.ClientCD
+            },
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#clientListPager").ui().dataSource != undefined && $("#clientListPager").ui().dataSource.pageData.length > 0) {
+                        $("#clientListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearchClientList").click();
+                    }
+                }
+            }
+        });
+    }
+
+    function openClientNewForm() {
+
+        if (checkClientNewForm()) {
+
+            smat.service.openForm({
+                url: "/Client/ClientEdit",
+                fillTarget: "main_form_content",
+                height: "100%",
+                params: {
+                    shopCD: $("#referShopCD").ui().value()
+                },
+                afterClose: function (result) {
+                    if (result == true) {
+                        if ($("#clientListPager").ui().dataSource != undefined && $("#clientListPager").ui().dataSource.pageData.length > 0) {
+                            $("#clientListPager").ui().reload();
+                        }
+                        else {
+                            $("#btnSearchClientList").click();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function openRoteTantoChangeForm() {
+
+        smat.service.openForm({
+            page: {
+                projID: 1,
+                entityName: "M_Client",
+                pageName: 'RoteTantoChange'
+            },
+            fillTarget: "body_id",
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#clientListPager").ui().dataSource != undefined && $("#clientListPager").ui().dataSource.pageData.length > 0) {
+                        $("#clientListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearchClientList").click();
+                    }
+                }
+            }
+        });
+    }
+    
+
+    function checkClientNewForm() {
+        $(".s-fieldError").removeClass("s-fieldError");
+
+        if ($('#referShopCD').ui().value() == "") {
+            smat.service.addErrorInfo("ShopName", $('#referShopCD'), "【店舗】を入力してください");
+        }
+
+        return smat.service.isNoError();
+    }
+
+    function downloadClientCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+
+    var afterReferShop = function (data) {
+        if (data != undefined) {
+            smat.service.loadJosnData({
+                url: "/Staff/GetStaffList",
+                params: { "ShopCD": data["ShopCD"] },
+                success: function (result) {
+
+                    var emptyItem = {};
+                    emptyItem.staffCD = "";
+                    emptyItem.StaffName = "";
+
+                    result.unshift(emptyItem);
+
+                    $("#ddlStaff").ui().setDataSource(result);
+
+                    }
+            });
+        } else {
+            $("#ddlStaff").ui().setDataSource([]);
+        }
+    }
+
+    var CancelFlgTemplateBound = function (dataItem) {
+        if (dataItem.CancelFlg) {
+            return '<span style="color:red;">解約</span>'
+        }
+        return '';
+    }
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag)
+    {
+        editStr = "参照";
+    }
+}
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+                @using (Html.Smat().BeginForm("clientListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                        {
+                            actions.Action("/Client/ClientSearch").ActionBtn("btnSearchClientList").ResultHandler("clientListPager");
+                            actions.Action("/Client/ClientCsv").ActionBtn("btnSearchCsvList").Success("downloadClientCsv");
+                        }
+                    ))
+                {
+                        <div class="row">
+                            <div class="col-fix-2">
+                                <div class="form-group">
+                                    @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                    {
+                                        @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" })
+                                        @Html.Smat().TextBox("referShopCD").Name("shopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Smat().Refer("referShopCD").Name("shopCD").Label("店舗").ReferKey("referShop").AfterSetValue("afterReferShop").HtmlAttributes(new { style = "width:260px;", cookie = "shopCD" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-fix-2" style="width: 360px;">
+                                <div class="form-group">
+                                    @Html.Smat().TextBox("txtClientName").Name("clientName").Label("顧客").HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" }).MaxLength(30)
+                                </div>
+                            </div>
+
+                            <div class="col-fix-1">
+                                <div class="form-group">
+                                    @(Html.Smat().DropDownList("ddlStaff")
+                                    .Name("staffCD")
+                                    .Label(label =>
+                                    {
+                                        label.Text("担当者");
+                                    })
+                                    .DataTextField("StaffName")
+                                    .DataValueField("StaffCD")
+                                    .DataType("json")
+                                    //.Url("/Staff/GetStaffList")
+                                    .EmptyText("")
+                                    .HtmlAttributes(new { @class = " input-s-date", style = "width:160px;" })
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                    <div class="row row-tool">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @Html.Smat().Button("btnSearchClientList").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            @Html.Smat().Button("btnSearchCsvList").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                            @(Html.Smat().Button("btnSearchNewList")
+                                                 .Content("新規")
+                                                 .HtmlAttributes(new { @class = "btn-primary" })
+                                                 .Events(events =>
+                                                    {
+                                                        events.Click("openClientNewForm");
+                                                    })
+                            )
+                            @*@(Html.Smat().Button("btnRoteTantoChange")
+                                                                 .Content("担当者一括変更")
+                                                 .HtmlAttributes(new { @class = "btn-primary" })
+                                                 .Events(events =>
+                                                    {
+                                                        events.Click("openRoteTantoChangeForm");
+                                                    })
+                            )*@
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            @Html.Smat().Pager("clientListPager").DataHandler("clientListGrid")
+                        </div>
+                    </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("clientListGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("ShopCD").Title("店舗").Width("100px");
+                          columns.Bound("ClientCD").Title("顧客コード").Width("100px");
+                          columns.Bound("ClientName").Title("顧客");
+                          columns.Bound("CancelFlg").Title("解約").Width("60px")
+                            .TemplateBound("CancelFlgTemplateBound").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("Tel").Title("電話番号").Width("145px");
+                          columns.Bound("StaffName").Title("担当者").Width("140px");
+                          columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                            ).Actions(actions =>
+                             {
+                                 actions.Text(editStr).Click("openClientEditForm");
+                             });
+                      })
+                )
+            </div>
+        </div>
+        <script>
+    $(document).ready(function () {
+        if (Modernizr.ios || Modernizr.android) {
+            $("#btnSearchCsvList").hide();
+        };
+    });
+        </script>
+
+    </section>
+</section>
+
+@if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+{
+    <script>
+
+
+        jQuery(document).ready(function () {
+            var data = {
+                ShopCD: "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD)",
+                defaultStaff: true
+            };
+
+            afterReferShop(data);
+        });
+
+
+
+    </script>
+}
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnSearchNewList").hide();
+        }
+    });
+</script>*@

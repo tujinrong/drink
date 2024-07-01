@@ -1,0 +1,186 @@
+﻿@model WebEvaluation.Models.M_Staff
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-staff.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "社員登録";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br>
+<div class="jumbotron">
+    @using (Html.BeginForm("Edit", "Staff", FormMethod.Post, new { @onsubmit = "return checkForm()" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Hidden("page", ViewBag.page as string)
+        @Html.Hidden("name", ViewBag.name as string)
+        @Html.Hidden("_staffCd", ViewBag._staffCd as string)
+        @Html.Hidden("_UnitCD", ViewBag._UnitCD as string)
+        @Html.Hidden("kanaName", ViewBag.kanaName as string)
+        @Html.Hidden("UpdateTime", ViewBag.UpdateTime as string)
+        
+            @Html.HiddenFor(model => model.StaffCD)
+        <div class="row" style="padding-left:80px;padding-right:80px">
+            <font color="#aaaaaa">社員基本情報</font>
+            <table class=" table form-table" style="width:100%">
+                <tr>
+                    <td align="right" width="200px">@Html.LabelFor(model => model.StaffCD)</td>
+                    <td>
+                        <div class="col-lg-3" style="line-height:32px;">
+                            @ViewBag.StaffCDForDisplay
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.StaffName)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(model => model.StaffName, new { @class = "form-control isCheckChange", @maxlength = "20" })
+                            @Html.ValidationMessageFor(model => model.StaffName)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.StaffKana)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(model => model.StaffKana, new { @class = "form-control isCheckChange", @maxlength = "20" })
+                            @Html.ValidationMessageFor(model => model.StaffKana)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.Sex)</td>
+                    <td>
+                        <div class="col-lg-3" style="padding-top: 11px;">
+                            <label>@Html.RadioButtonFor(model => model.Sex, "1", new { @name = "Sex", @class = "isCheckChange" }) &nbsp;男</label>
+                            <label>@Html.RadioButtonFor(model => model.Sex, "2", new { @name = "Sex", @class = "isCheckChange" }) &nbsp;女</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.EnrollmentDate)</td>
+                    <td>
+                        <div class="col-lg-3" >
+                            @Html.DatePicker("EnrollmentDate", ViewBag.EnrollmentDate as string, new { @class = "isCheckChange" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.Duty)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(model => model.Duty, new { @class = "form-control isCheckChange", @maxlength = "30" })
+                            @Html.ValidationMessageFor(model => model.Duty)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.Yakusyoku)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(model => model.Yakusyoku, new { @class = "form-control isCheckChange", @maxlength = "30" })
+                            @Html.ValidationMessageFor(model => model.Yakusyoku)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">@Html.LabelFor(model => model.UnitCD)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.UnitDropDownList("UnitCD", model => model.UnitCD, new { @class = "form-control input-sm isCheckChange" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">E-Mail</td>
+                    <td>
+                        <div class="col-lg-3" style="width:600px;">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control isCheckChange", @maxlength = "200" })
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row" style="padding-left:80px;padding-right:80px">
+    <font color="#aaaaaa">ユーザ情報</font>
+            <table class="table form-table" style="background-color:white;width:100%">
+                <tr>
+                    <td width="200px" align="right">権限</td>
+                    <td>
+                        <div class="col-lg-3">
+                            @Html.CodeDropDownList("RoleCD", "RoleCD", ViewBag.RoleCD as string, new { @class = "isCheckChange", @style = "width: 100%;" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">パスワード</td>
+                    <td>
+                        <div class="col-lg-3">
+                            <input class="form-control isCheckChange" id="Passowrd" name="psw" maxlength="20" autocomplete="off" placeholder="" type="password" value="@ViewBag.psw" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">パスワード(再入力)</td>
+                    <td>
+                        <div class="col-lg-3">
+                            <input class="form-control isCheckChange" id="Passowrd_c" name="psw_c" maxlength="20" autocomplete="off" placeholder="" type="password" value="@ViewBag.psw_c" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <button class="btn btn-success btn-sm" type="submit" style="width:60px">更新</button>
+                    @Html.ButtonAction(false, "取消", "../Staff/MasterManager/" + null, new { page = ViewBag.page, UnitCD = ViewBag._UnitCD, staffCd = ViewBag._staffCd, name = ViewBag.name, kanaName = ViewBag.kanaName, isPostBack = "1" }, new { @class = "btn btn-primary btn-sm", @Style = "width:60px", @checkAction = "checkAction()" })
+                </div>
+            </div>
+        </div>
+    }
+    <script type="text/javascript">
+        function checkForm() {
+
+            if ($("#StaffName").val().trim().length == 0) {
+                SMAT.Service.toastr("氏名を入力してください！", "error");
+                $("#StaffName").focus();
+                return false;
+            }
+
+            if ($("#UnitCD").get(0).selectedIndex == 0) {
+                SMAT.Service.toastr("所属を選択してください！", "error");
+                $("#UnitCD").focus();
+                return false;
+            }
+
+            if ($("#RoleCD").val() != "") {
+                if ($("#Passowrd").val().trim().length == 0) {
+                    SMAT.Service.toastr("パスワードを入力してください！", "error");
+                    $("#Passowrd").focus();
+                    return false;
+                }
+                if ($("#Passowrd_c").val().trim().length == 0) {
+                    SMAT.Service.toastr("パスワード(再入力)を入力してください!", "error");
+                    $("#Passowrd_c").focus();
+                    return false;
+                }
+                if ($("#Passowrd").val().trim() != $("#Passowrd_c").val().trim()) {
+                    SMAT.Service.toastr("パスワードが一致していません。", "error");
+                    $("#Passowrd_c").focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkAction() {
+            if (CheckChanged()) {
+                return confirm("変更があっても破棄してよろしいでしょうか？");
+            } else {
+                return true;
+            }
+        }
+    </script>
+</div>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = ViewBag.FormName;
+    Layout = "~/Views/Shared/_SubForm.cshtml";
+}
+
+<div id="page_@(ViewBag.ProjID)_@(ViewBag.EntityName)_@ViewBag.FormName"></div>
+
+
+<script>
+
+
+    var projID = "@ViewBag.ProjID";
+    var formName = "@ViewBag.FormName";
+    var entityName = "@ViewBag.EntityName";
+
+    smat.dynamics.openPage({
+        projID: projID,
+        formName: formName,
+        entityName: entityName,
+        contextOn: $("#page_" + projID + "_" + entityName + "_" + formName)
+    })
+
+</script>
+

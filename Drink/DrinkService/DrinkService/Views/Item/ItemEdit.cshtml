@@ -1,0 +1,443 @@
+﻿@model  DrinkService.Models.M_Item
+@{
+    Layout = "~/Views/Shared/_SubFormLayout.cshtml";
+    ViewBag.Title = "商品管理";
+    ViewBag.ContentId = "btnEditClose";
+}
+<script>
+
+    var itemCD = "@Model.ItemCD";
+    var saveFlag = false;
+    function successFunc(result) {
+        itemCD = $("#txtEditItemCD").ui().value();
+        $("#txtEditItemCD").ui().enable(false);
+        $("#btnEditDel").show();
+        saveFlag = true;
+    }
+    function successFunc2() {
+        smat.service.closeForm({
+            contentId: "itemEditForm",
+            result: true
+        });
+    }
+    function successFunc3(result) {
+        if (result.ReturnValue == 0) {
+            smat.service.closeForm({
+                contentId: "itemEditForm",
+                result: true
+            });
+        }
+    }
+
+    function errorFunc(result)
+    {
+        if (result.ErrorKey == "key") {
+            smat.service.addErrorBorder($('#txtEditItemCD'));
+        } else if (result.ErrorKey == "ItemName") {
+            smat.service.addErrorBorder($('#txtEditItemName'));
+        } else if (result.ErrorKey == "ShortName") {
+            smat.service.addErrorBorder($('#txtShortName'));
+        }
+    }
+
+    function closeEditForm() {
+        smat.service.closeForm({
+            contentId: "itemEditForm",
+            result:saveFlag
+        });
+    }
+
+    function checkDel() {
+        return "商品[" + itemCD + "]を削除しますか？";
+    }
+
+    function getParam(params) {
+        params.newMode = itemCD == "" ? true : false;
+        debugger
+        if (Number($('#txtShopPrice').ui().value()) == 0) {
+            params["ShopPrice"] = "";
+        }
+        return params;
+    }
+
+    function checkItemEditForm() {
+        $(".s-fieldError").removeClass("s-fieldError");
+
+        if ($('#txtEditItemCD').ui().value() == "") {
+            smat.service.addErrorInfo("ItemCD", $('#txtEditItemCD'), "【商品コード】を入力してください。");
+        } else if ($('#txtEditItemCD').ui().value().length < 8) {
+            smat.service.addErrorInfo("ItemCD", $('#txtEditItemCD'), "【商品コード】8桁を入力してください。");
+        }
+
+        if ($('#txtEditItemName').ui().value() == "") {
+            smat.service.addErrorInfo("ItemName", $('#txtEditItemName'), "【商品名】を入力してください。");
+        }
+
+        if ($('#txtShortName').ui().value() == "") {
+            smat.service.addErrorInfo("ShortName", $('#txtShortName'), "【略称】を入力してください。");
+        }
+
+        if ($('#txtStandardPrice').ui().value() == null) {
+            smat.service.addErrorInfo("txtStandardPrice", $('#txtStandardPrice'), "【標準単価】を入力してください。");
+        }
+
+        if ($('#txtInNum').ui().value() == null) {
+            smat.service.addErrorInfo("InNum", $('#txtInNum'), "【入数】を入力してください。");
+        }
+
+        if ($('#dpSaleStartDay').ui().value() == null) {
+            smat.service.addErrorInfo("SaleStartDay", $('#dpSaleStartDay'), "【適用開始日】を入力してください。");
+        }
+
+        if (Number($('#txtStandardPrice').ui().value()) < 0) {
+            smat.service.addErrorInfo("StandardPriceValue", $('#txtStandardPrice'), "【標準単価】-1より大きい値を入力してください。");
+        }
+        if (Number($('#txtShopPrice').ui().value()) < 0) {
+            smat.service.addErrorInfo("ShopPriceValue", $('#txtShopPrice'), "【店舗単価】-1より大きい値を入力してください。");
+        }
+        if ($('#txtInNum').ui().value() == "0") {
+            smat.service.addErrorInfo("InNumValue", $('#txtInNum'), "【入数】0より大きい値を入力してください。");
+        }
+
+        if ($("#dpSaleStartDay").ui().value() != null && $("#dpSaleEndDay").ui().value() != null && $("#dpSaleStartDay").ui().value() >= $("#dpSaleEndDay").ui().value()) {
+            smat.service.addErrorInfo("SaleEndDay", $('#dpSaleEndDay'), "販売終了日は適用開始日よりも大きいを入力してください。");
+        }
+        if ($("#dpSaleEndDay").ui().value() != null && $("#dpFreezingDay").ui().value() != null && $("#dpSaleEndDay").ui().value() >= $("#dpFreezingDay").ui().value()) {
+            smat.service.addErrorInfo("FreezingDay", $('#dpFreezingDay'), "凍結日は販売終了日よりも大きいを入力してください。");
+        }
+        if ($("#dpSaleStartDay").ui().value() != null && $("#dpFreezingDay").ui().value() != null && $("#dpSaleStartDay").ui().value() >= $("#dpFreezingDay").ui().value()) {
+            smat.service.addErrorInfo("FreezingDay", $('#dpFreezingDay'), "凍結日は適用開始日よりも大きいを入力してください。");
+        }
+
+
+        if (!$('#ddlMakerCD').ui().value()) {
+            smat.service.addErrorInfo("MakerCD", $('#ddlMakerCD'), "【メーカー】を入力してください。");
+        }
+        if (!$('#ddlTaxTypeCD').ui().value()) {
+            smat.service.addErrorInfo("TaxTypeCD", $('#ddlTaxTypeCD'), "【軽減税率区分】を入力してください。");
+        }
+    }
+</script>
+@{
+    bool editFlag = Model.ItemCD == null ? true : false;
+}
+
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        @using (Html.Smat().BeginForm("itemEditForm", new { @class = "panel-body", style = "padding-top:0;" }
+            ).Actions(actions =>
+            {
+                actions.Action("/Item/Save").ActionBtn("btnEditTempSave").CheckForm("checkItemEditForm").GetParam("getParam").Success("successFunc").Error("errorFunc");
+                actions.Action("/Item/Save").ActionBtn("btnEditSave").CheckForm("checkItemEditForm").GetParam("getParam").Success("successFunc2").Error("errorFunc");
+                actions.Action("/Item/Del").ActionBtn("btnEditDel").ConfirmFunc("checkDel").Success("successFunc3");
+            }
+            ))
+        {
+            <div class="row">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("btnEditTempSave").Content("一時保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @Html.Smat().Button("btnEditSave").Content("保存").HtmlAttributes(new { @class = "btn-warning" })
+                    @(Html.Smat().Button("btnEditClose")
+                            .Content("閉じる")
+                            .HtmlAttributes(new { @class = "btn-primary" })
+                            .Events(events =>
+                            {
+                                events.Click("closeEditForm");
+                            })
+                        )
+                    @Html.Smat().Button("btnEditDel").Content("削除").HtmlAttributes(new { @class = "btn-danger" }).Visible(!editFlag)
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+
+            <div class="panel-body" style="padding:5px"></div>
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtEditItemCD").Name("ItemCD").Label(label =>{
+                                                    label.Text("<span style='color:red;'>*</span>商品コード");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.ItemCD).MaxLength(8).HtmlAttributes(new { @class = "form-control input-s onlyNum", style = "width:200px" }).Enable(editFlag)
+                            <script type="text/javascript">
+                                $("#txtEditItemCD").css('text-align', 'left');
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-3">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtEditItemName").Name("ItemName").Label(label =>{
+                                                    label.Text("<span style='color:red;'>*</span>商品名");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.ItemName).MaxLength(40).HtmlAttributes(new { @class = "form-control input-s-hg", style = "width:600px" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-3">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtShortName").Name("ShortName").Label(label =>{
+                                                    label.Text("<span style='color:red;'>*</span>略称");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.ShortName).MaxLength(20).HtmlAttributes(new { @class = "form-control input-s-bg" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtStandardPrice").Name("StandardPrice").Label(label =>{
+                                                    label.Text("<span style='color:red;'>*</span>標準単価");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.StandardPrice).DataType("onlyNum").Select(false).MaxLength(4).HtmlAttributes(new { style = "width:200px" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtShopPrice").Name("ShopPrice").Label(label =>{
+                                                    label.Text("店舗単価");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.ShopPrice).DataType("onlyNum").Select(false).MaxLength(4).HtmlAttributes(new { style = "width:200px" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @Html.Smat().TextBox("txtInNum").Name("InNum").Label(label =>{
+                                                    label.Text("<span style='color:red;'>*</span>入数");
+                                                        label.Attrs(new { @class = "input-s" });
+                                                }).Value(Model.InNum).DataType("onlyNum").Select(false).MaxLength(4).HtmlAttributes(new { style = "width:200px" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DatePicker("dpSaleStartDay")
+                                .Name("SaleStartDay")
+                                .Label(
+                                    label =>
+                                    {
+                                        label.Text("<span style='color:red;'>*</span>適用開始日");
+                                        label.Attrs(new { @class = "input-s" });
+                                    }
+                                )
+                                .Value(Model.SaleStartDay)
+                                .HtmlAttributes(new { @class = " input-s", style = "margin-left: 0px;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DatePicker("dpSaleEndDay")
+                                .Name("SaleEndDay")
+                                .Label(
+                                    label =>
+                                    {
+                                        label.Text("販売終了日");
+                                        label.Attrs(new { @class = "input-s" });
+                                    }
+                                    )
+                                .Value(Model.SaleEndDay)
+                                .HtmlAttributes(new { @class = " input-s", style = "margin-left: 0px;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DatePicker("dpFreezingDay")
+                                .Name("FreezingDay")
+                                .Label(
+                                    label =>
+                                    {
+                                        label.Text("凍結日");
+                                        label.Attrs(new { @class = "input-s" });
+                                    }
+                                    )
+                                .Value(Model.FreezingDay)
+                                .HtmlAttributes(new { @class = " input-s", style = "margin-left: 0px;" })
+                            )
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row div-2">
+                    <div class="col-fix-3">
+                        <div class="form-group">
+                            <input id="ddlQualifieds" name="QualifiedCD" class="input-s-bg" />
+                        </div>
+                    </div>
+                </div>
+
+                <!--
+                <div class="row div-2">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().Refer("MakerCD")
+                            .Name("MakerCD")
+                            .Label(
+                                    label =>
+                                    {
+                                        label.Text("<span style='color:red;'>*</span>メーカー");
+                                        label.Attrs(new { @class = "input-s" });
+                                    }
+                            )
+                            .Value(Model.MakerCD)
+                            .ReferKey("メーカー情報参照画面"))
+                        </div>
+                    </div>
+                </div>
+                    -->
+                <div class="row div-2">
+                    <div class="col-fix-3">
+                        <div class="form-group">
+                            <input id="ddlMakerCD" name="MakerCD" class="input-s-bg" style="" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DropDownList("ddlItemTypeCD")
+                                        .Name("ItemTypeCD")
+                                        .Label(
+                                                label =>
+                                                {
+                                                    label.Text("種別");
+                                                    label.Attrs(new { @class = "input-s" });
+                                                }
+                                              )
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .CodeKind("ItemTypeCD")
+                                        .Value(Model.ItemTypeCD)
+                                        .HtmlAttributes(new { style = "" })
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-fix-2">
+                        <div class="form-group">
+                            @(Html.Smat().DropDownList("ddlTaxTypeCD")
+                                        .Name("TaxTypeCD")
+                                        .Label(
+                                                label =>
+                                                {
+                                                    label.Text("<span style='color:red;'>*</span>軽減税率区分");
+                                                    label.Attrs(new { @class = "input-s" });
+                                                }
+                                              )
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .CodeKind("TaxTypeCD")
+                                        .Value(Model.TaxTypeCD)
+                                        .HtmlAttributes(new { style = "" })
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+</section>
+
+@if(editFlag)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#txtStandardPrice').ui().value("");
+            $('#txtShopPrice').ui().value("");
+            $('#txtInNum').ui().value("");
+        });
+    </script>   
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ('@Model.StandardPrice' == 0) {
+                //$('#txtStandardPrice').ui().value("");
+            }
+        });
+    </script> 
+}
+
+<script type="text/javascript">
+
+    var ds = [];
+
+    var QualifiedsMstListStr = "@ViewBag.QualifiedsMstList";
+
+    var QualifiedsMstList = QualifiedsMstListStr.split(",");
+
+    ds.push({ Text: "", Value: "" });
+    if (QualifiedsMstListStr) {
+        for (var i in QualifiedsMstList) {
+            ds.push({ Text: QualifiedsMstList[i].split("|")[1], Value: QualifiedsMstList[i].split("|")[0] })
+        }
+    }
+
+    $("#ddlQualifieds").smatDropDownList({
+        label: {
+            text: "研修資格",
+            attrs: {
+                class: "input-s"
+            }
+        },
+        dataTextField: "Text",
+        dataValueField: "Value",
+        dataSource: ds
+    });
+
+    $("#ddlQualifieds").ui().value("@Model.QualifiedCD");
+
+    var ds2 = [];
+
+    var MakerMstListStr = "@ViewBag.MakerMstList";
+
+    var MakerMstList = MakerMstListStr.split(",");
+
+    ds2.push({ Text: "", Value: "" });
+    if (MakerMstListStr) {
+        for (var i in MakerMstList) {
+            ds2.push({ Text: MakerMstList[i].split("|")[1], Value: MakerMstList[i].split("|")[0] })
+        }
+    }
+
+    $("#ddlMakerCD").smatDropDownList({
+        label: {
+            text: "<span style='color:red;'>*</span>メーカー",
+            attrs: {
+                class: "input-s"
+            }
+        },
+        dataTextField: "Text",
+        dataValueField: "Value",
+        dataSource: ds2
+    });
+
+    $("#ddlMakerCD").ui().value("@Model.MakerCD");
+
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+        //smat.service.lockUIField('itemEditForm');
+        $("#btnEditTempSave").ui().visible(false);
+        $("#btnEditSave").ui().visible(false);
+        $("#btnEditDel").ui().visible(false);
+        }
+
+        $(".s-numeric-wrap").css('padding-right', '8px').css('background-color', '#FFFFFF');
+    });
+</script> 

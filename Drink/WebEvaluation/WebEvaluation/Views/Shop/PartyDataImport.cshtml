@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.IMG = "../../Content/images/ic-party.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "パーティ情報インポート";
+}
+<body>
+
+    <div class="jumbotron">
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-lg-12 text-right">
+                <a id="csv_btn" href="#">CSVダウンロード</a>
+                &nbsp;<img src="/Content/images/ic-teleline.png"> &nbsp;
+                <a href="../../Party/PartyIndex?isPostBack=1">テレフォンレポート一覧</a>
+                &nbsp;<img src="/Content/images/ic-teleline.png"> &nbsp;
+                <a href="/Help/挙式インポート操作マニュアル.docx">操作マニュアル</a>
+                &nbsp;<img src="/Content/images/ic-teleline.png"> &nbsp;
+                <a href="/Help/挙式データ変換ツール.xlsx">変換ツール</a>           
+            </div>
+        </div>
+
+        <div class="row">
+            @using (Html.BeginForm("PartyDataImport", "Shop", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", @onsubmit = "return checkForm()" }))
+            {
+                <div class="party-import-box">
+                    <fieldset>
+
+                        <div class="form-group" style="margin-top: 10px;border-bottom: 1px solid #ccc;padding-bottom: 30px;margin-left: 0px;width: 100%;">
+                            <label class="col-lg-4 control-label">パーティ(年月指定)</label>
+                            <div class="col-lg-3">
+                                @Html.MonthsPicker("PartyMonths", ViewBag.PartyDateFrom as string)
+
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 40px; margin-left: 0px; width: 100%; ">
+                            <label class="col-lg-4 control-label">ファイル名</label>
+                            <div class="col-lg-7">
+                                <div class="input-group shop">
+                                    <input type="text" class="form-control" id="partyDataFileLabel" style="" onfocus=this.blur() />
+                                    <input type="file" name="datafile" id="partyDataFile" title="パーティ情報インポート" style="width: 37px;height: 32px;margin: 0;padding: 0;opacity: 0;top: 0;left: 390px;position: absolute;cursor: pointer;z-index:10000000;" />
+
+                                    <span  class="input-group-addon input-sm">
+                                        <i id="btn_partyImport" class="glyphicon glyphicon-file" style="cursor: pointer;"></i>
+                                    </span>
+                                </div>                                
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group" style="margin-top: -30px; margin-left: 0px; width: 100%;">
+                            <label class="col-lg-4 control-label"></label>                           
+                            <div class="col-lg-7">
+                                <label>
+                                    <input id="UpdateType" name="UpdateType" value="all" checked="" type="radio">&nbsp;全月分更新&nbsp;&nbsp;
+                                </label>
+                                <label>
+                                    <input id="UpdateType" name="UpdateType" value="modify" checked="" type="radio">&nbsp;追加分のみ更新
+                                </label>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="form-group" style="width:100%; text-align:center;">
+                    <button type="submit" id="sub_partyImport" class="btn btn-success">実行</button>
+                </div>
+    
+            }
+            
+        </div>
+    </div>
+    
+</body>
+
+<script type="text/javascript">
+
+    function checkForm() {
+
+        if ($("#partyDataFile").val() == "") {
+            SMAT.Service.toastr("CSVファイルを選択してください！", "error");
+            return false;
+        }
+        else {
+            var fileName = $("#partyDataFile").val().split(".");
+            if (fileName[fileName.length - 1].toLocaleUpperCase() != "CSV") {
+                SMAT.Service.toastr("CSVファイルを選択してください！", "error");
+                return false;
+            }
+
+        }
+        $('<div id="toast-container" class="toast-top-center" aria-live="polite" role="alert"><div class="toast toast-info" style="opacity: 1;"><button class="toast-close-button" role="button"></button><div class="toast-message">処理中。。。しばらくお待ち下さい。</div></div></div>').appendTo($('body'));
+        return true;
+    }
+
+    function getParam() {
+        var p = {
+            PartyMonth: $("[name='PartyMonths']").val()
+        }
+
+        return p;
+    }
+
+    $("#csv_btn").bind('click', function (e) {
+
+        if ($("[name='PartyMonths']").val().trim().length == 0)
+        {
+            SMAT.Service.toastr("パーティ（年月指定）を入力してください！", "error");
+            $("[name='PartyMonths']").focus();
+            return;
+        }
+
+        var p = getParam();
+
+        SMAT.Service.getServerFile({
+            url: "@Url.Action("detailCsv", "Party")",
+            params: p
+        });
+    });
+
+    $("#btn_partyImport").bind("click", function (e) {
+        debugger;
+        $("#partyDataFile").click();
+    });
+
+    $("#partyDataFile").bind("change", function (e) {
+        var fileName = $(this).val().split("\\");
+        $("#partyDataFileLabel").val(fileName[fileName.length - 1]);
+        $("#sub_partyImport").show();
+    });
+</script>

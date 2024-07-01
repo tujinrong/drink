@@ -1,0 +1,215 @@
+﻿@{
+    Layout = "";   
+}
+<!DOCTYPE html>
+<html lang="jp" class="app" style="background-color: #fff;">
+<head>
+    <title>ログイン</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="format-detection" content="telephone = no" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    <link href="~/Content/templatemo_style.css" rel="stylesheet" type="text/css">
+
+    <script src="~/SMAT.UI/Scripts/jquery.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/asmat.all.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.core.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.service.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Button.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DatePicker.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DateTimePicker.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DropDownList.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Form.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Grid.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.NumericTextBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Refer.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.RadioButton.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Pager.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TextBox.js"></script>
+    <script type="text/javascript">
+        smat.global.n_errorTemplate = '<div class="wrong-pass"><i class="icon-info"></i><h3>#= title #</h3><p>#= message #</p><i class="fa fa-times notice-close"></i></div>';
+
+        $(document).ready(function () {
+
+            var msg = "@ViewBag.msg";
+            var msgType = "@ViewBag.msgType";
+            if (msg.length > 0) {
+                if (msgType.length > 0) {
+                    smat.service.notice({ msg: msg, type: msgType });
+                } else {
+                    smat.service.notice({ msg: msg });
+                }
+            }
+
+            var shopCD = getCookieShopCD();
+            $("#txtShopCode").val(shopCD);
+
+            $("#txtUserName").blur(function () {
+                var padLen = 5 - $("#txtUserName").val().trim().length;
+                if (padLen > 0 && padLen < 5)
+                {
+                    var padStr = "";
+                    for (var i = 0; i < padLen; i++) {
+                        padStr += "0";
+                    }
+                    $("#txtUserName").val(padStr + $("#txtUserName").val());
+                }
+            })
+
+            //if (Modernizr.ios || Modernizr.android) {
+            //    $("#txt_tel").css("color", "#428bca");
+            //};
+        });
+
+
+        function checkLoginForm() {
+            smat.service.openLoding();
+            $(".s-fieldError").removeClass("s-fieldError");
+
+            if ($('#txtShopCode').ui().value() == "") {
+                smat.service.addErrorInfo("shopName", $('#txtShopCode'), "【店舗コード】を入力してください！");
+            }
+
+            if ($('#txtUserName').ui().value() == "") {
+                smat.service.addErrorInfo("userName", $('#txtUserName'), "【ユーザー名】を入力してください！");
+            }
+
+            if ($('#txtPassWord').ui().value() == "") {
+                smat.service.addErrorInfo("passWord", $('#txtPassWord'), "【パスワード】を入力してください!");
+            }
+
+            setCookieShopCD($("#txtShopCode").val().trim());
+            return smat.service.isNoError();
+        }
+
+        function loginResult(result) {
+            if (result.loginResult == "1") {
+                setCookieShopCD($("#txtShopCode").val().trim());
+                window.location.href = "Home";
+            } else {
+                alert("ログイン名またはパスワードが正しくありません!")
+            }
+        }
+
+        function getCookieShopCD() {
+            return smat.service.cookie("shopCDLogin");
+        }
+
+        function setCookieShopCD(shopCD) {
+            smat.service.cookie("shopCDLogin", shopCD);
+            smat.service.cookie("shopCD", "");
+            
+        }
+    </script>
+
+</head>
+
+<body class="templatemo-bg-gray"  style="background-color: #fff;">
+    <div class="container" login-flag="asmat-plase-go-to-login-form">
+        <div class="col-md-12">
+            <h1 class="margin-bottom-15"><img src="~/Content/logo2.jpg" width="600" /></h1>
+            <form action="~/Main/Login" id="loginFrom" method="post" onsubmit="return checkLoginForm();">
+                <div class="form-horizontal templatemo-container templatemo-login-form-1 margin-bottom-30" style="background-color: #eee;border-color: #ccc;">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="control-wrapper">
+                                @(Html.Smat().TextBox("txtShopCode")
+                                        .Name("shopCD")
+                                        .Label(label =>
+                                        {
+                                            label.Text("店舗コード");
+                                            label.Attrs(new { @class = "control-label fa-label", style = "width:90px;text-align:right;" });
+                                        })
+                                                .HtmlAttributes(new { @class = "form-control" }).MaxLength(7)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="control-wrapper">
+                                @(Html.Smat().TextBox("txtUserName")
+                                .Name("userName")
+                                .Label(label =>
+                                {
+                                    label.Text("ユーザID");
+                                    label.Attrs(new { @class = "control-label fa-label", style = "width:90px;text-align:right;" });
+                                })
+                                        .HtmlAttributes(new { @class = "form-control" }).MaxLength(5)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="control-wrapper">
+                                @(Html.Smat().TextBox("txtPassWord")
+                                .Name("passWord")
+                                .Label(label =>
+                                {
+                                    label.Text("パスワード");
+                                    label.Attrs(new { @class = "control-label fa-label", style = "width:90px;text-align:right;" });
+                                })
+                                .HtmlAttributes(new { @class = "form-control", type = "password" })
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-md-12 text-center">
+                            @Html.Smat().Button("btnLogin").Content("ログイン").HtmlAttributes(new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="text-center">
+                <small>@*配置ドリンク  &copy; 2015*@  Ver <label style="color:red;">@ViewBag.ver 
+                @if (ViewBag.isTestVersion as string == "test")
+                {
+                     <span style="color:red;font-weight:bold;">テスト環境</span>
+
+                }else if (ViewBag.isTestVersion as string == "kensyu")
+                {
+                     <span style="color:red;font-weight:bold;">研修環境</span>
+
+                }
+                </label></small>
+
+            </div>
+
+            <div class="text-center" style="margin-top: 10px;">
+                <span style="font-size: 16px;color: #000;">＜システム・操作に関する問い合せ先＞</span>
+            </div>
+
+            <div class="text-center" style="margin-top: 3px;">
+                <span style="font-size: 16px;color: #000;">営業支援サポートセンター</span>
+            </div>
+
+            <div class="text-center" style="margin-top: 3px;">
+                <span id="txt_tel" style="font-size: 16px;color: #000;">０１２０－０１０－２３２</span>
+            </div>
+
+            <div class="text-center" style="margin-top: 3px;">
+                <span style="font-size: 16px;color: #000;">平日　８：３０～２１：００</span>
+            </div>
+            @*<div class="text-left" style="border: 1px solid #999;border-radius: 5px;width: 506px;margin-left: 50%;left: -253px;padding: 10px;position: absolute;">
+
+                <small>
+                    <label style="color: rgb(5, 75, 137);">
+                    　　　　    画面が崩れた場合、下記の方法で画面をリフレッシュしてください。
+                        <br />
+                    　　　　　　    &nbsp;&nbsp;&nbsp;&nbsp;IE：F5を押します。<br />　　　　　　IPad：画面上の回転マークを押します。
+                    </label>
+                </small>
+            </div>*@
+        </div>
+    </div>
+
+</body>
+</html>

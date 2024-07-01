@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    @*@Styles.Render("~/SMAT.UI/Styles/css")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/script")*@
+
+    <!-- Bootstrap Style-->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <!-- UI Style-->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.mobile.all.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.dataviz.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.dataviz.material.min.css" type="text/css">
+    <!-- App Style-->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <!-- jquery -->
+    <script src="~/SMAT.UI/Scripts/jquery.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/js/jquery.linq.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="~/SMAT.UI/Scripts/js/asmat.app.js"></script>
+    <script src="~/SMAT.UI/Scripts/js/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/js/asmat.app.plugin.js"></script>
+    <!-- UI -->
+    <script src="~/SMAT.UI/Scripts/asmat.all.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.core.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.service.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.Service.Data.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Button.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.ButtonGroup.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DatePicker.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DateTimePicker.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DropDownList.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Form.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Grid.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.NumericTextBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Refer.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.RadioButton.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Pager.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TextBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Chart.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.ComboBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.RadioBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.CheckBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TabStrip.js"></script>
+    <script src="~/SMAT.UI/Scripts/cultures/smat.culture.ja.min.js"></script>
+    <script src="~/Scripts/smat.config.js"></script>
+    <!-- Dynamics -->
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Filed.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Control.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Filter.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.View.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.UserControl.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleSearch.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleGraph.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleMasterList.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleMasterEdit.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleYList.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleYEdit.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleStatistics.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleCrossStatistic.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.UserControl.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SystemMaster.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.formList.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.designer.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.userControlDesigner.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.DropDownList.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.SubOptions.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Filter.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Sortable.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.View.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.ChartData.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Row.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Logic.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.GridData.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Template.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.CultureText.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.logic.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.logic.LogicItem.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.template.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Page.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Section.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Form.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Field.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.ToolBar.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Button.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Grid.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Line.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Pager.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Chart.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.PageUserControl.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.UserControl.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.RadioBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.CheckBox.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Div.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.TabStrip.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.TabPage.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Stage.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Node.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Connection.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Config.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Entity.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Database.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Menu.js"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Role.js"></script>
+    <!--codemirror-->
+    <link rel="stylesheet" href="~/SMAT.UI/CodeMirror/lib/codemirror.css">
+    <script src="~/SMAT.UI/CodeMirror/lib/codemirror.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/mode/javascript/javascript.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/addon/selection/active-line.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/addon/edit/matchbrackets.js"></script>
+
+    <!-- menu -->
+    <script src="~/Scripts/menu.config.js"></script>
+    <script src="~/Scripts/menu.action.js"></script>
+
+    <!-- highlight -->
+    <link href="~/Scripts/highlight/styles/solarized_dark.css" rel="stylesheet">
+    <script src="~/Scripts/highlight/highlight.pack.js"></script>
+
+    <link href="~/Content/Site.css" rel="stylesheet">
+
+    <script src="~/Scripts/smat.demo.js"></script>
+</head>
+<body id="main_form_content" class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <div class="navbar-header aside bg-info nav-xs">
+                <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen,open" data-target="#nav,html">
+                    <i class="icon-list"></i>
+                </a>
+                <a href="/" class="navbar-brand text-lt">
+                    <i class="fa fa-html5"></i>
+                    <span class="hidden-nav-xs m-l-sm">SMAT</span>
+                </a>
+                <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".user">
+                    <i class="icon-settings"></i>
+                </a>
+            </div>
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="#nav,.navbar-header" id="aside_btn" data-toggle="class:nav-xs,nav-xs" class="text-muted">
+                        <i class="fa fa-indent text"></i>
+                        <i class="fa fa-dedent text-active"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-bg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span id="title-text" class="nav-title">@ViewBag.Title</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user"></ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <!-- .aside -->
+                <aside class="bg-black dk  aside hidden-print nav-xs" id="nav">
+                    <section class="vbox">
+                        <section class="w-f-md scrollable">
+                            <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railopacity="0.2">
+
+
+
+                                <!-- nav -->
+                                <nav id="nav-menu" class="nav-primary hidden-xs">
+
+
+                                </nav>
+                                <!-- / nav -->
+                            </div>
+                        </section>
+
+                        <footer class="footer hidden-xs no-padder text-center-nav-xs"></footer>
+                    </section>
+                </aside>
+                <!-- /.aside -->
+                <section id="content">
+
+                    <section id="RenderBody" class="vbox">
+                        <section class="scrollable wrapper">
+                            @RenderBody()
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "プロジェクト管理";
+}
+
+<div id="projectManager_@(ViewBag.ProjID)"></div>
+
+
+<script>
+    var projID = "@ViewBag.ProjID";
+
+    $("#projectManager_" + projID).smatDynamicsProjectManager({
+        projID: projID
+    });
+
+</script>

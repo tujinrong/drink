@@ -1,0 +1,346 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "補充集金リスト作成";
+}
+<script>
+
+    var afterReferShop = function (data) {
+        if (data != undefined) {
+            smat.service.loadJosnData({
+                url: "/Staff/GetStaffList",
+                async:false,
+                params: { "ShopCD": data["ShopCD"] },
+                success: function (result) {
+                    var emptyItem = {};
+                    emptyItem.staffCD = "";
+                    emptyItem.StaffName = "";
+
+                    result.unshift(emptyItem);
+                    $("#ddlStaff").ui().setDataSource(result);
+                }
+            });
+
+            smat.service.loadJosnData({
+                url: "/DeliveryRoute/GetRouteList",
+                params: { "ShopCD": data["ShopCD"], date: asmat.toString($("#pickHoDate").ui().value(), "yyyy/MM/dd") },
+                async: false,
+                success: function (result) {
+                    $("#ddlRoute").ui().setDataSource(result);
+                    getRouteByDay();
+                }
+            });
+        } else {
+            $("#ddlStaff").ui().setDataSource([]);
+
+            smat.service.loadJosnData({
+                url: "/DeliveryRoute/GetRouteList",
+                params: {  date: asmat.toString($("#pickHoDate").ui().value(), "yyyy/MM/dd") },
+                async: false,
+                params: {},
+                success: function (result) {
+
+                    $("#ddlRoute").ui().setDataSource(result);
+                }
+            });
+        }
+        
+    }
+
+    function getRouteByDay() {
+        if ($('#pickHoDate').ui().value() != null) {
+            smat.service.loadJosnData({
+                url: "/DeliveryRoute/GetRouteByDay",
+                async: false,
+                params: {
+                    "ShopCD": $('#referShopCD').ui().value(),
+                    "DayStr": asmat.toString($("#pickHoDate").ui().value(), "yyyyMMdd")
+                },
+                success: function (result) {
+
+                    $("#ddlRoute").ui().value(result);
+                }
+            });
+        }
+       
+    }
+
+    function getRouteListByDay() {
+        smat.service.loadJosnData({
+            url: "/DeliveryRoute/GetRouteList",
+            params: { "ShopCD": $('#referShopCD').ui().value() == "" ? undefined : $('#referShopCD').ui().value(), date: asmat.toString($("#pickHoDate").ui().value(), "yyyy/MM/dd") },
+            async: false,
+            success: function (result) {
+                $("#ddlRoute").ui().setDataSource(result);
+                getRouteByDay();
+            }
+        });
+
+    }
+
+    function openDeliveryRouteListDoCreateForm(dataItem) {
+        smat.global.errorInfos = {};
+        checkDeliveryRoute();
+
+        if ($('#ddlRoute').ui().value() == "") {
+            smat.service.addErrorInfo("ddlRoute", $('#ddlRoute'), "【ルート】を選択ください");
+        }
+
+        if (smat.service.isNoError() == false) {
+            return;
+        }
+
+        smat.service.openForm({
+            url: "/DeliveryRoute/DeliveryRouteListDoCreate",
+            fillTarget: "body_id",
+            params: {
+                shopCD: $("#referShopCD").ui().value(),
+                staffCD: $("#ddlStaff").ui().value(),
+                route: $("#ddlRoute").ui().value(),
+                hoDate: asmat.toString($("#pickHoDate").ui().value(), "yyyyMMdd")
+            },
+            afterClose: function (result) {
+                if (result != undefined) {
+                    if ($("#deliveryRouteListPager").ui().dataSource != undefined && $("#deliveryRouteListPager").ui().dataSource.pageData.length > 0) {
+                        $("#deliveryRouteListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+
+        //smat.service.loadJosnData({
+        //    url: "/DeliveryRoute/CheckPasedPlanDone",
+        //    params: {
+        //        shopCD: $("#referShopCD").ui().value(),
+        //        staffCD: $("#ddlStaff").ui().value(),
+        //        route: $("#ddlRoute").ui().value(),
+        //        hoDate: asmat.toString($("#pickHoDate").ui().value(), "yyyyMMdd")
+        //    },
+        //    success: function (result) {
+        //        $("#referShopCD").ui().cookie($("#referShopCD").ui().value());
+        //        $(".s-fieldError").removeClass("s-fieldError");
+        //        if (result == true) {
+        //            smat.service.openForm({
+        //                url: "/DeliveryRoute/DeliveryRouteListDoCreate",
+        //                fillTarget: "body_id",
+        //                params: {
+        //                    shopCD: $("#referShopCD").ui().value(),
+        //                    staffCD: $("#ddlStaff").ui().value(),
+        //                    route: $("#ddlRoute").ui().value(),
+        //                    hoDate: asmat.toString($("#pickHoDate").ui().value(), "yyyyMMdd")
+        //                },
+        //                afterClose: function (result) {
+        //                    if (result != undefined) {
+        //                        debugger;
+        //                         //$("#deliveryRouteListPager").ui().reload();
+        //                         $("#btnSearch").click();
+        //                    }
+        //                }
+        //            });
+        //        } else if (result.type=="1") {
+        //            smat.service.notice({ msg: result.msg + "に未完了実績が存在するので、指定日の補充集金リストを作成できません。", type: "error" });
+        //            smat.service.addErrorBorder($("#pickHoDate"));
+        //            $("#pickHoDate").ui().focus();
+        //        } else if (result.type == "2") {
+        //            smat.service.notice({ msg: result.msg + "のデータが存在するので、<br />" + result.msg + "の前にデータを登録できません", type: "error" });
+        //            smat.service.addErrorBorder($("#pickHoDate"));
+        //            $("#pickHoDate").ui().focus();
+        //        }
+
+        //    }
+        //});
+
+        
+    }
+
+    function checkDeliveryRoute() {
+
+        $(".s-fieldError").removeClass("s-fieldError");
+        
+        if ($('#referShopCD').ui().value() == "") {
+            smat.service.addErrorInfo("referShopCD", $('#referShopCD'), "【店舗】を入力してください");
+        }
+
+        if ($('#pickHoDate').ui().value() == null) {
+            smat.service.addErrorInfo("pickHoDate", $('#pickHoDate'), "【日付】を入力ください");
+        }
+    }
+
+    var templateClientName = function (dataItem) {
+        return "[" + dataItem.ClientCD + "] " + dataItem["お客様"];
+
+    }
+
+    function templateFirstFlag(dataItem) {
+        //今ｽﾄ 後日
+        if (dataItem["LastAfterStopFlag"] == "2") {
+            return '<span style="">後日</span>'
+        }
+
+        return smat.service.optionSet({ codeKind: "@DrinkService.Models.ModelBase.CN初回", cd: dataItem["初回"] })
+
+    }
+</script>
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+            <div class="form-horizontal">
+                @using (Html.Smat().BeginForm("deliveryRouteListCreateForm", new { @class = "form-horizontal"}).Actions(actions =>
+                    {
+                        actions.Action("/DeliveryRoute/DeliveryRouteListCreateSearch").ActionBtn("btnSearch").ResultHandler("deliveryRouteListPager").CheckForm("checkDeliveryRoute");
+                        actions.Action("/Report/DeliveryRouteEmpty").ActionBtn("btnPrintPdf1").CheckForm("checkDeliveryRoute").Success("downloadPDF").Async(false);
+                        actions.Action("/Report/DeliveryRouteStorage").ActionBtn("btnPrintPdf2").CheckForm("checkDeliveryRoute").Success("downloadPDF").Async(false);
+                    }
+                ))
+                {
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                {
+                                    @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                                    @Html.Smat().TextBox("referShopCD").Name("shopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                                }
+                                else
+                                {
+                                    @Html.Smat().Refer("referShopCD").Name("shopCD").Label("店舗").ReferKey("referShop").AfterSetValue("afterReferShop").HtmlAttributes(new { cookie = "shopCD" })
+                                }
+                            </div>
+                        </div>
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_店舗担当者)
+                                {
+                                    @Html.Smat().TextBox("ddlStaff_Name").Label("担当者").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).StaffName).Enable(false).HtmlAttributes(new { @class = "form-control input-s-date" })
+                                    @Html.Smat().TextBox("ddlStaff").Name("staffCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).StaffCD).Enable(false).HtmlAttributes(new { style = "display:none;" })
+                                }
+                                else
+                                {
+                                    @(Html.Smat().DropDownList("ddlStaff")
+                                        .Name("staffCD")
+                                        .Label("担当者")
+                                        .DataTextField("StaffName")
+                                        .DataValueField("StaffCD")
+                                            .HtmlAttributes(new { @class = " input-s-date", style = "margin-left: 0px; width:160px;" })
+                                    )
+                                }
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                               @(Html.Smat().DatePicker("pickHoDate")
+                                  .Name("hoDate")
+                                  .Label("日付")
+                                  .Value(DateTime.Now)
+                                  
+                                   .HtmlAttributes(new { @class = " input-s-date", style = "margin-left: 0px;" })
+                            )
+                            </div>
+                        </div>
+                        <div class="col-fix-1">
+                            <div class="form-group">
+                                @(Html.Smat().DropDownList("ddlRoute")
+                                        .Name("route")
+                                        .Label("ルート")
+                                        .DataTextField("RouteCD")
+                                        .DataValueField("RouteCD")
+                                        .BindTo(ViewData["routeList"] as List<object>)
+                                        .HtmlAttributes(new { @class = " input-s", style = "width:110px; margin-left: 0px;" })
+                                )
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row row-tool">
+                <div class="col-sm-8 text-left text-center-xs">
+                    @Html.Smat().Button("btnSearch").Content("リスト確認").HtmlAttributes(new { @class = "btn-primary" })
+                    @(Html.Smat().Button("deliveryRouteListCreate_Llist_create_btn")
+                        .Content("リスト作成")
+                        .HtmlAttributes(new { @class = "btn-primary" })
+                        .Events(events =>
+                        {
+                            events.Click("openDeliveryRouteListDoCreateForm");
+                        })
+                    )
+
+                    @(Html.Smat().Button("btnPrintPdf1")
+                          .Content("レポート用紙出力")
+                          .HtmlAttributes(new { @class = "btn-primary" })
+                    )
+                    @(Html.Smat().Button("btnPrintPdf2")
+                          .Content("商品出庫リスト")
+                          .HtmlAttributes(new { @class = "btn-primary" })
+                    )
+
+                </div>
+                <div class="col-sm-4 text-right text-center-xs">
+                    @Html.Smat().Pager("deliveryRouteListPager").DataHandler("deliveryRouteListGrid").HtmlAttributes(new { @class = "pagination pagination-sm m-t-xs m-b-none" })
+                </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("deliveryRouteListGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound("No").Title("№").Width("40px").HtmlAttributes(new { @class = "text-center" });
+                          columns.Bound("状態").Title("状態").Width("60px").HtmlAttributes(new { @class = "text-center" }).CodeKind(DrinkService.Models.ModelBase.CN済);
+                          columns.Bound("初回").Title("初回").Width("60px").HtmlAttributes(new { @class = "text-center" }).CodeKind(DrinkService.Models.ModelBase.CN初回).TemplateBound("templateFirstFlag");
+                          columns.Bound("担当者").Title("担当者").Width("110px");
+                          columns.Bound("お客様").Title("お客様").Width("240px").TemplateBound("templateClientName");
+                          columns.Bound("住所").Title("住所");
+                      })
+
+                )
+            </div>
+        </div>
+    </section>
+</section>
+
+<script>
+
+    $(document).ready(function () {
+        $('#pickHoDate').ui().uiControl.bind('change', getRouteListByDay);
+    });
+    
+
+</script>
+
+@if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_店舗管理者 || (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_ドリンクマネジメント)
+{
+    <script>
+
+        $(document).ready(function () {
+            var data = {
+                ShopCD: "@((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD)"
+            };
+
+            afterReferShop(data);
+
+        });
+    </script>
+}else{
+    <script>
+        
+
+        $(document).ready(function () {
+            getRouteByDay();
+        });
+    </script>
+}
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#deliveryRouteListCreate_Llist_create_btn").hide();
+        }
+    });
+</script>*@ 

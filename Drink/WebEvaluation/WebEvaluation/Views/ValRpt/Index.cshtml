@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.ValRptViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<p>
+    @Html.ActionLink("再建策", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            エリア
+        </th>
+        <th>
+            グループ
+        </th>
+        <th>
+            店舗
+        </th>
+   </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.No)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AreaName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GroupName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShopCD)
+        </td>
+
+    </tr>
+}
+
+</table>

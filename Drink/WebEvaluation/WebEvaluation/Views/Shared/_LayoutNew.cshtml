@@ -1,0 +1,539 @@
+﻿<!DOCTYPE html>
+<html style="background-color: #fff1e5;">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テレフォンレポートシステム</title>
+   
+    @{
+        var version = "?v=18";
+    }
+
+
+    <!-- responsive -->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/responsive-nav.css">
+    <script src="~/SMAT.UI/Scripts/js/responsive-nav.js"></script>
+
+    <!-- UI Style-->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.common.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.mobile.all.min.css" type="text/css">
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/asmat.dataviz.min.css" type="text/css">
+    <link href="~/SMAT.UI/Styles/asmat.manage.ublod.icons.css" rel="stylesheet" type="text/css" />
+
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+
+    <!-- animate Style-->
+    <link rel="stylesheet" href="~/SMAT.UI/Styles/animate/animate.min.css" type="text/css" />
+
+
+    <!-- jquery -->
+    <script src="~/SMAT.UI/Scripts/js/jszip.js"></script>
+    <script src="~/SMAT.UI/Scripts/jquery.min.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/SMAT.UI/Scripts/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/js/jquery.linq.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/js/jquery.jqprint-0.3.js"></script>
+    @*<!-- Bootstrap -->
+        <script src="~/SMAT.UI/Scripts/js/bootstrap.js"></script>
+        <!-- App -->
+        <script src="~/SMAT.UI/Scripts/js/asmat.app.js@(version)"></script>
+        <script src="~/SMAT.UI/Scripts/js/slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="~/SMAT.UI/Scripts/js/asmat.app.plugin.js"></script>*@
+    <!-- UI -->
+    <script src="~/SMAT.UI/Scripts/asmat.all.min.js"></script>
+    <script src="~/SMAT.UI/Scripts/smat.core.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.Service.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.Service.Data.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.Service.Flow.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Button.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.ButtonGroup.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DatePicker.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DateTimePicker.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.DropDownList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Editor.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Form.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Grid.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.NumericTextBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Refer.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.RadioButton.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Pager.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TextBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Chart.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.ComboBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.MultiSelect.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.RadioBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.CheckBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TabStrip.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TreeView.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Upload.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TextArea.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Location.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Label.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.PanelBar.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.Tag.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/smat.ui.TimePicker.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Base.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.View.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Header.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Navbar.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Footer.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Layout.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Tabstrip.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Button.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.ButtonBack.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.ListView.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Input.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.DropDownList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.Slider.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/mobile/smat.ui.mobile.TextArea.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/uiPlugin/smat.ui.DyPage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/uiPlugin/smat.ui.ResourceImg.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/uiPlugin/smat.ui.DyUserControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/cultures/smat.culture.ja.min.js@(version)"></script>
+    <script src="~/Scripts/smat.config.js@(version)"></script>
+    <!-- Dynamics -->
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Filed.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Control.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.Filter.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.View.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.UserControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.FlowControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.BusinessSearchType.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.BusinessSearchPreview.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.FiledCheckBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/tool/smat.dynamics.tool.MobileControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleSearch.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleGraph.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleMasterList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleMasterEdit.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleMasterEmpty.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleYList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleYEdit.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleStatistics.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleCrossStatistic.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.UserControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SystemMaster.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleLogicList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.Refer.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleFlow.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.BusinessSearch.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/template/smat.dynamics.template.SimpleAppEmpty.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.formList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.formSetting.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.designer.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.userControlDesigner.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.appDesigner.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/smat.dynamics.diagramDesigner.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.DropDownList.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.SubOptions.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Object.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Filter.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Sortable.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.View.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.ChartData.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Row.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Logic.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.LogicStr.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.LogicScript.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.GridData.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Template.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.CultureText.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Handler.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.FormAuth.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/smat.dynamics.property.Style.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetBase.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetListSearch.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetLineChart.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetColChart.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetPieChart.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetSummaryCross.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetSummarySearch.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/property/set/smat.dynamics.property.set.SetBusinessResult.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.logic.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.logic.LogicItem.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/logic/smat.dynamics.template.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Page.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Section.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Form.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Field.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.ToolBar.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Button.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Grid.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Line.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Pager.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Chart.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.PageUserControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.UserControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.RadioBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.CheckBox.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Div.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.TabStrip.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.TabPage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.TreeView.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Editor.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.PageControl.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Upload.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.ResourceImg.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Location.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Label.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.PanelBar.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.PanelBarPage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/smat.dynamics.controls.Tag.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Base.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Section.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Button.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Button.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Footer.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Header.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Layout.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Page.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.View.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Navbar.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Tabstrip.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.TabPage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.ListView.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/control/mobile/smat.dynamics.controls.mobile.Field.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Stage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.FlowStage.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Node.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/diagram/smat.dynamics.diagram.Connection.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Config.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Entity.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Database.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Menu.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.Role.js@(version)"></script>
+    <script src="~/SMAT.UI/Scripts/dynamics/project/smat.dynamics.projectManager.SearchSetting.js@(version)"></script>
+    <!--codemirror-->
+    <link rel="stylesheet" href="~/SMAT.UI/CodeMirror/lib/codemirror.css">
+    <script src="~/SMAT.UI/CodeMirror/lib/codemirror.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/mode/javascript/javascript.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/addon/selection/active-line.js"></script>
+    <script src="~/SMAT.UI/CodeMirror/addon/edit/matchbrackets.js"></script>
+
+    <link href="~/Content/CommonSite.css" rel="stylesheet">
+
+    <link href="~/Content/site.css" rel="stylesheet">
+
+    <script src="~/Scripts/smat.config.js"></script>
+
+    <link href="~/Content/summernote.css" rel="stylesheet">
+    <script src="~/Scripts/summernote.js"></script>
+    <script src="~/Scripts/summernote-ja-JP.js"></script>
+
+
+    <script type="text/javascript">
+
+        smat.service.loginUser = {};
+        smat.service.loginUser.StaffName = "@((Session["user"] as WebEvaluation.DataModels.UserSession).StaffName)";
+        smat.service.loginUser.StaffCD = "@((Session["user"] as WebEvaluation.DataModels.UserSession).StaffCD)";
+        smat.service.loginUser.UnitCD = "@((Session["user"] as WebEvaluation.DataModels.UserSession).UnitCD)";
+        smat.service.loginUser.UnitName = "@((Session["user"] as WebEvaluation.DataModels.UserSession).UnitName)";
+        smat.service.loginUser.RoleCD = "@((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD)";
+        smat.service.loginUser.ShopCD = "@((Session["user"] as WebEvaluation.DataModels.UserSession).ShopCD)";
+
+
+        $(document).ready(function () {
+            var msg = "@ViewBag.msg";
+            var msgType = "@ViewBag.msgType";
+            if (msg.length > 0) {
+                if (msgType.length > 0) {
+                    SMAT.Service.toastr(msg,msgType);
+                } else {
+                    SMAT.Service.toastr(msg);
+                } 
+            }
+
+            // var timer = setInterval(keepSession, 60000);
+
+            $(document).on('change', 'table thead [type="checkbox"]', function (e) {
+                e && e.preventDefault();
+                var $table = $(e.target).closest('div.s-grid').find(' table:first'), $checked = $(e.target).is(':checked'), $colIndex = $(e.target).attr('colIndex');
+                $('tbody [type="checkbox"][colIndex="' + $colIndex + '"]', $table).prop('checked', $checked);
+            });
+
+        });
+
+        function keepSession(){
+            $.ajax({
+                url: "@Url.Action("KeepSession", "Home")",
+                dataType: "json",
+                type: "post",
+                success: function (result) {
+                },
+                error: function (a, b, c) {
+
+                }
+        });
+        }
+    </script>
+</head>
+<body style="background-color: #fff1e5;">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <!--LI--start-->
+        <div class="container" style="background-color:@ViewBag.color">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--LI--end-->
+                <!--<div class="float-left">
+                      <p>ViewBag.Title</p>
+                      </div>-->
+                <div id="navbar_brand_img" class="navbar-brand" style="padding-top:0px;margin-left: -47px;">
+                    <img src="@ViewBag.IMG" style="height:50px;">
+                </div>
+                <div id="navbar_brand_title" class="navbar-brand"><font class="nav-title" style="font-family: 'Meiryo UI';font-size:20px;">@ViewBag.Title</font></div><!--LI--start--end-->
+            </div>
+            <div class="navbar-collapse collapse">
+                <!--LI--start--end-->
+                
+                <!--<nav>-->
+                <ul id="navbar_brand_nav" class="nav navbar-nav navbar-right" style="background-color:#646464">
+                    <!--LI--start--end-->
+                    <li style="background-color:@ViewBag.color">@Html.ActionLink("ホーム", "Index", "Home")</li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">店舗<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01" 
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02"
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "05" //20151025 「業務管理者」権限を追加。
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                            {
+                                <li>@Html.ActionLink("テレフォンレポート入力", "PartyIndex", "Party")</li>
+                            }
+                            <li>@Html.ActionLink("テレフォンレポート閲覧", "TelRptSearch", "TelRpt")</li>
+
+                            <li>@Html.ActionLink("報告書閲覧", "ReportList", "Party")</li>
+                            @* --2014/07/09--LILIANG--
+                                <li>@Html.ActionLink("レポート登録", "TelRptCreate", "TelRpt")</li>*@
+                        </ul>
+                    </li>
+                    @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                    {
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">カスタマーセンター <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @*----2014/07/09--LILIANG--
+                                    <li class="bg-danger">@Html.ActionLink("担当者評価", "Index", "Party")</li>*@
+                                <li>@Html.ActionLink("電話内容入力", "EvaByStaffIndex", "EvaByStaff")</li>
+                                <li>@Html.ActionLink("二次評価", "EvaByLeaderIndex", "EvaByLeader")</li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">データ出力<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @*----2014/07/09--LILIANG--
+                                <li>@Html.ActionLink("テレレポート", "TelRptSearch", "TelRpt")</li>*@                            
+                            <li>@Html.ActionLink("通話率一覧", "TelRptFrequencySearch", "TelRateRpt")</li>
+                            <!--李梁  2014/09/13-->
+                            @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "05" //20151025 「業務管理者」権限を追加。
+                                || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                            {
+                                <li>@Html.ActionLink("テレフォンレポート総合評価", "ValRptSearch", "ValRpt")</li>
+                            }
+                            <li>@Html.ActionLink("評価構成比", "ValRptStatisticsSearch", "ValRpt")</li>
+                            <li>@Html.ActionLink("担当者別構成比", "ValRptStaffStatisticsSearch", "ValRpt")</li>
+                            @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                            {
+                                <li>@Html.ActionLink("データ分析", "BusinessAnalysis", "Home")</li>
+                            }
+                        </ul>
+                    </li>
+                    @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                    {
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">管理機能<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("店舗インポート", "ShopDataImport", "Shop")</li>
+                                <li>@Html.ActionLink("社員インポート", "StaffDataImport", "Shop")</li>
+                                <li>@Html.ActionLink("パーティ情報インポート", "PartyDataImport", "Shop")</li>
+                                @*<li>@Html.ActionLink("組織インポート", "UnitDataImport", "Unit")</li>*@
+                                <li>@Html.ActionLink("店舗管理", "MasterManager", "Shop")</li>
+                                <li>@Html.ActionLink("社員管理", "MasterManager", "Staff")</li>
+                                <li>@Html.ActionLink("組織管理", "Index", "Unit")</li>
+                                <li>@Html.ActionLink("事業部管理", "DivList", "Home")</li>
+                                <li>@Html.ActionLink("グループ管理", "GroupList", "Home")</li>
+                                <li>@Html.ActionLink("料理管理", "DishList", "Home")</li>
+                                <li>@Html.ActionLink("オプションセット管理", "OptionSetList", "Home")</li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">ユーザー<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("パスワード変更", "ChangePassword", "User")</li>
+                            <li>@Html.ActionLink("ログアウト", "Logout", "Home")</li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--</nav>-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+    @*$(document).ready(function () {
+        var radioClass = "@ViewBag.radioClass";
+        if (radioClass.length == 0) {
+            radioClass = "iradio_square-blue";
+        }
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: radioClass,
+            increaseArea: '20%' // optional
+        });
+
+    });*@
+    </script>
+
+    <div id="s_form_content" class="container body-content s-form-content" style="width:1266px; margin-right:auto;margin-left:auto;">
+        @RenderBody()
+    </div>
+    <div id="footer-bar" class="navbar navbar-black navbar-fixed-bottom" style="font-family:'Meiryo UI'">
+        <div class="container">
+            @{
+                string UpdateUser = ViewBag.UpdateUser;
+                string UpdateUserID = ViewBag.UpdateUserID;
+                string UpdateTime = ViewBag.UpdateTime;
+                string StaffName = (Session["user"] as WebEvaluation.DataModels.UserSession).StaffName;
+                string StaffCD = (Session["user"] as WebEvaluation.DataModels.UserSession).StaffCD;
+                string UnitName = (Session["user"] as WebEvaluation.DataModels.UserSession).UnitName;
+            }
+
+                <div style="float:left;font-family:'Meiryo UI'">
+                    @if (null != StaffName && StaffName.Length > 0)
+                    {
+                        <font style="font-family:'Meiryo UI'">@("社員名: " + StaffName)</font>
+                    }
+                    else if (null != StaffCD && StaffCD.Length > 0)
+                    {
+                       <font style="font-family:'Meiryo UI'"> @("社員番号: " + StaffCD) </font>
+                    }
+                    @if (null != UnitName && UnitName.Length > 0)
+                    {
+                        <font style="font-family:'Meiryo UI'">@("　　所属: " + UnitName)</font>
+                    }
+
+                </div>
+           
+           
+
+            <div style="float:right;font-family:'Meiryo UI'">
+                @if (null != UpdateUser && UpdateUser.Length > 0)
+                {
+                    <font style="font-family:'Meiryo UI'">@("前回更新者: " + UpdateUser)</font>
+                }
+                else if (null != UpdateUserID && UpdateUserID.Length > 0)
+                {
+                    @("前回更新者番号: " + UpdateUserID)
+                }
+                @if (null != UpdateTime && UpdateTime.Length > 0)
+                {
+                    @("　　前回更新時間: " + UpdateTime)
+                }
+        </div>
+            
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $("#link_home").bind('click', function (e) {
+                var pages = $(".s-dy-page");
+                $.each(pages, function () {
+                    if ($(this).attr("id")) {
+                        smat.service.closeForm({
+                            contentId: $(this).attr("id")
+                        });
+                    }
+                    
+                })
+                
+               
+            })
+
+            var forms = $('form');
+
+            $.each(forms, function () {
+                var form = $(this);
+                var ctrls = $(this).find('input , select');
+                if (ctrls.length > 0) {
+                    ctrls.last().addClass('form-last-input')
+                }
+
+                var btns = $(this).find('input');
+
+                $.each(btns, function () {
+                    $(this).bind('keydown', function (e) {
+                        if ($(this).hasClass('form-last-input')) {
+                            return;
+                        }
+                        if (window.event.keyCode == 13) {
+                            window.event.keyCode = 9;
+                        }
+                    });
+                });
+
+                var selects = $(this).find('select');
+
+                $.each(selects, function () {
+                    $(this).bind('keydown', function (e) {
+                        if (window.event.keyCode == 13) {
+                            if ($(this).hasClass('form-last-input')) {
+                                form.submit();
+                                return;
+                            }
+                            window.event.keyCode = 9;
+                        }
+                    });
+                });
+            });
+
+            //if ($(window).height() < $(document).height()) {
+            //    $("#footer-bar").css('position','relative');
+            //    $("#footer-bar").css('margin-bottom','-20px');
+            //}
+
+            var pages = $('.pagination-container');
+
+            $.each(pages, function () {
+                var lis = $(this).find('li');
+                if (lis.length == 1) {
+                    $(this).hide();
+                    $(this).after("<div class='col-lg-13' style='padding-left:0px'><font>&nbsp;</font></div>");
+                }
+                
+            });
+            
+        });
+    </script>
+</body>
+</html>

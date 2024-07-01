@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Dinamics Page";
+}
+
+<div id="form_designer"><button id="ttt">test</button></div>
+<script>
+
+    $("#ttt").bind('click', function () {
+        smat.service.openForm({
+            url: "/Dynamics/SubFormTest",
+            width:"840px",
+            params: {}
+        });
+    });
+
+</script>
+

@@ -1,0 +1,67 @@
+﻿@model PagedList.IPagedList<WebEvaluation.Models.Employee>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "社員一覧";
+}
+
+<h2>社員一覧</h2>
+
+<p>
+    @Html.ActionLink("新規作成", "Create")
+</p>
+@using (Html.BeginForm("Index", "Employee", FormMethod.Get))
+{
+    <p>
+        名前検索: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="検索" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            社員番号
+        </th>
+        <th>
+            名前
+        </th>
+        <th>
+            ふりがな
+        </th>
+        <th>
+            入社日
+        </th>
+        <th></th>
+    </tr>
+
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonCD)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JapName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KanaName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PersonCD }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PersonCD }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PersonCD })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

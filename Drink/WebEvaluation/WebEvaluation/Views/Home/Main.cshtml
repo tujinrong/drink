@@ -1,0 +1,49 @@
+﻿@model WebEvaluation.ViewModels.HomeViewModel
+
+@{
+    ViewBag.IMG = "../Content/images/ic-logo.png";
+    ViewBag.Title = "テレフォンレポートシステム";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+    ViewBag.color = "#2e2e2e";
+}
+
+
+<div id="main_box" class="jumbotron" style="top: 20px; padding-top: 4px; bottom:40px;">
+   
+    <div id="menu_box" class="menu-box" style="padding:15px 60px 15px 60px">
+        <div class="panel panel-menu" style="margin:0px">
+            <div class="panel-heading"><span class="title">報告書</span></div>
+            <div class="panel-body">
+                <table style="background-color:white">
+                    <tr>
+                        <td width="400px">
+                            <a href="javascript:void(0)" data-entity="Y_AnalysisField" data-page="PartyReportList"><img style="height:50px;width:50px" src="~/Content/images/ic-telerepo.png"></a> &nbsp;&nbsp;
+                            <a href="javascript:void(0)" data-entity="Y_AnalysisField" data-page="PartyReportList">パーティ報告書</a>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    var links = $("a[data-entity]").bind('click', function () {
+        smat.service.openPage({
+            page: {
+                projID: 1,
+                entityName: $(this).attr("data-entity"),
+                pageName: $(this).attr("data-page")
+            },
+            fillTarget: "main_box",
+            afterOpen: function (smatWindow) {
+                smatWindow.parent().css('z-index', 1);
+            }
+        });
+    });
+    
+</script>

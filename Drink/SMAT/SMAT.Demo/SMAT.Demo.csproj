@@ -1,0 +1,931 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F010FBE1-C9EB-4914-B0C6-F7C46642B74F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ASMAT.Demo</RootNamespace>
+    <AssemblyName>ASMAT.Demo</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.1.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.2.1.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.2.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.2.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\RadioButtonController.cs" />
+    <Compile Include="Controllers\DemoDataController.cs" />
+    <Compile Include="Controllers\DynamicsController.cs" />
+    <Compile Include="Controllers\TextBoxController.cs" />
+    <Compile Include="Controllers\DropDownListController.cs" />
+    <Compile Include="Controllers\NumericTextBoxController.cs" />
+    <Compile Include="Controllers\DateTimePickerController.cs" />
+    <Compile Include="Controllers\ReferController.cs" />
+    <Compile Include="Controllers\DatePickerController.cs" />
+    <Compile Include="Controllers\FormController.cs" />
+    <Compile Include="Controllers\GridController.cs" />
+    <Compile Include="Controllers\SMATController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DrinkServiceContext.cs" />
+    <Compile Include="Models\DySMAT\Y_EntityData.cs" />
+    <Compile Include="Models\DySMAT\Y_EntityItemData.cs" />
+    <Compile Include="Models\DySMAT\Y_EntityViewData.cs" />
+    <Compile Include="Models\DySMAT\Y_EntityViewItemData.cs" />
+    <Compile Include="Models\DySMAT\Y_ProjData.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LogicBase.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\共通\CommonLogic.cs" />
+    <Compile Include="Models\共通\ModelBase.cs" />
+    <Compile Include="Models\共通\M_Code.cs" />
+    <Compile Include="Models\共通\M_CodeData.cs" />
+    <Compile Include="Models\共通\M_PostCode.cs" />
+    <Compile Include="Models\共通\M_System.cs" />
+    <Compile Include="Models\共通\M_SystemData.cs" />
+    <Compile Include="Models\共通\T_Message.cs" />
+    <Compile Include="Models\商品\M_Item.cs" />
+    <Compile Include="Models\商品\M_ItemData.cs" />
+    <Compile Include="Models\商品\M_ItemKit.cs" />
+    <Compile Include="Models\商品\M_ItemKitDetail.cs" />
+    <Compile Include="Models\店舗\M_Shop.cs" />
+    <Compile Include="Models\店舗\M_ShopData.cs" />
+    <Compile Include="Models\担当者\M_Staff.cs" />
+    <Compile Include="Models\担当者\M_StaffData.cs" />
+    <Compile Include="Models\補充集金\T_HoClient.cs" />
+    <Compile Include="Models\補充集金\T_HoClientItem.cs" />
+    <Compile Include="Models\補充集金\T_HoData.cs" />
+    <Compile Include="Models\補充集金\T_HoDay.cs" />
+    <Compile Include="Models\補充集金\T_HoOrder.cs" />
+    <Compile Include="Models\補充集金\T_HoOrderClient.cs" />
+    <Compile Include="Models\補充集金\T_HoOrderData.cs" />
+    <Compile Include="Models\顧客\M_Client.cs" />
+    <Compile Include="Models\顧客\M_ClientData.cs" />
+    <Compile Include="Models\顧客\M_ClientInitItems.cs" />
+    <Compile Include="Models\顧客\M_ClientRoute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Demo.mdf" />
+    <Content Include="App_Data\Demo_log.ldf">
+      <DependentUpon>Demo.mdf</DependentUpon>
+    </Content>
+    <Content Include="Content\images\accept.png" />
+    <Content Include="Content\images\crossout.png" />
+    <Content Include="Content\images\star.png" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="HtmlDemo\DateTimePicker\Basic_usage.html" />
+    <Content Include="HtmlDemo\DropDownList\Basic_usage.html" />
+    <Content Include="HtmlDemo\Grid\RowDetail.html" />
+    <Content Include="HtmlDemo\Grid\Edit.html" />
+    <Content Include="HtmlDemo\Form\Basic_usage.html" />
+    <Content Include="HtmlDemo\Grid\Basic_usage.html" />
+    <Content Include="HtmlDemo\NumericTextBox\Basic_usage.html" />
+    <Content Include="HtmlDemo\RadioButton\Basic_usage.html" />
+    <Content Include="HtmlDemo\Refer\Basic_usage.html" />
+    <Content Include="HtmlDemo\TextBox\Events.html" />
+    <Content Include="HtmlDemo\TextBox\Basic_usage.html" />
+    <Content Include="Scripts\highlight\highlight.pack.js" />
+    <Content Include="Scripts\highlight\styles\arta.css" />
+    <Content Include="Scripts\highlight\styles\ascetic.css" />
+    <Content Include="Scripts\highlight\styles\atelier-dune.dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-dune.light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-forest.dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-forest.light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-heath.dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-heath.light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-lakeside.dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-lakeside.light.css" />
+    <Content Include="Scripts\highlight\styles\atelier-seaside.dark.css" />
+    <Content Include="Scripts\highlight\styles\atelier-seaside.light.css" />
+    <Content Include="Scripts\highlight\styles\brown_paper.css" />
+    <Content Include="Scripts\highlight\styles\brown_papersq.png" />
+    <Content Include="Scripts\highlight\styles\dark.css" />
+    <Content Include="Scripts\highlight\styles\default.css" />
+    <Content Include="Scripts\highlight\styles\docco.css" />
+    <Content Include="Scripts\highlight\styles\far.css" />
+    <Content Include="Scripts\highlight\styles\foundation.css" />
+    <Content Include="Scripts\highlight\styles\github.css" />
+    <Content Include="Scripts\highlight\styles\googlecode.css" />
+    <Content Include="Scripts\highlight\styles\idea.css" />
+    <Content Include="Scripts\highlight\styles\ir_black.css" />
+    <Content Include="Scripts\highlight\styles\magula.css" />
+    <Content Include="Scripts\highlight\styles\mono-blue.css" />
+    <Content Include="Scripts\highlight\styles\monokai.css" />
+    <Content Include="Scripts\highlight\styles\monokai_sublime.css" />
+    <Content Include="Scripts\highlight\styles\obsidian.css" />
+    <Content Include="Scripts\highlight\styles\paraiso.dark.css" />
+    <Content Include="Scripts\highlight\styles\paraiso.light.css" />
+    <Content Include="Scripts\highlight\styles\pojoaque.css" />
+    <Content Include="Scripts\highlight\styles\pojoaque.jpg" />
+    <Content Include="Scripts\highlight\styles\railscasts.css" />
+    <Content Include="Scripts\highlight\styles\rainbow.css" />
+    <Content Include="Scripts\highlight\styles\school_book.css" />
+    <Content Include="Scripts\highlight\styles\school_book.png" />
+    <Content Include="Scripts\highlight\styles\solarized_dark.css" />
+    <Content Include="Scripts\highlight\styles\solarized_light.css" />
+    <Content Include="Scripts\highlight\styles\sunburst.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-blue.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-bright.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night-eighties.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow-night.css" />
+    <Content Include="Scripts\highlight\styles\tomorrow.css" />
+    <Content Include="Scripts\highlight\styles\vs.css" />
+    <Content Include="Scripts\highlight\styles\xcode.css" />
+    <Content Include="Scripts\highlight\styles\zenburn.css" />
+    <Content Include="Scripts\smat.demo.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\comment\comment.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\comment\continuecomment.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\dialog\dialog.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\dialog\dialog.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\display\fullscreen.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\display\fullscreen.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\display\panel.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\display\placeholder.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\display\rulers.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\closebrackets.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\closetag.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\continuelist.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\matchbrackets.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\matchtags.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\edit\trailingspace.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\brace-fold.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\comment-fold.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\foldcode.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\foldgutter.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\foldgutter.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\indent-fold.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\markdown-fold.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\fold\xml-fold.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\anyword-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\css-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\html-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\javascript-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\show-hint.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\show-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\sql-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\hint\xml-hint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\coffeescript-lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\css-lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\javascript-lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\json-lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\lint.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\lint\yaml-lint.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\merge\merge.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\merge\merge.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\mode\loadmode.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\mode\multiplex.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\mode\multiplex_test.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\mode\overlay.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\mode\simple.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\runmode\colorize.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\runmode\runmode-standalone.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\runmode\runmode.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\runmode\runmode.node.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\scroll\annotatescrollbar.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\scroll\scrollpastend.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\scroll\simplescrollbars.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\scroll\simplescrollbars.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\search\match-highlighter.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\search\matchesonscrollbar.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\search\matchesonscrollbar.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\search\search.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\search\searchcursor.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\selection\active-line.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\selection\mark-selection.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\selection\selection-pointer.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\tern\tern.css" />
+    <Content Include="SMAT.UI\CodeMirror\addon\tern\tern.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\tern\worker.js" />
+    <Content Include="SMAT.UI\CodeMirror\addon\wrap\hardwrap.js" />
+    <Content Include="SMAT.UI\CodeMirror\lib\codemirror.css" />
+    <Content Include="SMAT.UI\CodeMirror\lib\codemirror.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\apl\apl.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\apl\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asciiarmor\asciiarmor.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asciiarmor\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asn.1\asn.1.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asn.1\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asterisk\asterisk.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\asterisk\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clike\clike.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clike\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clike\scala.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clike\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clojure\clojure.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\clojure\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cmake\cmake.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cmake\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cobol\cobol.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cobol\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\coffeescript\coffeescript.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\coffeescript\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\commonlisp\commonlisp.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\commonlisp\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\css.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\less.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\less_test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\scss.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\scss_test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\css\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cypher\cypher.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\cypher\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dart\dart.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dart\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\diff\diff.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\diff\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\django\django.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\django\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dockerfile\dockerfile.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dockerfile\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dtd\dtd.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dtd\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dylan\dylan.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\dylan\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\d\d.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\d\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ebnf\ebnf.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ebnf\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ecl\ecl.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ecl\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\eiffel\eiffel.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\eiffel\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\elm\elm.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\elm\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\erlang\erlang.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\erlang\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\factor\factor.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\factor\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\forth\forth.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\forth\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\fortran\fortran.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\fortran\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gas\gas.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gas\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gfm\gfm.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gfm\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gfm\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gherkin\gherkin.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\gherkin\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\go\go.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\go\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\groovy\groovy.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\groovy\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haml\haml.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haml\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haml\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\handlebars\handlebars.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\handlebars\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haskell\haskell.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haskell\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haxe\haxe.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\haxe\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\htmlembedded\htmlembedded.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\htmlembedded\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\htmlmixed\htmlmixed.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\htmlmixed\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\http\http.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\http\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\idl\idl.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\idl\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\jade\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\jade\jade.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\javascript\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\javascript\javascript.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\javascript\json-ld.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\javascript\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\javascript\typescript.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\jinja2\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\jinja2\jinja2.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\julia\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\julia\julia.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\kotlin\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\kotlin\kotlin.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\livescript\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\livescript\livescript.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\lua\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\lua\lua.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\markdown\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\markdown\markdown.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\markdown\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mathematica\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mathematica\mathematica.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\meta.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mirc\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mirc\mirc.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mllike\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mllike\mllike.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\modelica\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\modelica\modelica.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mumps\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\mumps\mumps.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\nginx\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\nginx\nginx.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ntriples\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ntriples\ntriples.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\octave\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\octave\octave.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pascal\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pascal\pascal.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pegjs\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pegjs\pegjs.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\perl\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\perl\perl.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\php\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\php\php.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\php\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pig\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\pig\pig.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\properties\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\properties\properties.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\puppet\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\puppet\puppet.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\python\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\python\python.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\q\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\q\q.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rpm\changes\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rpm\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rpm\rpm.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rst\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rst\rst.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ruby\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ruby\ruby.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ruby\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rust\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\rust\rust.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\r\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\r\r.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sass\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sass\sass.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\scheme\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\scheme\scheme.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\shell\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\shell\shell.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\shell\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sieve\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sieve\sieve.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\slim\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\slim\slim.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\slim\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\smalltalk\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\smalltalk\smalltalk.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\smarty\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\smarty\smarty.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\solr\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\solr\solr.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\soy\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\soy\soy.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sparql\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sparql\sparql.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\spreadsheet\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\spreadsheet\spreadsheet.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sql\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\sql\sql.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\stex\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\stex\stex.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\stex\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\stylus\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\stylus\stylus.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tcl\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tcl\tcl.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\textile\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\textile\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\textile\textile.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiddlywiki\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiddlywiki\tiddlywiki.css" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiddlywiki\tiddlywiki.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiki\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiki\tiki.css" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tiki\tiki.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\toml\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\toml\toml.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tornado\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\tornado\tornado.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\troff\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\troff\troff.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ttcn-cfg\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ttcn-cfg\ttcn-cfg.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ttcn\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\ttcn\ttcn.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\turtle\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\turtle\turtle.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\twig\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\twig\twig.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\vbscript\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\vbscript\vbscript.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\vb\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\vb\vb.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\velocity\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\velocity\velocity.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\verilog\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\verilog\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\verilog\verilog.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xml\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xml\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xml\xml.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xquery\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xquery\test.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\xquery\xquery.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\yaml\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\yaml\yaml.js" />
+    <Content Include="SMAT.UI\CodeMirror\mode\z80\index.html" />
+    <Content Include="SMAT.UI\CodeMirror\mode\z80\z80.js" />
+    <Content Include="SMAT.UI\images\desinger-bg.jpg" />
+    <Content Include="SMAT.UI\images\envelope.png" />
+    <Content Include="SMAT.UI\images\error-icon.png" />
+    <Content Include="SMAT.UI\images\folder.png" />
+    <Content Include="SMAT.UI\images\logo.png" />
+    <Content Include="SMAT.UI\images\ruleLeft.png" />
+    <Content Include="SMAT.UI\images\ruleTop.jpg" />
+    <Content Include="SMAT.UI\images\space.png" />
+    <Content Include="SMAT.UI\images\success-icon.png" />
+    <Content Include="SMAT.UI\images\temp-user.png" />
+    <Content Include="SMAT.UI\Scripts\asmat.all.min.js" />
+    <Content Include="SMAT.UI\Scripts\cultures\smat.culture.ja.min.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Chart.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.CheckBox.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Div.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Pager.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Button.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Grid.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.PageUserControl.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.RadioBox.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.TabPage.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.TabStrip.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.ToolBar.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Line.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Field.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Form.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Page.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.Section.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\control\smat.dynamics.controls.UserControl.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\diagram\smat.dynamics.diagram.Connection.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\diagram\smat.dynamics.diagram.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\diagram\smat.dynamics.diagram.Node.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\diagram\smat.dynamics.diagram.Stage.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\logic\smat.dynamics.logic.LogicItem.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\logic\smat.dynamics.logic.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\logic\smat.dynamics.template.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.Config.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.Database.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.Entity.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.Menu.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\project\smat.dynamics.projectManager.Role.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.CultureText.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.GridData.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Logic.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Filter_old.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Row.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Sortable.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.DropDownList.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.SubOptions.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.ChartData.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Template.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.View.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.Filter.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\property\smat.dynamics.property.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\smat.dynamics.designer.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\smat.dynamics.formList.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\smat.dynamics.formListBkUp.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\smat.dynamics.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\smat.dynamics.userControlDesigner.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleCrossStatistic.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleGraph.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleMasterEdit.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleMasterList.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleSearch.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleStatistics.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleYEdit.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SimpleYList.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.SystemMaster.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\template\smat.dynamics.template.UserControl.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.Control.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.UserControl.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.View.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.Filter.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.Filed.js" />
+    <Content Include="SMAT.UI\Scripts\dynamics\tool\smat.dynamics.tool.js" />
+    <Content Include="SMAT.UI\Scripts\jquery.ba-throttle-debounce.min.js" />
+    <Content Include="SMAT.UI\Scripts\jquery.min.js" />
+    <Content Include="SMAT.UI\Scripts\js\asmat.app.js" />
+    <Content Include="SMAT.UI\Scripts\js\asmat.app.plugin.js" />
+    <Content Include="SMAT.UI\Scripts\js\bootstrap.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\excanvas.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\html5shiv.js" />
+    <Content Include="SMAT.UI\Scripts\js\ie\respond.min.js" />
+    <None Include="SMAT.UI\Scripts\js\jquery.linq-vsdoc.js" />
+    <Content Include="SMAT.UI\Scripts\js\jquery.linq.js" />
+    <Content Include="SMAT.UI\Scripts\js\jquery.linq.min.js" />
+    <Content Include="SMAT.UI\Scripts\js\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="SMAT.UI\Scripts\smat.Service.Data.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Chart.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.ButtonGroup.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Button.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.CheckBox.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.ComboBox.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.RadioBox.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.RadioButton.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.TabStrip.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.TextBox.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.DropDownList.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.DateTimePicker.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.NumericTextBox.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Editor.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Pager.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Resource.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Form.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.ListView.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Refer.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.TreeView.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.Grid.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.DatePicker.js" />
+    <Content Include="SMAT.UI\Scripts\smat.core.js" />
+    <Content Include="SMAT.UI\Scripts\smat.Service.js" />
+    <Content Include="SMAT.UI\Scripts\smat.ui.js" />
+    <Content Include="SMAT.UI\Styles\asmat.common.icon.css" />
+    <Content Include="SMAT.UI\Styles\asmat.common-material.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.common.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.dataviz.material.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.dataviz.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.material.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.mobile.all.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.silver.min.css" />
+    <Content Include="SMAT.UI\Styles\asmat.common.animate.css" />
+    <Content Include="SMAT.UI\Styles\asmat.app.css" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\editor.png" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\imagebrowser.png" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\indeterminate.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\loading-image.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\loading.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\loading_2x.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\markers.png" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\markers_2x.png" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\slider-h.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\slider-v.gif" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\sprite.png" />
+    <Content Include="SMAT.UI\Styles\BlueOpal\sprite_2x.png" />
+    <Content Include="SMAT.UI\Styles\bootstrap.css" />
+    <Content Include="SMAT.UI\fonts\fontawesome-webfont.svg" />
+    <Content Include="SMAT.UI\fonts\Simple-Line-Icons.dev.svg" />
+    <Content Include="SMAT.UI\fonts\Simple-Line-Icons.svg" />
+    <Content Include="SMAT.UI\Styles\asmat.blueopal.min.css" />
+    <Content Include="SMAT.UI\Styles\Material\editor.png" />
+    <Content Include="SMAT.UI\Styles\Material\imagebrowser.png" />
+    <Content Include="SMAT.UI\Styles\Material\indeterminate.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading-image.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading.gif" />
+    <Content Include="SMAT.UI\Styles\Material\loading_2x.gif" />
+    <Content Include="SMAT.UI\Styles\Material\slider-h.gif" />
+    <Content Include="SMAT.UI\Styles\Material\slider-v.gif" />
+    <Content Include="SMAT.UI\Styles\Material\sprite.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_2x.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_kpi.png" />
+    <Content Include="SMAT.UI\Styles\Material\sprite_kpi_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\editor.png" />
+    <Content Include="SMAT.UI\Styles\Silver\imagebrowser.png" />
+    <Content Include="SMAT.UI\Styles\Silver\indeterminate.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading-image.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\loading_2x.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\markers.png" />
+    <Content Include="SMAT.UI\Styles\Silver\markers_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\slider-h.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\slider-v.gif" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_2x.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_kpi.png" />
+    <Content Include="SMAT.UI\Styles\Silver\sprite_kpi_2x.png" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="SMAT.UI\fonts\fontawesome-webfont.eot" />
+    <Content Include="SMAT.UI\fonts\fontawesome-webfont.ttf" />
+    <Content Include="SMAT.UI\fonts\fontawesome-webfont.woff" />
+    <Content Include="SMAT.UI\fonts\FontAwesome.otf" />
+    <Content Include="SMAT.UI\fonts\Simple-Line-Icons.eot" />
+    <Content Include="SMAT.UI\fonts\Simple-Line-Icons.ttf" />
+    <Content Include="SMAT.UI\fonts\Simple-Line-Icons.woff" />
+    <Content Include="SMAT.UI\fonts\sourcesanspro\sourcesanspro-bold.woff" />
+    <Content Include="SMAT.UI\fonts\sourcesanspro\sourcesanspro-light.woff" />
+    <Content Include="SMAT.UI\fonts\sourcesanspro\sourcesanspro.woff" />
+    <Content Include="Scripts\highlight\CHANGES.md" />
+    <Content Include="Scripts\highlight\LICENSE" />
+    <Content Include="Scripts\highlight\README.md" />
+    <Content Include="Scripts\highlight\README.ru.md" />
+    <Content Include="Models\CodeMap1.dgml" />
+    <None Include="Properties\PublishProfiles\safeneeds.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\menu.action.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="HtmlDemo\DatePicker\Basic_usage.html" />
+    <Content Include="Views\Dynamics\FormEdit.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Grid\Edit.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Scripts\menu.config.js" />
+    <Content Include="Views\Home\Demo.cshtml" />
+    <Content Include="Views\SMAT\Demo.cshtml" />
+    <Content Include="Views\DatePicker\Basic_usage.cshtml" />
+    <Content Include="Views\Grid\Basic_usage.cshtml" />
+    <Content Include="Views\Form\Basic_usage.cshtml" />
+    <Content Include="Views\Refer\Basic_usage.cshtml" />
+    <Content Include="Views\Refer\PersonRefer.cshtml" />
+    <Content Include="Views\DateTimePicker\Basic_usage.cshtml" />
+    <Content Include="Views\NumericTextBox\Basic_usage.cshtml" />
+    <Content Include="Views\DropDownList\Basic_usage.cshtml" />
+    <Content Include="Views\TextBox\Basic_usage.cshtml" />
+    <Content Include="Views\TextBox\Events.cshtml" />
+    <Content Include="Views\Grid\Edit.cshtml" />
+    <Content Include="Views\Dynamics\Test.cshtml" />
+    <Content Include="Views\Grid\RowDetail.cshtml" />
+    <Content Include="Views\RadioButton\Basic_usage.cshtml" />
+    <Content Include="Views\Dynamics\FormList.cshtml" />
+    <Content Include="Views\Dynamics\FormPage.cshtml" />
+    <Content Include="Views\Dynamics\SubFormTest.cshtml" />
+    <Content Include="Views\Shared\_Layout_bk.cshtml" />
+    <Content Include="Views\Shared\_SubForm.cshtml" />
+    <Content Include="Views\Dynamics\Home.cshtml" />
+    <Content Include="Views\Dynamics\ProjectManager.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SMAT.Core\SMAT.Core.csproj">
+      <Project>{76f1e577-54e0-49c8-a2ae-a214fefbf359}</Project>
+      <Name>SMAT.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMAT.Dynamics\SMAT.Dynamics.csproj">
+      <Project>{c9e1262a-bf2a-479f-9103-9219cd9cec4d}</Project>
+      <Name>SMAT.Dynamics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMAT.MVC\SMAT.MVC.csproj">
+      <Project>{da4dde6d-1029-4dc8-ac42-0806319fc0f0}</Project>
+      <Name>SMAT.MVC</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7783</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:7783/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

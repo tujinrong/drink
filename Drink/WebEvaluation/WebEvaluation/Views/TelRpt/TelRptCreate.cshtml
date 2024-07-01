@@ -1,0 +1,538 @@
+﻿@model WebEvaluation.ViewModels.TelRptCreateViewModel
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-telerepo.png";
+    ViewBag.radioClass = "icheckbox_square-blue";
+    ViewBag.Title = "テレフォンレポート情報登録";
+    ViewBag.color = "#002cba";
+
+    if (ViewBag.mode == "refer")
+    {
+        Layout = "~/Views/Shared/_LayoutSub.cshtml";
+    }
+    else {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    
+}
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/Content/summernote.css" rel="stylesheet">
+<script src="~/Scripts/summernote.js"></script>
+<script src="~/Scripts/summernote-ja-JP.js"></script>
+
+<script type="text/javascript"> 
+    function htmlEncode(value) {
+        return $('<div/>').text(value).html();
+    }
+
+    function htmlDecode(value) {
+        return $('<div/>').html(value).text();
+    }
+
+
+    $(document).ready(function () {
+        //20151019
+        //memo
+        $('#summernote-Memo').summernote({
+            toolbar: [
+              ['color', ['fontColor']],
+              ['other', ['fullscreen']]
+            ],
+            lang: 'ja-JP',
+            height: 260,                 // set editor height
+
+            minHeight: 260,             // set minimum height of editor
+            maxHeight: 500,             // set maximum height of editor
+            pasteNoHtml: true,
+            disableDragAndDrop: true
+        });
+        //&lt;p
+        var oldMemoMsg = $('#report_Memo').val();
+        if (oldMemoMsg.indexOf("&lt;") >= 0) {
+            oldMemoMsg = htmlDecode(oldMemoMsg);
+        } else {
+            oldMemoMsg = oldMemoMsg.replace(new RegExp("\n", "gm"), "<br>");
+        }
+        $('#summernote-Memo').code(oldMemoMsg);
+
+        var oldMsg = htmlDecode(htmlDecode($('#msg-box-record').html()));
+        $('#msg-box-record').html(oldMsg);
+
+        var timer = setInterval(keepSession, 60000);
+    });
+</script>
+
+<!--テレフォンレポート情報登録--BUTTON-->
+<div class="jumbotron" style="background-color:#fff1e5">
+    @using (Html.BeginForm("TelRptCreate", "TelRpt", FormMethod.Post, new { @id = "editForm", @class = "form-horizontal", @autocomplete="off", @onsubmit = "return checkForm()" }))
+    {
+        <br>
+        @Html.Hidden("ShopCD", ViewBag.ShopCD as string)
+        @Html.Hidden("PartyDateFrom", ViewBag.PartyDateFrom as string)
+        @Html.Hidden("PartyDateTo", ViewBag.PartyDateTo as string)
+        @Html.Hidden("isPostBack","1")
+        @Html.Hidden("page",ViewBag.page as string)
+        @Html.Hidden("PartyID",Model.party.PartyID)
+        @Html.Hidden("UpdateTime",ViewBag.UpdateTime as string)
+        @Html.Hidden("UpdateUser", ViewBag.UpdateUser as string)
+        @Html.Hidden("UpdateUserID", ViewBag.UpdateUserID as string)
+        @Html.Hidden("actionType", "1")
+        @Html.Hidden("isPartyReport", "")
+        @Html.Hidden("TelState", ViewBag.TelState as string)
+        @Html.Hidden("ReportState", ViewBag.ReportState as string)
+    <!--パーティ情報-->
+        <font color="#aaaaaa">パーティ情報</font>
+        @Html.HiddenFor(model=>model.report.PartyID)
+        <table class="table form-table">
+                    <tr class="" >
+                        <td align="right" class="edit-title" style="width:10%">店舗：</td>
+                        <td style="width:15%">
+                            @if (string.IsNullOrEmpty(Model.party.HallType))
+                            {
+                                @Html.DisplayFor(model => model.party.ShopCD)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => model.party.ShopCD)
+                                <font>(</font>
+                                @Html.DisplayFor(model => model.party.HallType)
+                                <font>)</font>
+                            }
+                        </td>
+                        <td align="right" class="edit-title" style="width:10%">パーティID：</td>
+                        <td style="width:15%">@Html.DisplayFor(model => model.party.PartyNo)</td>
+                        <td align="right" class="edit-title" style="width:10%">挙式日：</td>
+                        <td style="width:15%">
+                            @Html.DisplayFor(model => model.party.PartyDate)
+                            @Html.DisplayFor(model => model.party.StartTime)
+                        </td>
+                        <td align="right" class="edit-title" style="width:10%">担当者：</td>
+                        <td style="width:15%">@Html.DisplayFor(model => model.party.TantoCD)</td>
+                    </tr>
+            <tr class="" >
+                <td align="right" class="edit-title">新郎氏名：</td>
+                <td >@Html.DisplayFor(model => model.party.BrideName)</td>
+                <td align="right" class="edit-title">かな：</td>
+                <td>@Html.DisplayFor(model => model.party.BrideKana)</td>
+                <td align="right" class="edit-title">自宅Tel：</td>
+                <td>@Html.DisplayFor(model => model.party.BrideHomeTel)</td>
+                <td align="right" class="edit-title">携帯：</td>
+                <td>@Html.DisplayFor(model => model.party.BrideMobile)</td>
+            </tr>
+            <tr class="" >
+                <td align="right" class="edit-title">新婦氏名：</td>
+                <td>@Html.DisplayFor(model => model.party.GroomName)</td>
+                <td align="right" class="edit-title">かな：</td>
+                <td>@Html.DisplayFor(model => model.party.GroomKana)</td>
+                <td align="right" class="edit-title">自宅Tel：</td>
+                <td>@Html.DisplayFor(model => model.party.GroomHomeTel)</td>
+                <td align="right" class="edit-title">携帯：</td>
+                <td>@Html.DisplayFor(model => model.party.GroomMobile)</td>
+            </tr>
+                </table>
+
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li id="li_home" class="@(ViewBag.isPartyReport != "1"?"active":"")" style="width: 50%;">
+            <a href="#home" class="btn btn-gray btn-sm" style="border-left-width: 0;font-size: 16px;padding: 5px;" data-toggle="tab">
+                <img src="~/Content/images/75-phone.png" style="width: 24px;height: 24px;">テレフォンレポート
+            </a>
+        </li>
+        <li id="li_ios" class="@(ViewBag.isPartyReport == "1"?"active":"")" style="width: 50%;">
+            <a href="#ios" class="btn btn-gray btn-sm" style="border-right-width: 0;font-size: 16px;padding: 5px;" data-toggle="tab">
+                <img src="~/Content/images/48-fork-and-knife.png" style="width: 24px;height: 24px;">報告書
+            </a>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade @(ViewBag.isPartyReport != "1"?"in active":"")" id="home" style="">
+
+            <!--レポート情報登録-->
+            <div style="float: left; padding-bottom: 2px;"><font color="#aaaaaa">レポート情報</font></div>
+            <div id="attention" style="padding-left: 135px;float: left;display:none;"><label style="color: red; border: 1px solid red; border-radius: 9px; ">&nbsp;電話否、ご注意ください!&nbsp;</label></div>
+            @*<div id="reportRefer" style="float: right;"><a id="btnReportRefer" class="btn btn-primary btn-sm" style="width: 80px;height: 24px;padding: 0;">報告書</a></div>*@
+
+
+            @Html.Hidden("report.UpdateTime", Model.report.UpdateTime)
+            <div id="report_box">
+                <table class="table form-table" border="0">
+                    <tr>
+                        <td width="140" align="right" class="edit-title">
+                            電話可否：
+                        </td>
+                        <td width="80">
+                            <label class="edit-title">@Html.RadioButtonFor(model => model.report.TelFlg, "1", new { @name = "report.TelFlg", @class = "isCheckChange" }) &nbsp;可</label>
+                        </td>
+                        <td width="80">
+                            <label class="edit-title">@Html.RadioButtonFor(model => model.report.TelFlg, "2", new { @name = "report.TelFlg", @class = "isCheckChange" }) &nbsp;否</label>
+                        </td>
+                        <td width="80" align="right" class="edit-title">備考：</td>
+                        <td>@Html.TextBoxFor(model => model.report.Remark, new { @name = "report.Remark", @class = "form-control isCheckChange", @style = "width:100%", @maxLength = "50" })</td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="edit-title">特記事項：</td>
+                        <td colspan="12">
+                            @Html.TextAreaFor(model => model.report.Memo, new { @class = "form-control isCheckChange", @rows = "8", @style = "resize: vertical;display:none;" })
+                            <div class="summernote-box"><pre id="summernote-Memo" style="width: 100%;background: transparent;border: none;"></pre></div>
+                        </td>
+                    </tr>
+
+                </table>
+                <font color="#aaaaaa">電話内容</font>
+                <table class="table form-table">
+                    <tr>
+                        <td align="right" class="edit-title" width="140">
+                            留意フラグ：
+                        </td>
+                        <td colspan="10">
+                            @if (Model.evaBystaff.CareFlg == "0")
+                            {
+                                <label>要確認</label>
+                            }
+                            @if (Model.evaBystaff.CareFlg == "1")
+                            {
+                                <label>要対応</label>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="edit-title" style="width:120px">電話内容：</td>
+                        <td colspan="13">
+                            <pre id="msg-box-record" style="width: 100%;background: transparent;border: none; max-width:1038px;">@Model.evaBystaff.Record</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" style="height: 0px; background-color: #808080; padding-top: 0px; padding-bottom: 0px;"></td>
+                    </tr>
+                    <tr style="background-color: #fff1e5;">
+                        <td style="border-top-color:#ffffff"></td>
+                        <td style="border-top-color:#ffffff" align="center" class="edit-title" width="150">日付/時間</td>
+                        <td style="border-top-color:#ffffff" width="3px"><img src="~/Content/images/ic-teleline.png"></td>
+                        <td style="border-top-color:#ffffff" align="center" class="edit-title" width="150">通話結果</td>
+                        <td style="border-top-color:#ffffff" width="3px"><img src="~/Content/images/ic-teleline.png"></td>
+                        <td style="border-top-color:#ffffff" align="center" class="edit-title" nowrap="nowrap" width="150">通話時間(分)</td>
+                        <td style="border-top-color:#ffffff" width="3px"><img src="~/Content/images/ic-teleline.png"></td>
+                        <td style="border-top-color:#ffffff" align="center" class="edit-title" width="150">担当</td>
+                        <td style="border-top-color:#ffffff" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" style="height: 0px; background-color: #808080; padding-top: 0px; padding-bottom: 0px; border-top-color:#ffcfa6;"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="edit-title" width="120" style="border-top-color:#aaaaaa">1回目情報</td>
+                        <td style="border-top-color:#aaaaaa" width="180">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva1Date)
+                        </td>
+                        <td style="border-top-color:#aaaaaa"></td>
+                        <td style="border-top-color:#aaaaaa">
+                            @if (Model.evaBystaff.Eva1Result == "0")
+                            {
+                                @("繋がった")
+                            }
+                            @if (Model.evaBystaff.Eva1Result == "1")
+                            {
+                                @("繋がらず")
+                            }
+                            @if (Model.evaBystaff.Eva1Result == "2")
+                            {
+                                @("繋がったが話せず")
+                            }
+                            @if (Model.evaBystaff.Eva1Result == "3")
+                            {
+                                @("留守電")
+                            }
+                            @if (Model.evaBystaff.Eva1Result == "4")
+                            {
+                                @("書面アンケート")
+                            }
+                        </td>
+                        <td style="border-top-color:#aaaaaa"></td>
+                        <td style="border-top-color:#aaaaaa" width="170" align="right">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva1Time)
+                        </td>
+                        <td style="border-top-color:#aaaaaa"></td>
+                        <td style="border-top-color:#aaaaaa" width="80">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva1StaffCD)
+                        </td>
+                        <td style="border-top-color:#aaaaaa" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="edit-title">2回目情報</td>
+                        <td width="180">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva2Date)
+                        </td>
+                        <td></td>
+                        <td>
+                            @if (Model.evaBystaff.Eva2Result == "0")
+                            {
+                                @("繋がった")
+                            }
+                            @if (Model.evaBystaff.Eva2Result == "1")
+                            {
+                                @("繋がらず")
+                            }
+                            @if (Model.evaBystaff.Eva2Result == "2")
+                            {
+                                @("繋がったが話せず")
+                            }
+                            @if (Model.evaBystaff.Eva2Result == "3")
+                            {
+                                @("留守電")
+                            }
+                            @if (Model.evaBystaff.Eva2Result == "4")
+                            {
+                                @("書面アンケート")
+                            }
+                        </td>
+                        <td></td>
+                        <td width="170" align="right">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva2Time)
+                        </td>
+                        <td></td>
+                        <td width="80">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva2StaffCD)
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="edit-title">3回目情報</td>
+                        <td width="180">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva3Date)
+                        </td>
+                        <td></td>
+                        <td>
+                            @if (Model.evaBystaff.Eva3Result == "0")
+                            {
+                                @("繋がった")
+                            }
+                            @if (Model.evaBystaff.Eva3Result == "1")
+                            {
+                                @("繋がらず")
+                            }
+                            @if (Model.evaBystaff.Eva3Result == "2")
+                            {
+                                @("繋がったが話せず")
+                            }
+                            @if (Model.evaBystaff.Eva3Result == "3")
+                            {
+                                @("留守電")
+                            }
+                            @if (Model.evaBystaff.Eva3Result == "4")
+                            {
+                                @("書面アンケート")
+                            }
+                        </td>
+                        <td></td>
+                        <td width="170" align="right">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva3Time)
+                        </td>
+                        <td></td>
+                        <td width="80">
+                            @Html.DisplayFor(model => model.evaBystaff.Eva3StaffCD)
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade @(ViewBag.isPartyReport == "1"?"in active":"")" id="ios" style="">
+            <div id="ReportRefer_box" style="min-height:680px"></div>
+            @*<iframe frameborder="0" src="/Home/ReportRefer?ShopCD=@Model.party.ShopCD&PartyID=@Model.party.PartyID" style="width: 100%; height: 750px;"></iframe>*@
+        </div>
+    </div>
+
+        <div id="party_report_box" style="display:none;">
+            <div class="webui-popover bottom in webui-no-padding" style="display: block;width: 100%;position: inherit;margin-top: 40px;margin-bottom: 10px;">
+                <div class="arrow"></div>
+                <div class="webui-popover-inner">
+                    <a href="#" class="close">x</a>
+                    <h3 class="webui-popover-title">報告書</h3>
+                    <div class="webui-popover-content" style="">
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="btn-box" class="row">
+            <div class="col-lg-12 text-center">
+                <a class="btn btn-success btn-sm" style="width:60px" actiontype ="1" onclick="setActionType(1)">保存</a>
+                <a class="btn btn-success btn-sm" style="width:100px" actiontype ="2" onclick="setActionType(2)">保存終了</a>
+                @Html.ButtonAction(false, "閉じる", "../Party/PartyIndex" + null, new { page = ViewBag.page, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, TelState = ViewBag.TelState, ReportState = ViewBag.ReportState, isPostBack = "1" }, new { @class = "btn btn-primary btn-sm", @style = "width:60px", @checkAction = "checkAction()" })
+            </div>
+        </div>
+    }
+
+    @{
+        var CareFlg = Model.evaBystaff.CareFlg;
+        var Record = Model.evaBystaff.Record;
+        var Eva1Result = Model.evaBystaff.Eva1Result;
+        var Eva2Result = Model.evaBystaff.Eva2Result;
+        var Eva3Result = Model.evaBystaff.Eva3Result;
+        var StatffEva = Model.evaBystaff.StatffEva;
+
+        bool EvaFlag = false;
+
+        if (CareFlg != null || Record != null || Eva1Result != null || Eva2Result != null || Eva3Result != null || StatffEva != null)
+        {
+            EvaFlag = true;
+        }
+        //EvaFlag = true;
+    }
+
+    @if (ViewBag.mode == "refer")
+    {
+        <script type="text/javascript">
+            $("#btn-box").remove();
+        </script>
+    }
+
+    @if (EvaFlag == true)
+    {
+       <script type="text/javascript">
+           function checkForm() {
+                //if ($("#report_TelFlg:checked").val() != 1 && ($("#report_Memo").val().length >0)) {
+                //     //SMAT.Service.toastr("電話の内容や評価を入力しました、電話可を選択してください！！", "error");
+                //     SMAT.Service.toastr("電話否のため、電話内容・評価の入力は不可", "error");
+                //     return false;
+                // }
+
+                var reportForm = $("#ReportRefer_box").find(".report_edit_form").ui();
+                if (reportForm) {
+                    reportForm.doAction(reportForm.config.actions[0]);
+                    debugger;
+                    if (reportForm.ReturnValue != 0) {
+                        return false;
+                    }
+                }               
+
+                return true;
+          }
+    </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            function checkForm() {
+                //if (($("#report_TelFlg:checked").val() != 1 && $("#report_TelFlg:checked").val() != 2)&&($("#report_Memo").val().length >0)) {
+                //    SMAT.Service.toastr("電話可否欄の入力をしてください", "error");
+                //    return false;
+                //}
+
+                var reportForm = $("#ReportRefer_box").find(".report_edit_form").ui();                
+                if (reportForm) {
+                    reportForm.doAction(reportForm.config.actions[0]);
+
+                    if (reportForm.ReturnValue != 0) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        </script>
+    }
+
+    <script type="text/javascript">
+    function checkAction() {
+        $('#report_Memo').val(htmlEncode($('#summernote-Memo').code()));
+        var reportForm = $("#ReportRefer_box").find(".report_edit_form").ui();
+        if (CheckChanged() || (reportForm && reportForm.isChanged())) {
+            return confirm("変更があっても破棄してよろしいでしょうか？");
+        } else {
+            return true;
+        }
+    }
+
+    function setActionType(t) {
+        if ($("#ios").hasClass("active")) {
+            $("#isPartyReport").val(1);
+        } else {
+            $("#isPartyReport").val("");
+        }
+        $("#actionType").val(t);
+        $('#report_Memo').val(htmlEncode($('#summernote-Memo').code()));
+        $('#editForm').submit();
+    }
+
+    var openFlg = false;
+    function openPartyReportEdit() {
+        if (openFlg) {
+            return;
+        }
+        openFlg = true;
+
+        smat.service.openPage({
+            page: {
+                projID: 1,
+                entityName: "Y_AnalysisField",
+                pageName: "PartyReportEdit"
+            },
+            params: {
+                partyData: {
+                    ShopCD: "@Model.party.ShopCD",
+                    PartyID: "@Model.party.PartyID",
+                    StaffCD: "",
+                    StaffName: "@Model.party.TantoCD"
+                }
+            },
+            fillTarget: "ReportRefer_box",
+            afterOpen: function (smatWindow) {
+                //smatWindow.parent().css('z-index', 1);
+            }
+        });
+    }
+
+    $("#UpdateTime").val("@(ViewBag.UpdateTime as string)");
+
+        $(":radio").on('ifClicked', function (event) {
+            $(event.target).iCheck('uncheck');
+        });
+
+        $("input[id='report_TelFlg'][value='2']").on('ifChecked', function (event) {
+            $("#attention").show();
+        });
+
+        $("input[id='report_TelFlg'][value='2']").on('ifUnchecked', function (event) {
+            $("#attention").hide();
+        });
+
+        $("#myTab").on("click", "li", function () {
+            //do something here
+            if (this.id == "li_ios") {
+                openPartyReportEdit();
+            }
+        });
+
+        $(document).ready(function () {
+            //フォームデータを取得する
+            $('#report_Memo').val(htmlEncode($('#summernote-Memo').code()));
+            _formData = GetFormData();
+
+            if ("@ViewBag.isPartyReport" == "1") {
+                openPartyReportEdit();
+            }
+        });
+
+    </script>
+
+    @{
+        var telFlg = ViewBag.telFlg;
+    }
+
+    @if (telFlg == "2")
+    {
+        <script type="text/javascript">
+            $("#attention").show();
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $("#attention").hide();
+        </script>
+    }
+
+
+</div>

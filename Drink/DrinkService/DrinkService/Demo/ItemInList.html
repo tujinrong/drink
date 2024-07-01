@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="jp" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title> ドリンク サービス Application</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.animate.css" type="text/css" />
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common.icon.css" type="text/css" />
+    
+    <!--[if lt IE 9]>
+      <script src="./Scripts/js/ie/html5shiv.js"></script>
+      <script src="./Scripts/js/ie/respond.min.js"></script>
+      <script src="./Scripts/js/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.common-material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.material.min.css" type="text/css">
+    <link rel="stylesheet" href="./SMAT.UI/Styles/asmat.app.css" type="text/css" />
+    <link rel="stylesheet" href="./Styles/Site.css" type="text/css" />
+    
+    <script src="./SMAT.UI/Scripts/jquery.min.js"></script>
+
+   <!-- Bootstrap -->
+    <script src="./SMAT.UI/Scripts/js/bootstrap.js"></script>
+    <!-- App -->
+    <script src="./SMAT.UI/Scripts/js/asmat.app.js"></script>
+
+
+
+    <script src="./SMAT.UI/Scripts/asmat.all.min.js"></script>
+
+    <script src="./Scripts/smat.core.js"></script>
+    <script src="./Scripts/smat.service.js"></script>
+    <script src="./Scripts/smat.ui.js"></script>
+</head>
+<body class="">
+    <section class="vbox">
+        <header class="bg-white-only header header-md navbar navbar-fixed-top-xs">
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a href="Home.html" id="home-link" class="text-muted">
+                        <i class="icon icon-home text"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-form navbar-left input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+                <div class="form-group">
+                    <span class="nav-title">商品別設置リスト</span>
+                </div>
+            </div>
+
+            <div class="navbar-right ">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown">
+                            <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                                <img src="images/temp-user.png" alt="...">
+                            </span>
+                            本社　　江坂　太郎 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight">
+                            <li>
+                                <span class="arrow top"></span>
+                                <a href="PasswordChange.html">パスワード設定</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="Login.html" >ログアウト</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <section id="content">
+                   
+                    <section class="vbox">
+
+                        <!-- contentBody -->
+                        <section class="scrollable wrapper">
+                            <section class="panel panel-default">
+                                <div class="panel-body" style="padding:5px 20px">
+
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-fix-1">
+                                                <div class="form-group">
+                                                    <label class="input-s-sm control-label">店舗</label>
+                                                    <span class="s-widget s-dropdown s-header form-control input-s picker2">
+                                                        <span class="s-dropdown-wrap s-state-default ">
+                                                            <span class="s-input">南森町店</span>
+                                                            <span class="s-select">
+                                                                <span class="s-icon s-i-hbars">select</span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+
+                                    </div>
+
+                                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                                    <div class="row">
+
+                                        <div class="col-sm-6 text-left text-center-xs">
+                                            <button id="button1" class="btn-primary">检索</button>
+                                            <button id="button2" class="btn-primary">PDF出力</button>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                                    <div class="row">
+                                        <div id="demo_list" class="col-xs12"></div>
+                                    </div>
+                                </div>
+                            </section>
+
+<script>
+    $(document).ready(function () {
+
+        $("#button1").asmatButton();
+        $("#button2").asmatButton({
+            click: function () { window.open("/Main/PDFView?Path=66"); }
+        });
+
+        $(".picker2").bind('click', function () {
+            smat.service.doOpenSubForm({
+                url: "ReferShop.html",
+                title: "店舗検索"
+            });
+        });
+
+        $("#input2").asmatDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+            { text: "ニッシンシステム", value: "1" },
+            { text: "ニッシンシステム", value: "2" },
+            { text: "ニッシンシステム", value: "3" },
+            { text: "ニッシンシステム", value: "4" }
+            ],
+            index: 0
+        });
+
+        //数据
+        var dataSource = [
+            { "FIELD1": "1", "FIELD2": "プラセンタ20000", "FIELD3": "4", "FIELD4": "11", "FIELD5": "10022", "FIELD6": "オレンジジュース", "FIELD7": "4", "FIELD8": "11" },
+            { "FIELD1": "2", "FIELD2": "コカ・コーラ", "FIELD3": "3", "FIELD4": "12", "FIELD5": "10024", "FIELD6": "CCレモン", "FIELD7": "3", "FIELD8": "1" },
+            { "FIELD1": "3", "FIELD2": "大塚製薬　ポカリスエット", "FIELD3": "5", "FIELD4": "32", "FIELD5": "10026", "FIELD6": "レットブール", "FIELD7": "1", "FIELD8": "4" },
+            { "FIELD1": "4", "FIELD2": "スパークリング", "FIELD3": "2", "FIELD4": "23", "FIELD5": "10028", "FIELD6": "六甲の水", "FIELD7": "4", "FIELD8": "12" },
+            { "FIELD1": "5", "FIELD2": "キリンビバレッジ", "FIELD3": "1", "FIELD4": "14", "FIELD5": "10020", "FIELD6": "オレンジジュース", "FIELD7": "6", "FIELD8": "11" }
+        ];
+
+        //列信息
+        var columns =
+           [
+               
+            {
+                field: "FIELD1",
+                title: "№",
+                attributes: {
+                    "class": "text-center "
+                },
+                width: "60px"
+            }, {
+                field: "FIELD5",
+                title: "コード",
+                width: "100px"
+            },
+            {
+                field: "FIELD2",
+                title: "商品名"
+            },
+            {
+                field: "FIELD3",
+                title: "在庫数",
+                attributes: {
+                    "class": "text-right"
+                },
+                width: "80px"
+            }
+           ];
+
+        $("#demo_list").asmatGrid({
+            dataSource: dataSource,
+            sortable: true,
+            columns: columns,
+            scrollable: false,
+            dataBound: function(e) {
+            }
+        });
+    });
+</script>
+
+
+
+                        </section>
+                        <!-- /contentBody -->
+                    </section>
+                    </section>
+            </section>
+        </section>
+    </section>
+
+    
+</body>
+
+</html>

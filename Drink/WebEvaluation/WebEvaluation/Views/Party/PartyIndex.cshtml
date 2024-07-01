@@ -1,0 +1,336 @@
+﻿@model PagedList.IPagedList<WebEvaluation.ViewModels.PartyIndexViewModel>
+
+@using PagedList.Mvc;
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-telerepo.png";
+    ViewBag.Title = "テレフォンレポート入力";
+    ViewBag.color = "#002cba";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div class="jumbotron">
+        <div style="padding-top:20px"></div>
+        <div class="col-lg-6 text-left" style="padding-left:0px;padding-bottom:4px;"><font color="#aaaaaa">検索条件</font></div>
+        @using (Html.BeginForm("PartyIndex", "Party", FormMethod.Post, new { @class = "form-horizontal", @onsubmit = "return checkForm()" }))
+        {
+            @Html.Hidden("isPostBack",ViewBag.isPostBack as string)
+            
+                <table class="table form-table" border="0">
+                <tr>
+                    <td style="width:160px" align="right" class="edit-title">店舗：</td>
+                    @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02"
+                        //|| (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04"
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "05" //20151025 「業務管理者」権限を追加。
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                    {
+                        <td style="width:160px">@Html.CodeName("ShopCD", "shop", ViewBag.ShopCD as string)</td>
+                        <td class="text-left" colspan="4">@Html.CodeNameLabel("ShopCD")</td>
+                    }
+                    else
+                    {
+                        var shopCD = (Session["user"] as WebEvaluation.DataModels.UserSession).ShopCD;
+                         <td>@shopCD</td>
+                            
+                        <td colspan="3"><input type="hidden" name="ShopCD" value="@shopCD" /></td>
+                    }
+                </tr>
+                <tr >
+                    <td style="width:160px" align="right" class="edit-title">挙式日：</td>
+                    <td style="width:160px">
+                        @Html.DatePicker("PartyDateFrom", ViewBag.PartyDateFrom as string, new { @class = "s-range-from", @rangekey="partyDate" })
+                    </td>
+                    <td style="width:40px" align="center">～</td>
+                    <td style="width:160px">
+                        @Html.DatePicker("PartyDateTo", ViewBag.PartyDateTo as string, new { @class = "s-range-to", @rangekey = "partyDate" })
+                    </td>
+                    <td>
+                        
+                        <label class="checkbox m-l-md i-checks" style="margin-left: 60px;color: #892c2c;">登録状況：</label>
+                        <label class="checkbox m-l-md i-checks" style="margin-left: 0;"><input class="chs-item not-i-check" style="" type="checkbox" name="TelState" checked="@(ViewBag.TelState == "on")"><i></i><span><img src="~/Content/images/75-phone.png" class=" " style="width: 24px;height: 24px;" /></span></label>
+                        <label class="checkbox m-l-md i-checks" style=""><input class="chs-item not-i-check" style="" type="checkbox" name="ReportState" checked="@(ViewBag.ReportState == "on")"><i></i><span><img src="/Content/images/48-fork-and-knife.png" class=" " style="width: 24px;height: 24px;" /></span></label>
+                    </td>
+                </tr>
+                @*<tr>
+                    <td style="width:160px" align="right" class="edit-title"><img  src="/Content/images/48-fork-and-knife.png" class=" " style="margin-left:40px;width: 24px;height: 24px;margin-top: 5px;" />：</td>
+                    <td colspan="8">
+                        <label class="checkbox m-l-md i-checks" style="margin-left: 0;"><input class="chs-item not-i-check" style="" type="checkbox" name="ReportState0" checked="@(ViewBag.ReportState0 == "on")"><i></i><span style="">未入力</span></label>
+                        <label class="checkbox m-l-md i-checks" style=""><input class="chs-item not-i-check" style="" type="checkbox" name="ReportState1" checked="@(ViewBag.ReportState1 == "on")"><i></i><span><img src="/Content/images/dish2.png" style="width: 24px;height: 24px;margin-top: -3px;">未完了</span></label>
+                        <label class="checkbox m-l-md i-checks" style=""><input class="chs-item not-i-check" style="" type="checkbox" name="ReportState2" checked="@(ViewBag.ReportState2 == "on")"><i></i><span><img src="/Content/images/dish1.png" style="width: 24px;height: 24px;margin-top: -3px;">完了</span></label>
+
+                    </td>
+                </tr>*@
+            </table>
+            <div class="row" style="padding-top:15px">
+                <div class="col-lg-12 text-center">
+                    <button class="btn btn-primary btn-sm" type="submit">&nbsp;検&nbsp;&nbsp;索&nbsp;</button>
+                    <button id="csv_btn" class="btn btn-primary btn-sm" type="button">CSV出力</button>
+                </div>
+            </div>
+        }
+        @if (null != Model && Model.Count > 0)
+        {
+        <!--party一覧-->
+        <div class="col-lg-4 text-left" style="padding-left:0px"><font color="#aaaaaa">パーティ一覧</font></div>
+        <div class="col-lg-8 text-right" style="padding-right:0px;">
+                @Html.PagedListPager(Model, page => Url.Action("PartyIndex", new { page, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, isPostBack = ViewBag.isPostBack, TelState = ViewBag.TelState, ReportState = ViewBag.ReportState }))
+        </div>
+        <form method="post" action="../TelRpt/TelRptCreate">            
+            <table class="table form-table table-hover" border="0">
+                
+                <thead>
+                    <tr >
+                        <th class="text-left">店舗</th>
+                        <th class="text-left">挙式日</th>
+                        <th class="text-left">会場種別</th>
+                        <th class="text-left">開始時間</th>
+                        <th class="text-left">担当者</th>
+                        <th class="text-left">新郎氏名</th>
+                        <th class="text-left">新婦氏名</th>
+                        <th class="text-center">電話可</th>
+                        <th class="text-center">留意</th>
+                        <th class="text-center">評価</th>
+                        <th class="text-center"><img src="~/Content/images/75-phone.png" style="width: 24px;height: 24px;"></th>
+                        <th class="text-center"><img src="~/Content/images/48-fork-and-knife.png" style="width: 24px;height: 24px;"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                
+                                @foreach (var item in Model)
+                                {
+                                    <tr style="background-color:white">
+                                        <td class="text-left">
+                                            @Html.DisplayFor(modelItem => item.ShopCD)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PartyDate)
+                                        </td>
+                                        <td class="text-left">
+                                            @Html.DisplayFor(modelItem => item.HallType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StartTime)
+                                        </td>
+                                        <td class="text-left">
+                                            @Html.DisplayFor(modelItem => item.TantoCD)
+                                        </td>
+                                        <td class="text-left">
+                                            @Html.DisplayFor(modelItem => item.BrideName)
+                                        </td>
+                                        <td class="text-left">
+                                            @Html.DisplayFor(modelItem => item.GroomName)
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.TelFlg == "1")
+                                            {
+                                                <font color="blue">@("可") </font>
+                                            }
+                                            else if (item.TelFlg == "2")
+                                            {
+                                                <font color="red"> @("否") </font>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.CareFlg == "0" || item.CareFlg == "1")
+                                            {
+                                                <img style="" src="~/Content/images/check-red.png" />
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.LeaderEva == "A")
+                                            {
+                                                <img src="../../Content/icon/A.gif" title="A">
+                                            }
+                                            else if (item.LeaderEva == "B")
+                                            {
+                                                <img src="../../Content/icon/B.gif" title="B">
+                                            }
+                                            else if (item.LeaderEva == "C")
+                                            {
+                                                <img src="../../Content/icon/C.gif" title="C">
+                                            }
+                                            else if (item.LeaderEva == "D")
+                                            {
+                                                <img src="../../Content/icon/D.gif" title="D">
+                                            }
+                                            else if (item.LeaderEva == "E")
+                                            {
+                                                <img src="../../Content/icon/E.gif" title="E">
+                                            }
+                                            else if (item.LeaderEva == "F")
+                                            {
+                                                <img src="../../Content/icon/F.gif" title="F">
+                                            }
+                                            else if (item.LeaderEva == "S")
+                                            {
+                                                <img src="../../Content/icon/S.gif" title="S">
+                                            }
+                                            else if (item.LeaderEva == "SS")
+                                            {
+                                                <img src="../../Content/icon/SS.gif" title="SS">
+                                            }
+                                            else if (item.LeaderEva == "H")
+                                            {
+                                                <img src="../../Content/icon/H.png" title="H">
+                                            }
+                                            else if (item.LeaderEva == "X")
+                                            {
+                                                <img src="../../Content/icon/X.png" title="X">
+                                            }
+                                            else if (item.LeaderEva == "Y")
+                                            {
+                                                <img src="../../Content/icon/Y.png" title="Y">
+                                            }
+                                            else if (item.LeaderEva == "Z")
+                                            {
+                                                <img src="../../Content/icon/Z.png" title="Z">
+                                            }
+                                            else if (item.StatffEva == "A")
+                                            {
+                                                <img src="../../Content/icon/A.gif" title="A">
+                                            }
+                                            else if (item.StatffEva == "B")
+                                            {
+                                                <img src="../../Content/icon/B.gif" title="B">
+                                            }
+                                            else if (item.StatffEva == "C")
+                                            {
+                                                <img src="../../Content/icon/C.gif" title="C">
+                                            }
+                                            else if (item.StatffEva == "D")
+                                            {
+                                                <img src="../../Content/icon/D.gif" title="D">
+                                            }
+                                            else if (item.StatffEva == "E")
+                                            {
+                                                <img src="../../Content/icon/E.gif" title="E">
+                                            }
+                                            else if (item.StatffEva == "F")
+                                            {
+                                                <img src="../../Content/icon/F.gif" title="F">
+                                            }
+                                            else if (item.StatffEva == "S")
+                                            {
+                                                <img src="../../Content/icon/S.gif" title="S">
+                                            }
+                                            else if (item.StatffEva == "SS")
+                                            {
+                                                <img src="../../Content/icon/SS.gif" title="SS">
+                                            }
+                                            else if (item.StatffEva == "H")
+                                            {
+                                                <img src="../../Content/icon/H.png" title="H">
+                                            }
+                                            else if (item.StatffEva == "X")
+                                            {
+                                                <img src="../../Content/icon/X.png" title="X">
+                                            }
+                                            else if (item.StatffEva == "Y")
+                                            {
+                                                <img src="../../Content/icon/Y.png" title="Y">
+                                            }
+                                            else if (item.StatffEva == "Z")
+                                            {
+                                                <img src="../../Content/icon/Z.png" title="Z">
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.FinishFlag == true)
+                                            {
+                                                <img style="width:28px;height:28px" src="~/Content/images/finish32.png" />
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.ReportState == "1")
+                                            {
+                                                <img style="" src="~/Content/images/dish2.png" />
+                                            }
+                                            else if (item.ReportState == "2")
+                                            {
+                                                <img style="" src="~/Content/images/dish1.png" />
+                                            } 
+                                        </td>
+                                        <td>
+                                            <div class="col-lg-12">
+                                                @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01"
+                                                    && (Session["user"] as WebEvaluation.DataModels.UserSession).ShopCD != item.ShopCD)
+                                                {
+                                                    
+                                                }
+                                                else { 
+                                                    @Html.ButtonAction(false, "詳細", "../TelRpt/TelRptCreate/" + @item.PartyID, new { page = Model.PageNumber, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, TelState = ViewBag.TelState, ReportState = ViewBag.ReportState }, new { @class = "btn btn-primary btn-xs" })
+                                                    @*<button  class="btn btn-primary btn-sm btn-report" PartyID ="@item.PartyID" type="button">報告書</button>*@
+                                                }
+                                                
+                                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("PartyIndex", new { page, ShopCD = ViewBag.ShopCD, PartyDateFrom = ViewBag.PartyDateFrom, PartyDateTo = ViewBag.PartyDateTo, isPostBack = ViewBag.isPostBack }))
+
+        </form>
+        }
+        <script type="text/javascript">
+            function checkForm() {
+                if ($("#PartyDateFrom").val().trim().length == 0) {
+                    SMAT.Service.toastr("開始挙式日を入力してください！", "error");
+                    $("#PartyDateFrom").focus();
+                    return false;
+                }
+
+                if (!CheckDateFromTo("partyDate"))
+                {
+                    SMAT.Service.toastr("日付け指定にエラーがあります！", "error");
+                    $("#PartyDateFrom").focus();
+                    return false;
+                }
+                return true;
+            }
+
+            function getParam() {
+                var p = {
+                    ShopCD: $("input[name='ShopCD']").val().trim(),
+                    PartyDateFrom: $("input[name='PartyDateFrom']").val().trim(),
+                    PartyDateTo: $("input[name='PartyDateTo']").val().trim(),
+                    TelState: $("input[name='TelState']").prop("checked")?"on":"",
+                    ReportState: $("input[name='ReportState']").prop("checked") ? "on" : ""
+                }
+
+                return p;
+            }
+
+            $("#csv_btn").bind('click', function (e) {
+
+                if (checkForm() == false) {
+                    return;
+                }
+                var p = getParam();
+
+                SMAT.Service.getServerFile({
+                    url: "@Url.Action("csv")",
+                    params: p
+            });
+            });
+
+            $(".btn-report").bind('click', function (e) {
+                debugger;
+                var p = { PartyID: $(this).attr("PartyID") };
+
+                SMAT.Service.getServerFile({
+                    url: "/TelRpt/ReportExcel",
+                    params: p
+            });
+            });
+
+            
+        </script>
+    </div>
+</body>
+</html>

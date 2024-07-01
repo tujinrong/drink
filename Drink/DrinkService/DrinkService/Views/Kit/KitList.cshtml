@@ -1,0 +1,191 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "初期キット登録";
+}
+<script>
+    function openKitEditForm(dataItem) {
+
+        smat.service.openForm({
+            url: "/Kit/KitEdit",
+            fillTarget: "body_id",
+            params: {
+                shopCD: dataItem.ShopCD == undefined ? "" : dataItem.ShopCD,
+                kitID: dataItem.KitID == undefined ? "" : dataItem.KitID,
+            },
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#kitListPager").ui().dataSource != undefined && $("#kitListPager").ui().dataSource.pageData.length > 0) {
+                        $("#kitListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+    }
+
+    //$(document).ready(function () {
+    //    getKitNameList();
+    //});
+
+    //function getKitNameList() {
+    //    smat.service.loadJosnData({
+    //        url: "/Kit/GetItemKitName",
+    //        success: function (result) {
+
+    //            var emptyItem = {};
+    //            emptyItem.KitID = "";
+    //            emptyItem.KitName = "";
+
+    //            result.unshift(emptyItem);
+
+    //            $("#ddlKitID").ui().setDataSource(result);
+    //        }
+    //    });
+    //}
+
+    function openKitNewtForm(dataItem) {
+
+        if (checkKitNewForm() == true) {
+            smat.service.openForm({
+                url: "/Kit/KitEdit",
+                fillTarget: "body_id",
+                params: {
+                    shopCD: $('#referShopName').ui().value(),
+                },
+                afterClose: function (result) {
+                    if (result != undefined) {
+                        if ($("#kitListPager").ui().dataSource != undefined && $("#kitListPager").ui().dataSource.pageData.length > 0) {
+                            $("#kitListPager").ui().reload();
+                        }
+                        else {
+                            $("#btnSearch").click();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function checkKitNewForm() {
+
+        $(".s-fieldError").removeClass("s-fieldError");
+
+        if ($('#referShopName').ui().value() == "") {
+            smat.service.addErrorInfo("ShopName", $('#referShopName'), "【店舗】を入力してください");
+        }
+
+        return smat.service.isNoError();
+    }
+
+    function downloadKitCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag)
+    {
+        editStr = "参照";
+    }
+}
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+                @using (Html.Smat().BeginForm("kitListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                            {
+                                actions.Action("/Kit/ItemKitSearch").ActionBtn("btnSearch").ResultHandler("kitListPager");
+                                actions.Action("/Kit/KitCsv").ActionBtn("btnCsv").Success("downloadKitCsv");
+                            }
+                        ))
+                {
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-fix-2">
+                                <div class="form-group">
+                                    @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                    {
+                                        @Html.Smat().TextBox("ShopName_Name").Label("店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" })
+                                        @Html.Smat().TextBox("referShopName").Name("shopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Smat().Refer("referShopName").Name("shopCD").Label("店舗").ReferKey("referShop").HtmlAttributes(new { cookie = "shopCD", style = "width:260px;" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-fix-2">
+                                <div class="form-group">
+                                    @(Html.Smat().TextBox("ddlKitID")
+                                                .Label(label =>
+                                                {
+                                                    label.Text("キット名");
+                                                })
+                        .Name("kitName").HtmlAttributes(new { style = "width:260px;" }).MaxLength(30)
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                    <div class="row row-tool">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            @Html.Smat().Button("btnCsv").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                            @(Html.Smat().Button("btnNew")
+                                      .Content("新規")
+                                      .HtmlAttributes(new { @class = "btn-primary" })
+                                      .Events(events =>
+                                      {
+                                          events.Click("openKitNewtForm");
+                                      })
+                            )
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            @Html.Smat().Pager("kitListPager").DataHandler("kitListGrid")
+                        </div>
+                    </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("kitListGrid")
+                          .Columns(columns =>
+                          {
+                              columns.Bound("ShopName").Title("店舗");
+                              columns.Bound("KitName").Title("キット名").Width("240px");
+                              columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                                ).Actions(actions =>
+                                 {
+                                     actions.Text(editStr).Click("openKitEditForm");
+                                 });
+                          })
+                )
+            </div>
+        </div>
+    </section>
+    <script>
+    $(document).ready(function () {
+        if (Modernizr.ios || Modernizr.android) {
+            $("#btnCsv").hide();
+        };
+    });
+    </script>
+</section>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnNew").ui().visible(false);
+        }
+    });
+</script>*@

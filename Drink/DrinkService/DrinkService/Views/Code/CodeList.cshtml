@@ -1,0 +1,126 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "汎用コードマスタ";
+}
+
+<script>
+    function openCodeEditForm(dataItem) {
+
+        smat.service.openForm({
+            url: "/Code/CodeEdit",
+            fillTarget: "body_id",
+            params: {
+                kind: dataItem.Kind == undefined ? "" : dataItem.Kind,
+                cD: dataItem.CD == undefined ? "" : dataItem.CD,
+            },
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#codeListPager").ui().dataSource != undefined && $("#codeListPager").ui().dataSource.pageData.length > 0) {
+                        $("#codeListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+    }
+
+    function downloadCodeCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+
+    function checkFrom() {
+        if ($('#CodeListKind').ui().value() == "") {
+            smat.service.addErrorInfo("RoleCD", $('#CodeListKind'), "【種別】を選択ください。");
+        }
+    }
+
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag)
+    {
+        editStr = "参照";
+    }
+}
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+            @using (Html.Smat().BeginForm("codeListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                {
+                    actions.Action("/Code/CodeSearch").ActionBtn("btnSearch").CheckForm("checkFrom").ResultHandler("codeListPager");
+                    actions.Action("/Code/CodeCsv").ActionBtn("btnCsv").CheckForm("checkFrom").Success("downloadCodeCsv");
+                }
+            ))
+            {
+                <div class="row">
+                    <div class="form-group col-fix-2">
+                        @(Html.Smat().DropDownList("CodeListKind")
+                            .Label(label =>{
+                                        label.Text("種別");
+                                    })
+                            .Name("Kind")
+                            .CodeKind(DrinkService.Models.ModelBase.CN区分)
+                        )
+                    </div>
+                </div>
+            }
+            <div class="line line-dashed b-b line-lg pull-in "></div>
+            <div class="row row-tool">
+                <div class="col-sm-6 text-left text-center-xs">
+                    @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                    @Html.Smat().Button("btnCsv").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                    @(Html.Smat().Button("btnNew")
+                            .Content("新規")
+                            .HtmlAttributes(new { @class = "btn-primary" })
+                            .Events(events =>{
+                                events.Click("openCodeEditForm");
+                            }))
+                </div>
+                <div class="col-sm-6 text-right text-center-xs">
+                    @Html.Smat().Pager("codeListPager").DataHandler("codeListGrid")
+                </div>
+            </div>
+                
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("codeListGrid")
+                          .Columns(columns =>
+                          {
+                              columns.Bound("Kind").Title("種別").Width("80px").CodeKind(DrinkService.Models.ModelBase.CN区分);
+                              columns.Bound("CD").Title("コード").Width("90px");
+                              columns.Bound("Name").Title("名称");
+                              columns.Bound("RefNo").Title("関連数値").Width("140px").HtmlAttributes(new { @class = "text-right" });
+                              columns.Bound("RefCD").Title("関連コード").Width("140px");
+                              columns.Bound(" ").Title(" ").Width("100px").HtmlAttributes(new { @class = "text-center" }).Actions(actions =>{
+                                  actions.Text(editStr).Click("openCodeEditForm");
+                                 });
+                          })
+                )
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                if (Modernizr.ios || Modernizr.android) {
+                    $("#btnCsv").hide();
+                };
+            });
+        </script>
+
+    </section>
+</section>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnNew").ui().visible(false);
+        }
+    });
+</script>*@

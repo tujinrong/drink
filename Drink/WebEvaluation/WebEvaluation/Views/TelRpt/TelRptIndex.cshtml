@@ -1,0 +1,145 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.TelRptViewModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.IMG = "../../Content/icon/m05.png";
+    ViewBag.Title = "検索結果";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="jumbotron">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-lg-12 control-label">
+                @Html.OpenWindow("プレビュー", "/TelRptIndexPreview", "1440", "800", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo,Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.Sort, Tel = ViewBag.Tel }, new { @class = "btn btn-info btn-sm" })
+                @Html.ButtonAction(true, "CSV出力", "/csv", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo,Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.Sort, Tel = ViewBag.Tel }, new { @class = "btn btn-success btn-sm" })
+                @Html.ButtonAction(false, "再検索", "TelRptSearch", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo,Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.Sort, Tel = ViewBag.Tel }, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+    </form>
+    <!--テレーフォンレポート一覧-->
+    <table class="table table-bordered table-hover text-center" border="1">
+        <thead>
+            <tr class="text-center" style="background-color:#e5e5e5">
+                <th class="text-center" width="5%">№</th>
+                @if (ViewBag.Sort == "partyDate")
+                {
+                    <th class="text-center" width="7%">挙式日</th> 
+                    <th class="text-center" width="7%">店舗</th>
+                    <th class="text-center" width="7%">担当者</th>
+                }
+                else if (ViewBag.Sort == "staff")
+                { 
+                    <th class="text-center" width="7%">担当者</th>  
+                    <th class="text-center" width="7%">店舗</th>
+                    <th class="text-center" width="7%">挙式日</th>  
+                }
+                else if (ViewBag.Sort == "shop")
+                { 
+                    <th class="text-center" width="7%">店舗</th>
+                    <th class="text-center" width="7%">挙式日</th>
+                    <th class="text-center" width="7%">担当者</th> 
+                }
+                
+                <th class="text-center" width="">電話内容</th>
+                @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                {
+                    <th class="text-center" width="8%">評価</th>
+                    <th class="text-center" width="10%">二次評価</th>
+                }
+            </tr>
+        </thead>
+        @{ var no = 0;}
+        @foreach (var item in Model)
+        {
+            <tr class="" style="background-color:white">
+                <td class="text-center">
+                    @(++no)
+                </td>
+                @if (ViewBag.Sort == "partyDate")
+                {
+                     <td>
+                        @Html.DisplayFor(modelItem => item.HoldDate)
+                    </td>
+                     <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    <td class="text-left" nowrap>
+                        @Html.DisplayFor(modelItem => item.StaffName)
+                    </td>
+                }
+                else if (ViewBag.Sort == "staff")
+                {
+                    <td class="text-left" nowrap>
+                        @Html.DisplayFor(modelItem => item.StaffName)
+                    </td>
+                     <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HoldDate)
+                    </td>  
+                }
+                else if (ViewBag.Sort == "shop")
+                {
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HoldDate)
+                    </td>
+                    <td class="text-left" nowrap>
+                        @Html.DisplayFor(modelItem => item.StaffName)
+                    </td>
+                }
+
+                @if (ViewBag.showType1 == "1")
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TelMemo)
+                    </td>
+                }
+                else
+                {
+                    <td class="text-left">
+                        <div class="tab-content">
+                            @{
+                                List<string> tel = ViewBag.Tel; 
+                            }
+                            <!--by 屠　-->
+
+                            @if (null != tel && tel.Contains("memo_special") && !String.IsNullOrEmpty(item.TelMemo_special))
+                            {
+                                <h5 class="list-group-item-heading">【特記事項】</h5>
+                                <pre style="width: 670px;background: transparent;border: none;">
+                                    @Html.DisplayFor(modelItem => item.TelMemo_special)
+                                </pre>
+                            }
+
+                            @if (!String.IsNullOrEmpty(item.TelMemo))
+                            {
+                                <h5 class="list-group-item-heading">【電話内容】</h5>
+                                <pre style="width: 670px;background: transparent;border: none;">
+                                    @Html.DisplayFor(modelItem => item.TelMemo)
+                                </pre>
+                            }
+                            
+                        </div>
+
+                    </td>
+
+                }
+                @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StaffEva)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LeaderEva)
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+
+</div>

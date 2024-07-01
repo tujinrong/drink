@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "";
+}
+
+<section class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-fix-2 form-group">
+                    <div id="options">
+                        <label class="input-s control-label">Customize DataSource1</label>
+                        @(Html.Smat().DropDownList("color")
+                              .DataTextField("Text")
+                              .DataValueField("Value")
+                              .BindTo(new List<SelectListItem>() {
+                              new SelectListItem() {
+                                  Text = "Black",
+                                  Value = "1"
+                              },
+                              new SelectListItem() {
+                                  Text = "Orange",
+                                  Value = "2"
+                              },
+                              new SelectListItem() {
+                                  Text = "Grey",
+                                  Value = "3"
+                              }
+                            })
+                            .Value("1")
+                        )
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-2 form-group">
+                    <label class="input-s control-label">Customize DataSource2</label>
+                    @(Html.Smat().DropDownList("size")
+                          .BindTo(new List<string>() {
+                              "S - 6 3/4\"",
+                              "M - 7 1/4\"",
+                              "L - 7 1/8\"",
+                              "XL - 7 5/8\""
+                          })
+                    )
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-2 form-group">
+                    <label class="input-s control-label">Code Master DataSource1</label>
+                    @(Html.Smat().DropDownList("codeMst1")
+                          .CodeKind("00")
+                    )
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-fix-2 form-group">
+                    <label class="input-s control-label">Code Master DataSource2</label>
+                    @(Html.Smat().DropDownList("codeMst2")
+                          .CodeKind("01")
+                          .EmptyText("All")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="m-b-md">
+    <h3 id="demo-type-title" class="m-b-none">Elements</h3>
+
+    <div class="other-source">
+        <h4>demo also available for:</h4>
+        <ul id="other-source-ul"></ul>
+    </div>
+
+</div>
+
+<!-- =====================以下是code显示区域 =====================-->
+<section class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="code-tabstrip">
+            <ul>
+                <li class="s-state-active">
+                    demo.html
+                </li>
+            </ul>
+            <div>
+                <pre>
+                <code>
+                        <!-- ====code显示区域 =====-->
+                <script class="source-code" type="text">
+<div class="form-horizontal">
+    <div class="row">
+	    <div class="col-fix-2 form-group">
+	        <div id="options">
+		    <label class="input-s control-label">Customize DataSource1</label>
+		    @@(Html.Smat().DropDownList("color")
+		          .DataTextField("Text")
+		          .DataValueField("Value")
+		          .BindTo(new List<SelectListItem>() {
+		              new SelectListItem() {
+			          Text = "Black",
+			          Value = "1"
+		              },
+		              new SelectListItem() {
+			          Text = "Orange",
+			          Value = "2"
+		              },
+		              new SelectListItem() {
+			          Text = "Grey",
+			          Value = "3"
+		              }
+		          })
+		          .Value("1")
+		    )
+	        </div>
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-fix-2 form-group">
+	        <label class="input-s control-label">Customize DataSource2</label>
+	        @@(Html.Smat().DropDownList("size")
+		      .BindTo(new List<string>() {
+		          "S - 6 3/4\"",
+		          "M - 7 1/4\"",
+		          "L - 7 1/8\"",
+		          "XL - 7 5/8\""
+		      })
+	        )
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-fix-2 form-group">
+	        <label class="input-s control-label">Code Master DataSource1</label>
+	        @@(Html.Smat().DropDownList("codeMst1")
+		      .CodeKind("00")
+	        )
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-fix-2 form-group">
+	        <label class="input-s control-label">Code Master DataSource2</label>
+	        @@(Html.Smat().DropDownList("codeMst2")
+		      .CodeKind("01")
+		      .EmptyText("All")
+	        )
+	    </div>
+    </div>
+</div>
+                        </script>
+                        <!-- /===code显示区域 =====-->
+                    </code>
+             </pre>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $("#code-tabstrip").asmatTabStrip();
+
+    hljs.configure({ tabReplace: '    ' }); // 4 spaces
+    $('pre code').each(function (i, e) {
+
+        if ($(this).find('.source-code').length > 0) {
+
+            $(this).html((asmat.htmlEncode($(this).find('.source-code').html())));
+
+        }
+
+        hljs.highlightBlock(e)
+    });
+</script>

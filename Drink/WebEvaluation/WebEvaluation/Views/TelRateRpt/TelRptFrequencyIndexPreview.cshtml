@@ -1,0 +1,83 @@
+﻿@model IEnumerable<WebEvaluation.ViewModels.TelRateRptViewModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "通話率一覧プレビュー";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_self" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+
+    <script src="/Scripts/Common/SMAT.Controls.js"></script>
+    <script src="/Scripts/Common/SMAT.Service.js"></script>
+</head>
+
+<body style="padding-top: 0;">
+    <div class="jumbotron" style=" background-color: #ffffff;">
+        <div class="panel panel-default">
+            <table class="table table-condensed table-hover text-center" border="1">
+                <thead>
+                    <tr>
+                        <th class="text-center" colspan="4"></th>
+                        <th class="text-center" colspan="4">一回目</th>
+                        <th class="text-center" colspan="4">二回目</th>
+                        <th class="text-center" colspan="4">三回目</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">事業部</th>
+                        <th class="text-center">グループ名</th>
+                        <th class="text-center">店舗名</th>
+                        <th class="text-center">担当</th>
+                        <th class="text-center">総数</th>
+                        <th class="text-center">繋がった</th>
+                        <th class="text-center">繋がらず</th>
+                        <th class="text-center">通話率</th>
+                        <th class="text-center">総数</th>
+                        <th class="text-center">繋がった</th>
+                        <th class="text-center">繋がらず</th>
+                        <th class="text-center">通話率</th>
+                        <th class="text-center">総数</th>
+                        <th class="text-center">繋がった</th>
+                        <th class="text-center">繋がらず</th>
+                        <th class="text-center">通話率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="" style="background-color:white">
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.DivName)</td>
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.GroupName)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ShopCD)</td>
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.StaffName)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.FirstCount)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.FirstConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.FirstNoConnected)</td>
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.FirstRate)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondCount)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.SecondNoConnected)</td>
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.SecondRate)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdCount)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdConnected)</td>
+                            <td class="text-right">@Html.DisplayFor(modelItem => item.ThirdNoConnected)</td>
+                            <td class="text-left">@Html.DisplayFor(modelItem => item.ThirdRate)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+﻿@{
+    Layout = "~/Views/Shared/_MainFormLayout.cshtml";
+    ViewBag.Title = "担当者マスタ";
+}
+
+<script>
+   
+    function getReferShop() {
+        var param = {
+            shopTypeCD: $("#rdoShopType").ui().value()
+        }
+
+        return param;
+    }
+
+    function onShopTypeChange()
+    {
+        //$("#referShopCD").ui().value("");
+        //$("#referShopCD").ui().reSetCacheValue();
+    }
+
+    function openStaffEditForm(dataItem) {
+        smat.service.openForm({
+            url: "/Staff/StaffEdit",
+            fillTarget: "body_id",
+            params: {
+                shopCD: dataItem.ShopCD == undefined ? "" : dataItem.ShopCD,
+                shopTypeCD: $("#rdoShopType").ui().value(),
+                staffCD: dataItem.StaffCD == undefined ? "" : dataItem.StaffCD
+            },
+            afterClose: function (result) {
+                if (result == true) {
+                    if ($("#staffListPager").ui().dataSource != undefined && $("#staffListPager").ui().dataSource.pageData.length > 0) {
+                        $("#staffListPager").ui().reload();
+                    }
+                    else {
+                        $("#btnSearch").click();
+                    }
+                }
+            }
+        });
+    }
+
+    function downloadStaffCsv(result) {
+        if (result.ResultType == "Success") {
+            $('body').append($('<iframe style="width:1px;height:1px;display: none;" src="' + result.Path + '">'));
+        } else {
+            smat.service.notice({ msg: "対象となるデータがありません。", type: "info" });
+        }
+    }
+</script>
+@{
+    string editStr = "修正";
+    bool refFlag = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).RoleCD == DrinkService.Models.ModelBase.CN役割_本部参照;
+    if (refFlag) {
+        editStr = "参照";
+    }
+}
+<section class="scrollable wrapper">
+    <section class="panel panel-default">
+        <div class="panel-body" style="padding:5px 20px">
+            <div class="form-horizontal">
+                @using (Html.Smat().BeginForm("staffListForm", new { @class = "form-horizontal" }).Actions(actions =>
+                            {
+                                actions.Action("/Staff/StaffSearch").ActionBtn("btnSearch").ResultHandler("staffListPager");
+                                actions.Action("/Staff/StaffCsv").ActionBtn("btnCsv").Success("downloadStaffCsv");
+                            }
+                        ))
+                {
+                    <div class="row">
+                        <div class="col-fix-2">
+                            <div class="form-group">
+                                @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                {
+                                    string shopTypeName = (ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopTypeCD == "1" ? "店舗" : "管理部署";
+                                    @Html.Smat().TextBox("rdoShopTypeName").Label("所属区分").Value(shopTypeName).Enable(false).HtmlAttributes(new { @class = "form-control input-s" })
+                                    @Html.Smat().TextBox("rdoShopType").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopTypeCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s" ,style="display:none;"})
+                                }
+                                else
+                                {
+                                    @(Html.Smat().RadioButton("rdoShopType")
+                                                .Name("shopType")
+                                                .Label("所属区分")
+                                                .DataSource(new List<object>() {
+                                                            new{text="店舗",value="1"},
+                                                            new{text="管理部署",value="2"},
+                                                }).HtmlAttributes(new { style = "width:100px;" })
+                                                .Value("1")
+                                                .Events(events =>
+                                                {
+                                                    events.Change("onShopTypeChange");
+                                                })
+                                                .Enable(false)
+                                    )
+                                }
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-2">
+                            <div class="form-group">
+                                @if ((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).IsShopRole())
+                                {
+                                    @Html.Smat().TextBox("ShopName_Name").Label("部署店舗").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopName).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" })
+                                    @Html.Smat().TextBox("referShopCD").Name("shopCD").Value((ViewBag.LoginUser as DrinkService.Data.Models.UserSession).ShopCD).Enable(false).HtmlAttributes(new { @class = "form-control input-s", style = "display:none;" })
+
+                                }
+                                else
+                                {
+                                    @Html.Smat().Refer("referShopCD").Name("shopCD").Label("部署店舗").ReferKey("referShop").GetParam("getReferShop").HtmlAttributes(new { style = "width:260px" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-fix-2">
+                            <div class="form-group">
+                                @Html.Smat().TextBox("txtStaffName").Name("staffName").Label("名前").HtmlAttributes(new { @class = "form-control input-s", style = "width:260px;" }).MaxLength(30)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in "></div>
+                    <div class="row row-tool">
+                        <div class="col-sm-6 text-left text-center-xs">
+                            @Html.Smat().Button("btnSearch").Content("検索").HtmlAttributes(new { @class = "btn-primary" })
+                            @Html.Smat().Button("btnCsv").Content("CSV").HtmlAttributes(new { @class = "btn-primary" })
+                            @(Html.Smat().Button("btnNew")
+                                .Content("新規")
+                                .HtmlAttributes(new { @class = "btn-primary" })
+                                .Events(events =>{
+                                    events.Click("openStaffEditForm");
+                                })
+                            )
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            @Html.Smat().Pager("staffListPager").DataHandler("staffListGrid")
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+                @(Html.Smat().Grid("staffListGrid")
+                          .Columns(columns =>
+                          {
+                              columns.Bound("ShopName").Title("部署店舗");
+                              columns.Bound("StaffCD").Title("番号").Width("100px");
+                              columns.Bound("StaffName").Title("担当者名").Width("190px");
+                              columns.Bound("RoleCD").Title("役割").Width("180px");
+                              columns.Bound("").Title("").Width("90px").HtmlAttributes(new { @class = "text-center" }
+                                ).Actions(actions =>
+                                 {
+                                     actions.Text(editStr).Click("openStaffEditForm");
+                                 });
+                          })
+                )
+            </div>
+        </div>
+    </section>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#referShopCD").ui().bind("getParam", getReferShop);
+        if (Modernizr.ios || Modernizr.android) {
+            $("#btnCsv").hide();
+        };
+    });
+
+</script>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        if (mainRoleCD == mainCN役割_本部参照) {
+            $("#btnNew").ui().visible(false);
+        }
+    });
+</script>*@ 

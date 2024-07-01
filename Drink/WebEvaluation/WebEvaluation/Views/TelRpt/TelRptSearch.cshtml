@@ -1,0 +1,872 @@
+﻿@model PagedList.IPagedList<WebEvaluation.ViewModels.TelRptViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-teleinfo.png";
+    ViewBag.Title = "テレフォンレポート閲覧";
+    ViewBag.color = "#002cba";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <div style="position:absolute;top:40px;right:30px; z-index: 2;">
+        @Html.ActionLink("通話率一覧", "TelRptFrequencySearch", "TelRateRpt", new { Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.SortRate, SortRpt = ViewBag.Sort, GroupBy = ViewBag.GroupBy, isPostBack = 1 }, null)
+    </div>
+    <div style="padding-top:15px"></div>
+    <!--検索条件-->
+    @using (Html.BeginForm("TelRptSearch", "TelRpt", FormMethod.Post, new { @class = "form-horizontal", @onsubmit = "return checkForm()" }))
+    {
+        @Html.Hidden("isPostBack",ViewBag.isPostBack as string)
+        
+        <div class="row" style="padding:0px 0px;">
+           
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;期間指定</font></div>
+
+                <table id="tb_Time" class="table form-table">
+                    <tr id="tr_Months" class="tr-enable">
+
+                        <td class="text-left">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Months", null)&nbsp;月度：
+                            </label>
+                        </td>
+                        <td>
+                            @Html.MonthsPicker("Months", ViewBag.Months as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Custom" class="tr-disable">
+                        <td class="text-left">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Custom", null)&nbsp;自由：
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DatePicker("DateFrom", ViewBag.DateFrom as string, new { @class = "s-range-from", @rangekey = "partyDate" })
+                        </td>
+                        <td style="text-align:center">～</td>
+                        <td>
+                            @Html.DatePicker("DateTo", ViewBag.DateTo as string, new { @class = "s-range-to", @rangekey = "partyDate" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_Year" class="tr-disable">
+                        <td class="text-left" width="100">
+                            <label class="edit-title">
+                                @Html.RadioButtonFor("Time", ViewBag.Time as string, "Year", null)&nbsp;年度：
+
+                            </label>
+                        </td>
+                        <td width="180">
+                            @Html.YearsPicker("Year", ViewBag.Year as string)
+                        </td>
+                        <td width="50px" class="edit-title">半期</td>
+                        <td width="180">
+                            @Html.CodeDropDownList("Season", "Season", ViewBag.Season as string, new { @class = "form-control input-sm" })
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;範囲指定</font></div>
+                <table id="tb_Range" class="table form-table">
+                    <tr id="tr_division" class="tr-enable">
+                        <td align="left" width="140"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "division", null)&nbsp;事業部/G：</label></td>
+                        <td width="180">
+                            @Html.GroupDropDownList("divisionCD", "groupControl", ViewBag.divisionCD as string)
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr_shop" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "shop", null) &nbsp;店舗：</label></td>
+                        <td>
+                            @Html.CodeName("ShopCD", "shop", ViewBag.ShopCD as string)
+                        </td>
+                        <td class="text-left" colspan="4">
+                            @Html.CodeNameLabel("ShopCD")
+                        </td>
+                    </tr>
+                    <tr id="tr_tanto" class="tr-disable">
+                        <td class="text-left"><label class="edit-title">@Html.RadioButtonFor("Range", ViewBag.Range as string, "tanto", null) &nbsp;担当者：</label></td>
+                        <td>
+                            @Html.CodeName("StaffCD", "staff", ViewBag.StaffCD as string)
+                        </td>
+                        <td class="text-left" colspan="4">
+                            @Html.CodeNameLabel("StaffCD")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        //李梁   2014/09/12
+        if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02"
+            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01" 
+            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+            || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+        {
+        <div class="row" style="padding:0px 0px;">           
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;対象指定</font></div>
+              
+                <table class="table form-table" >
+                    <tr >
+                        @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "01")
+                        {
+                            <td class="text-right edit-title" width="140">二次評価：</td>
+                            <td class="text-left" width="180">
+                                @Html.CodeDropDownList("LeaderEva", "EvaVal2Cdt", ViewBag.LeaderEva as string, new { @class = "form-control input-sm" })
+                            </td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else { 
+                            <td class="text-left edit-title" width="100">評価：</td>
+                            <td class="text-left" width="180">
+                                @Html.CodeDropDownList("StaffEva", "EvaValCdt", ViewBag.StaffEva as string, new { @class = "form-control input-sm" })
+                            </td>
+                            <td class="text-right edit-title" width="140">二次評価：</td>
+                            <td class="text-left" width="180">
+                                @Html.CodeDropDownList("LeaderEva", "EvaVal2Cdt", ViewBag.LeaderEva as string, new { @class = "form-control input-sm" })
+                            </td>
+                        }
+                        
+                        <td></td>
+                        <td></td>
+                        
+                    </tr>
+                </table>
+                
+            </div>
+            <div class="col-lg-6">
+                <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;内容</font></div>
+                <table class="table form-table" >
+                    <tr style="height:34px;">
+                        <td class="text-left" width="140"><label class="edit-title">@Html.CheckBoxFor("Tel", ViewBag.Tel as List<string>, "memo_special", null)&nbsp;&nbsp;特記事項</label></td>
+                        <td class="text-left" width="140">@*<label class="edit-title">@Html.CheckBoxFor("Tel", "memo", ViewBag.Tel as List<string>,null)&nbsp;電話内容</label>*@</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        }else{ 
+            <div class="row" style="padding:0px 0px;">
+                <div class="col-lg-6">
+                    <div class="row"><font color="#aaaaaa">&nbsp;&nbsp;&nbsp;内容</font></div>
+                    <table class="table form-table">
+                        <tr style="height:34px;">
+                            <td class="text-left" width="140"><label class="edit-title">@Html.CheckBoxFor("Tel", ViewBag.Tel as List<string>, "memo_special", null)&nbsp;&nbsp;特記事項</label></td>
+                            <td class="text-left" width="140">@*<label class="edit-title">@Html.CheckBoxFor("Tel", "memo", ViewBag.Tel as List<string>,null)&nbsp;電話内容</label>*@</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          @*<div class="hidden"> @Html.CheckBoxFor("Tel", ViewBag.Tel as List<string>, "memo_special", null)</div>*@
+        }
+        <div class="row" style="padding:0px 0px;">
+           
+            <div class="col-lg-12"><font color="#aaaaaa">表示順</font></div>
+            <div class="col-lg-12">
+            <table class="table form-table" >
+                <tr style="height:34px;">
+                    <td class="text-left" width="120px" nowrap><label class="edit-title">@Html.RadioButtonFor("Sort", ViewBag.Sort as string, "partyDate", null) &nbsp;&nbsp;挙式日順</label></td>
+                    <td class="text-left" width="120px" nowrap><label class="edit-title">@Html.RadioButtonFor("Sort", ViewBag.Sort as string, "staff", null)&nbsp;&nbsp;担当者順</label></td>
+                    <td class="text-left" width="120px" nowrap><label class="edit-title">@Html.RadioButtonFor("Sort", ViewBag.Sort as string, "shop", null)&nbsp;&nbsp;店舗順</label></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            </div>
+        </div>
+    
+        
+        
+        
+    <div class="row" style="padding-top:15px">
+        <div class="col-lg-12 text-center">
+            <button class="btn btn-primary btn-sm" type="submit" >    検　索    </button>
+            <button id="csv_btn" class="btn btn-primary btn-sm" type="button">CSV出力</button>
+            <button id="report_btn" class="btn btn-primary btn-sm" type="button">   帳　票   </button>
+        </div>
+    </div>
+    }
+
+    @if (null != Model && Model.ToList().Count > 0)
+{
+    <div class="row"  style="padding:0px 0px;">
+        <div class="col-lg-12">
+        <!--テレーフォンレポート一覧-->
+        @Html.PagedListPager(Model, page => Url.Action("TelRptSearch", new { page, Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.Sort, Tel = ViewBag.Tel==null? null: (ViewBag.Tel as List<string>)[0], isPostBack = ViewBag.isPostBack }))
+
+        <table class="table form-table table-hover" border="0">
+            <thead>
+                <tr class="text-center" style="background-color:#e5e5e5">
+                    <th class="text-center" width="4%">№</th>
+                    @if (ViewBag.Sort == "partyDate")
+                    {
+                        <th class="text-center" width="6%" style="border-left: 1px solid #dddddd">挙式日</th>
+                        <th class="text-center" width="5%" style="border-left: 1px solid #dddddd" nowrap>店舗</th>
+                        <th class="text-center" width="40px" style="border-left: 1px solid #dddddd">番号</th>
+                        <th class="text-center" width="6%" style="border-left: 1px solid #dddddd">担当者</th>
+                    }
+                    else if (ViewBag.Sort == "staff")
+                    {
+                        <th class="text-center" width="40px" style="border-left: 1px solid #dddddd">番号</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd">担当者</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd" nowrap>店舗</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd">挙式日</th>
+                    }
+                    else if (ViewBag.Sort == "shop")
+                    {
+                        <th class="text-center" style="border-left: 1px solid #dddddd" nowrap>店舗</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd">挙式日</th>
+                        <th class="text-center" width="40px" style="border-left: 1px solid #dddddd">番号</th>
+                        <th class="text-center" style="border-left: 1px solid #dddddd">担当者</th>
+                    }
+                    <th class="text-center" width="85px" style="border-left: 1px solid #dddddd">会場種別</th>
+                    <th class="text-center" width="85px" style="border-left: 1px solid #dddddd">開始時間</th>
+
+                    <th class="text-center" style="min-width:450px;border-left: 1px solid #dddddd">電話内容</th>
+                    @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                    {
+                         <th class="text-center" width="50px" style="border-left: 1px solid #dddddd">評価</th>
+                         <th class="text-center" width="90px" style="border-left: 1px solid #dddddd">二次評価</th>
+                    }
+                    else
+                    {
+                        <th class="text-center" width="90px" style="border-left: 1px solid #dddddd">二次評価</th>
+                    }
+                </tr>
+            </thead>
+            @{
+    var no = (Model.PageNumber - 1) * Model.PageSize;
+            }
+            @foreach (var item in Model)
+            {
+                <tr class="" style="background-color:white">
+                    <td class="text-center">
+                        @(++no)
+                    </td>
+                    @if (ViewBag.Sort == "partyDate")
+                    {
+    <td style="border-left: 1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.HoldDate)
+                        </td>
+    <td class="text-left" style="border-left:1px solid #dddddd">
+        @Html.DisplayFor(modelItem => item.ShopName)
+    </td>
+                         <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffCD)
+                        </td>
+                        <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffName)
+                        </td>
+                    }
+                    else if (ViewBag.Sort == "staff")
+                    {
+                        <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffCD)
+                        </td>
+                        <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffName)
+                        </td>
+    <td class="text-left" style="border-left:1px solid #dddddd">
+        @Html.DisplayFor(modelItem => item.ShopName)
+    </td>
+                        <td style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.HoldDate)
+                        </td>
+                    }
+                    else if (ViewBag.Sort == "shop")
+                    {
+                        <td class="text-left" style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.ShopName)
+                        </td>
+                        <td style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.HoldDate)
+                        </td>
+                        <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffCD)
+                        </td>
+                        <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.StaffName)
+                        </td>
+                    }
+                    
+                    <td style="border-left:1px solid #dddddd">
+                            @Html.DisplayFor(modelItem => item.HallType)
+                    </td>
+                    <td class="text-left" nowrap style="border-left:1px solid #dddddd">
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    @*if (ViewBag.showType1 == "1")*@
+                    @*--by LI--*@
+                    @if(ViewBag.Tel==null)
+                    {
+                        <td style="border-left:1px solid #dddddd;font-family:'Meiryo UI'">
+                            <pre style="width: 505px; background: transparent; border: none; margin: 0px; padding-bottom: 5px; padding-top: 0px;font-family:'Meiryo UI'">@Html.DisplayFor(modelItem => item.TelMemo)</pre>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-left" style="border-left:1px solid #dddddd">
+                            <div class="tab-content">
+                                @{
+                        List<string> tel = ViewBag.Tel;
+                                }
+                                <!--by 屠　-->
+                                @if (null != tel && tel.Contains("memo_special") && !String.IsNullOrEmpty(item.TelMemo_special))
+                                {
+                                    <h5 class="list-group-item-heading" style="margin:0;font-family:'Meiryo UI'">【特記事項】</h5>
+                                    <pre style="width: 480px; background: transparent; border: none; margin: 0px; padding-bottom: 5px; padding-top: 0px;font-family:'Meiryo UI'">@Html.DisplayFor(modelItem => item.TelMemo_special)</pre>
+                                }
+                                @if (!String.IsNullOrEmpty(item.TelMemo))
+                                {
+                                    <h5 class="list-group-item-heading" style="margin:0;font-family:'Meiryo UI'">【電話内容】</h5>
+                                    <pre style="width: 480px;background: transparent;border: none;margin:0px;padding-bottom:5px;padding-top:0px;font-family:'Meiryo UI' ">@Html.DisplayFor(modelItem => item.TelMemo)</pre>
+                                }
+
+                            </div>
+                        </td>
+
+                    }<!--李梁  2014.09.12-->
+                    @if ((Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "02" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "04" 
+                        || (Session["user"] as WebEvaluation.DataModels.UserSession).RoleCD == "09")
+                    {
+                        <td class="text-center" style="border-left:1px solid #dddddd">
+                            @if (item.StaffEva == "A")
+                            {
+                                <img src="../../Content/icon/A.gif" title="A">
+                            }
+                            else if (item.StaffEva == "B")
+                            {
+                                <img src="../../Content/icon/B.gif" title="B">
+                            }
+                            else if (item.StaffEva == "C")
+                            {
+                                <img src="../../Content/icon/C.gif" title="C">
+                            }
+                            else if (item.StaffEva == "D")
+                            {
+                                <img src="../../Content/icon/D.gif" title="D">
+                            }
+                            else if (item.StaffEva == "E")
+                            {
+                                <img src="../../Content/icon/E.gif" title="E">
+                            }
+                            else if (item.StaffEva == "F")
+                            {
+                                <img src="../../Content/icon/F.gif" title="F">
+                            }
+                            else if (item.StaffEva == "S")
+                            {
+                                <img src="../../Content/icon/S.gif" title="S">
+                            }
+                            else if (item.StaffEva == "SS")
+                            {
+                                <img src="../../Content/icon/SS.gif" title="SS">
+                            }
+                            else if (item.StaffEva == "H")
+                            {
+                                <img src="../../Content/icon/H.png" title="H">
+                            }
+                            else if (item.StaffEva == "X")
+                            {
+                                <img src="../../Content/icon/X.png" title="X">
+                            }
+                            else if (item.StaffEva == "Y")
+                            {
+                                <img src="../../Content/icon/Y.png" title="Y">
+                            }
+                            else if (item.StaffEva == "Z")
+                            {
+                                <img src="../../Content/icon/Z.png" title="Z">
+                            }
+                        </td>
+                        <td class="text-center" style="border-left:1px solid #dddddd">
+                            @if (item.LeaderEva == "A")
+                            {
+                                <img src="../../Content/icon/A.gif" title="A">
+                            }
+                            else if (item.LeaderEva == "B")
+                            {
+                                <img src="../../Content/icon/B.gif" title="B">
+                            }
+                            else if (item.LeaderEva == "C")
+                            {
+                                <img src="../../Content/icon/C.gif" title="C">
+                            }
+                            else if (item.LeaderEva == "D")
+                            {
+                                <img src="../../Content/icon/D.gif" title="D">
+                            }
+                            else if (item.LeaderEva == "E")
+                            {
+                                <img src="../../Content/icon/E.gif" title="E">
+                            }
+                            else if (item.LeaderEva == "F")
+                            {
+                                <img src="../../Content/icon/F.gif" title="F">
+                            }
+                            else if (item.LeaderEva == "S")
+                            {
+                                <img src="../../Content/icon/S.gif" title="S">
+                            }
+                            else if (item.LeaderEva == "SS")
+                            {
+                                <img src="../../Content/icon/SS.gif" title="SS">
+                            }
+                            else if (item.LeaderEva == "H")
+                            {
+                                <img src="../../Content/icon/H.png" title="H">
+                            }
+                            else if (item.LeaderEva == "X")
+                            {
+                                <img src="../../Content/icon/X.png" title="X">
+                            }
+                            else if (item.LeaderEva == "Y")
+                            {
+                                <img src="../../Content/icon/Y.png" title="Y">
+                            }
+                            else if (item.LeaderEva == "Z")
+                            {
+                                <img src="../../Content/icon/Z.png" title="Z">
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-center" style="border-left:1px solid #dddddd">
+                            @if (item.LeaderEva == "A")
+                            {
+                                <img src="../../Content/icon/A.gif" title="A">
+                            }
+                            else if (item.LeaderEva == "B")
+                            {
+                                <img src="../../Content/icon/B.gif" title="B">
+                            }
+                            else if (item.LeaderEva == "C")
+                            {
+                                <img src="../../Content/icon/C.gif" title="C">
+                            }
+                            else if (item.LeaderEva == "D")
+                            {
+                                <img src="../../Content/icon/D.gif" title="D">
+                            }
+                            else if (item.LeaderEva == "E")
+                            {
+                                <img src="../../Content/icon/E.gif" title="E">
+                            }
+                            else if (item.LeaderEva == "F")
+                            {
+                                <img src="../../Content/icon/F.gif" title="F">
+                            }
+                            else if (item.LeaderEva == "S")
+                            {
+                                <img src="../../Content/icon/S.gif" title="S">
+                            }
+                            else if (item.LeaderEva == "SS")
+                            {
+                                <img src="../../Content/icon/SS.gif" title="SS">
+                            }
+                            else if (item.LeaderEva == "H")
+                            {
+                                <img src="../../Content/icon/H.png" title="H">
+                            }
+                            else if (item.LeaderEva == "X")
+                            {
+                                <img src="../../Content/icon/X.png" title="X">
+                            }
+                            else if (item.LeaderEva == "Y")
+                            {
+                                <img src="../../Content/icon/Y.png" title="Y">
+                            }
+                            else if (item.LeaderEva == "Z")
+                            {
+                                <img src="../../Content/icon/Z.png" title="Z">
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+        @Html.PagedListPager(Model, page => Url.Action("TelRptSearch", new { page, Time = ViewBag.Time, Year = ViewBag.Year, Season = ViewBag.Season, Months = ViewBag.Months, DateFrom = ViewBag.DateFrom, DateTo = ViewBag.DateTo, Range = ViewBag.Range, divisionCD = ViewBag.divisionCD, ShopCD = ViewBag.ShopCD, StaffCD = ViewBag.StaffCD, StaffEva = ViewBag.StaffEva, LeaderEva = ViewBag.LeaderEva, Sort = ViewBag.Sort, Tel = ViewBag.Tel == null ? null : (ViewBag.Tel as List<string>)[0], isPostBack = ViewBag.isPostBack }))
+    </div>
+  </div>
+}
+    <script type="text/javascript">
+
+
+    $("#ShopCD").ui().onSelectedRow = function (ret) {
+        $("#groupControl").val(ret.paramCD);
+        $("#tb_Range input[type='radio'][value='shop']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+    };
+
+    $("#ShopCD").ui().getParam = function (e) {
+        if ($("#groupControl").val().trim().length > 0) {
+            return "?divisionCD=" + ($("#groupControl").val().trim());
+        } else {
+            return "";
+        }
+
+    };
+
+    $("#StaffCD").ui().getParam = function (e) {
+        if ($("#ShopCD").val().trim().length > 0) {
+            return "?shopCD=" + ($("#ShopCD").val().trim());
+        } else {
+            return "";
+        }
+    }
+
+    //$("#StaffCD").ui().getParam = function (e) {
+    //    return "?initCenter=1";
+    //};
+
+    $("input[name='Months']").bind('focus', function () {
+        $("input[type='radio'][value='Months']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='DateFrom']").bind('focus', function () {
+        $("input[type='radio'][value='Custom']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='DateTo']").bind('focus', function () {
+        $("input[type='radio'][value='Custom']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='Year']").bind('focus', function () {
+        $("input[type='radio'][value='Year']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("select[name='Season']").bind('focus', function () {
+        $("input[type='radio'][value='Year']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+
+    $("select[name='divisionCD']").bind('focus', function () {
+        $("input[type='radio'][value='division']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='ShopCD']").bind('focus', function () {
+        $("#tr_shop input[type='radio'][value='shop']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='StaffCD']").bind('focus', function () {
+        $("input[type='radio'][value='tanto']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+
+
+    $("input[name='Months']").bind('change', function () {
+        $("input[type='radio'][value='Months']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='DateFrom']").bind('change', function () {
+        $("input[type='radio'][value='Custom']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='DateTo']").bind('change', function () {
+        $("input[type='radio'][value='Custom']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='Year']").bind('change', function () {
+        $("input[type='radio'][value='Year']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("select[name='Season']").bind('change', function () {
+        $("input[type='radio'][value='Year']").iCheck('check');
+
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+
+    $("input[name='ShopCD']").bind('change', function () {
+        $("#tr_shop input[type='radio'][value='shop']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("input[name='StaffCD']").bind('change', function () {
+        $("input[type='radio'][value='tanto']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+
+    });
+
+    $("#StaffCD").ui().onSelectedRow = function (ret) {
+        $("#ShopCD").val(ret.paramCD);
+        $("#ShopCD").blur();
+
+        $("input[type='radio'][value='tanto']").iCheck('check');
+
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+    };
+
+    ///////
+    $("input[type='radio'][value='Months']").on('ifChecked', function (event) {
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    $("input[type='radio'][value='Custom']").on('ifChecked', function (event) {
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    $("input[type='radio'][value='Year']").on('ifChecked', function (event) {
+        $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    $("input[type='radio'][value='division']").on('ifChecked', function (event) {
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    $("input[type='radio'][name='Range'][value='shop']").on('ifChecked', function (event) {
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    $("input[type='radio'][value='tanto']").on('ifChecked', function (event) {
+        $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+        $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+    });
+
+    function checkForm() {
+        if ($(":radio[name='Time']:checked").val() == "Months") {
+            if ($("input[name='Months']").val().trim().length == 0) {
+                SMAT.Service.toastr("期間指定(月度)を入力してください！", "error");
+                $("input[name='Months']").focus();
+                return false;
+            }
+        } else if ($(":radio[name='Time']:checked").val() == "Custom") {
+
+
+            if ($("input[name='DateFrom']").val().trim().length == 0) {
+                SMAT.Service.toastr("期間指定(自由)を入力してください！", "error");
+                $("input[name='DateFrom']").focus();
+                return false;
+            }
+
+            if (!CheckDateFromTo("partyDate")) {
+                SMAT.Service.toastr("日付け指定にエラーがあります！", "error");
+                $("input[name='DateFrom']").focus();
+                return false;
+            }
+
+        } else if ($(":radio[name='Time']:checked").val() == "Year") {
+            if ($("input[name='Year']").val().trim().length == 0) {
+                SMAT.Service.toastr("期間指定(年度)を入力してください！", "error");
+                $("input[name='Year']").focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getParam() {
+        var p = {
+            Time: $(":radio[name='Time']:checked").val(),
+            Year: $("input[name='Year']").val().trim(),
+            Season: $("#Season").val(),
+            Months: $("input[name='Months']").val().trim(),
+            DateFrom: $("input[name='DateFrom']").val().trim(),
+            DateTo: $("input[name='DateTo']").val().trim(),
+            Range: $(":radio[name='Range']:checked").val(),
+            divisionCD: $("#groupControl").val(),
+            ShopCD: $("#ShopCD").val().trim(),//------LI
+            StaffCD: $("#StaffCD").val().trim(),//LI-----
+            StaffEva: $("#StaffEva").val(),
+            LeaderEva: $("#LeaderEva").val(),
+            Sort: $(":radio[name='Sort']:checked").val(),
+            Tel: [],
+        }
+
+        var checkBoxs = $(":checkbox[name='Tel']:checked");
+        var index = 0;
+        $.each(checkBoxs, function () {
+            p.Tel[index] = $(this).val();
+
+            index = index + 1;
+        });
+
+        return p;
+    }
+
+    $("#report_btn").bind('click', function (e) {
+
+        if (checkForm() == false) {
+            return;
+        }
+        var p = getParam();
+
+        SMAT.Service.getServerFile({
+            url: "@Url.Action("TelRptIndexPreview")",
+            params: p
+        });
+    });
+
+    $("#csv_btn").bind('click', function (e) {
+
+        if (checkForm() == false) {
+            return;
+        }
+        var p = getParam();
+
+        SMAT.Service.getServerFile({
+            url: "@Url.Action("csv")",
+            params: p
+        });
+    });
+
+    function htmlEncode(value) {
+        return $('<div/>').text(value).html();
+    }
+
+    function htmlDecode(value) {
+        return $('<div/>').html(value).text();
+    }
+
+
+    $(document).ready(function () {
+        //20151019
+        //memo
+        var pres = $("pre");
+        $.each(pres, function (e) {
+            var oldMsg = htmlDecode(htmlDecode($(this).html()));
+            $(this).html(oldMsg);
+        });
+       
+        var timer = setInterval(keepSession, 60000);
+    });
+</script>
+
+    @{
+            var time = ViewBag.Time;
+            var range = ViewBag.Range;
+    }
+    @if (time == "Months"){
+        <script type="text/javascript">
+            $("input[type='radio'][value='Months']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Months").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (time == "Year"){ 
+        <script type="text/javascript">
+            $("input[type='radio'][value='Year']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Year").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (time == "Custom"){ 
+        <script type="text/javascript">
+            $("input[type='radio'][value='Custom']").iCheck('check');
+            $("#tb_Time tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_Custom").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    
+    @if (range == "division")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='division']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_division").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (range == "shop")
+    {
+        <script type="text/javascript">
+            $("#tr_shop input[type='radio'][value='shop']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_shop").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+    else if (range == "tanto")
+    {
+        <script type="text/javascript">
+            $("input[type='radio'][value='tanto']").iCheck('check');
+            $("#tb_Range tr.tr-enable").removeClass('tr-enable').addClass('tr-disable');
+            $("#tr_tanto").removeClass('tr-disable').addClass('tr-enable');
+        </script>
+    }
+</div>

@@ -1,0 +1,99 @@
+﻿@model IEnumerable<WebEvaluation.Models.S_Unit>
+
+@{
+    ViewBag.IMG = "../../Content/images/ic-staff.png";
+    ViewBag.color = "#7f00ba";
+    ViewBag.Title = "組織管理";
+}
+@using (Html.BeginForm("Index", "Unit", FormMethod.Get, new { @class = "form-horizontal" }))
+ {
+<div class="jumbotron">
+    <br>
+         @Html.Hidden("isPostBack", ViewBag.isPostBack as string)
+    <div class="col-lg-4" style="padding-left:0px">
+        <font color="#aaaaaa">組織一覧</font>       
+    </div>
+
+    <div class="col-lg-8 text-right" style="padding-right:0px">
+        @Html.ActionLink("新規組織", "Create", new { id = "" }) @*|
+        <a href="../../Unit/UnitDataImport">組織インポート</a>*@
+    </div>
+<table class="table form-table">
+  <thead>
+    <tr>
+        <th width ="8%">
+            番号
+        </th>
+        <th width="14.285%">
+            @Html.DisplayNameFor(model => model.UnitCD)
+        </th>
+        <th width="17%">
+            @Html.DisplayNameFor(model => model.UnitName)
+        </th>
+        <th width="14.285%">
+            @*@Html.DisplayNameFor(model => model.ShopCD)*@
+            店舗略称
+        </th>
+        <th width="14.285%">
+            @*@Html.DisplayNameFor(model => model.IsCusCenter)*@
+            カスタマセンター
+        </th>
+        <th width="14.285%">
+            @*@Html.DisplayNameFor(model => model.IsShop)*@
+            店舗
+        </th>
+        <th width="14.285%"></th>
+    </tr>
+ </thead>
+@{var no = 0;}
+@foreach (var item in Model) {
+    no++;    
+    <tr>
+        <td>
+            @(no)  
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitCD)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShopCD)
+        </td>
+        <td>
+            @*@Html.DisplayFor(modelItem => item.IsCusCenter, new { @class = "checkbox icheckbox_square-aero" })*@
+            @if(item.IsCusCenter==true)
+            {
+                <img style="width:29px;height:28px" src="~/Content/images/cs32.png"/>
+            }
+        </td>
+        <td>
+            @*@Html.DisplayFor(modelItem => item.IsShop)*@
+            @if (item.IsShop == true)
+            {
+                <img style="width:29px;height:28px" src="~/Content/images/cs32.png" />
+            }
+        </td>
+        <td>
+            @Html.ButtonAction(false, "編集", "Edit/" + @item.UnitCD,"",new { @class = "btn btn-primary btn-xs" }) |
+            @*@Html.ButtonAction(false, "削除", "Delete/" + @item.UnitCD, "", new { @class = "btn btn-danger btn-xs" })*@
+            <button class="btn btn-danger btn-xs" type="button" onclick="javascript:unitDelete('@item.UnitCD')">削除</button>
+            @*@Html.ActionLink("Create", "Create", new { id = item.UnitCD }) |
+            @Html.ActionLink("Edit", "Edit", new { id=item.UnitCD }) |            
+            @Html.ActionLink("Delete", "Delete", new { id=item.UnitCD })*@
+        </td>
+    </tr>
+    }
+</table>
+</div>
+ }
+<script type="text/javascript">
+    function unitDelete(UnitCD) {
+        if (confirm("組織コード" + UnitCD + "　の組織を削除しますか？")) {
+            var url = "../Unit/Delete/" + UnitCD;
+            window.location = url;
+            //window.onsubmit;
+        }
+    }
+</script>

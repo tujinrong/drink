@@ -1,0 +1,142 @@
+﻿@model PagedList.IPagedList<WebEvaluation.ViewModels.StaffViewModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "担当参照";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_self" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/site.css" rel="stylesheet">
+    @Styles.Render("~/Content/Common/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/common")
+</head>
+<body style="padding-top: 0;">
+    <div class="jumbotron" style="background-color:#dcdcdc;padding-left:5px;padding-right:5px;padding-top:5px">
+        <!--社員マスタ＆BUTTON--->
+        @using (Html.BeginForm("Refer", "Staff", FormMethod.Get, new { @class = "form-horizontal" }))
+        {
+                
+        <!--条件検索-->
+            <table class="table form-table " border="0" style="margin-bottom:0;">
+                <tr>
+                    <td align="right" nowrap="nowrap" class="edit-title" width="65" style="padding-left:0px;padding-right:0px">組織名：</td>
+                    <td width="400" align="left">
+                        @Html.UnitDropDownList("UnitCD", ViewBag.UnitCD as string, new { @class = "form-control input-sm" })
+                    </td>@*
+                    <td align="right" width="120px">社員コード：</td>
+                    <td width="10%">
+                        <input id="inputSmall" class="form-control input-sm" size="10" type="text">
+                    </td>*@
+                    <td align="right" nowrap="nowrap" class="edit-title" width="50" style="padding-left:0px;padding-right:0px"> 氏名：</td>
+                    <td width="250" align="left">
+                        @Html.TextBox("name", ViewBag.name as string, new { @class = "form-control input-sm", size = "10" })
+                    </td>@*
+                    <td align="right" width="100px">氏名カナ：</td>
+                    <td width="10%">
+                        <input id="inputSmall" class="form-control input-sm" size="10" type="text">
+                    </td>*@
+                    <td>
+                        <div class="col-lg-12 text-left">
+                            <button type="submit" class="btn btn-primary btn-xs">検索</button>
+                            @*@Html.ButtonClose("true")*@
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+        }
+        @Html.PagedListPager(Model, page => Url.Action("Refer", new { page, UnitCD = ViewBag.UnitCD, staffCd = ViewBag.staffCd, name = ViewBag.name, kanaName = ViewBag.kanaName, isPostBack = ViewBag.isPostBack }))
+
+
+        <!--社員一覧-->
+        <table class="table form-table table-hover" border="0">
+                    <thead>
+                <tr style="background-color:#e9e9e9">
+                            
+                    <th class="text-left" nowrap>コード</th>
+                    <th class="text-left">氏名</th>
+                            @*<th class="text-center">氏名カナ</th>*@
+                            <th class="text-center" nowrap>性別</th>
+                            @*<th class="text-center" width="10%"> 入社年月日</th>*@
+                            @*<th class="text-center">役職</th>
+                            <th class="text-center">職種</th>
+                            <th class="text-center">権限</th>*@
+                    <th class="text-left" nowrap>現在組織</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="background-color:white">
+                            
+                    <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.StaffCD)
+                            </td>
+                            <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.StaffName)
+                            </td>
+                            @*<td class="text-left">
+                                @Html.DisplayFor(modelItem => item.StaffKana)
+                            </td>*@
+                            <td class="text-center">
+                               @if (item.Sex == "1")
+                                {
+                                    @("男")
+                                }
+                               else if (item.Sex == "2")
+                                {
+                                    @("女")
+                                }
+                            </td>
+                            <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.UnitName)
+                            </td>
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duty)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duty)
+                            </td>
+                            <td class="text-left">
+                                @Html.DisplayFor(modelItem => item.RoleCD)
+                            </td>*@
+                            <td align="center">
+                                <button class="btn btn-primary btn-xs" type="button" onclick="javascript:SMAT.Service.getReferValue('@item.StaffCD','@item.StaffName','@ViewBag.shopCD')">選択</button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+               @* Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount new { page }))*@
+                @Html.PagedListPager(Model, page => Url.Action("Refer", new { page, UnitCD = ViewBag.UnitCD, staffCd = ViewBag.staffCd, name = ViewBag.name, kanaName = ViewBag.kanaName, isPostBack = ViewBag.isPostBack }))
+            </div>
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var pages = $('.pagination-container');
+
+        $.each(pages, function () {
+            var lis = $(this).find('li');
+            if (lis.length == 1) {
+                $(this).hide();
+            }
+
+        });
+
+    });
+    </script>
+
+</body>
+</html>
