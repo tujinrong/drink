@@ -23,7 +23,7 @@ namespace DrinkService
             Application["user_session_keys"] = new Dictionary<string,object>();
 
             string dbConnectionString = ConfigurationManager.ConnectionStrings["DrinkServiceContext"].ToString();
-            if (dbConnectionString.Contains("Data Source=10.132.137.147;"))
+            if (dbConnectionString.Contains("Data Source=10.193.13.199;"))
             {
                 CommonLogic.IsTestVersion = "false";
             }

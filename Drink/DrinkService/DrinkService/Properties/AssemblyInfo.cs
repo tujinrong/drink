@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // すべての値を指定するか、以下のように "*" を使用してリビジョンとビルド番号を
 // 既定値にすることができます:
-[assembly: AssemblyVersion("3.0.2.1")]
-[assembly: AssemblyFileVersion("3.0.2.1")]
+[assembly: AssemblyVersion("3.0.2.2")]
+[assembly: AssemblyFileVersion("3.0.2.2")]
